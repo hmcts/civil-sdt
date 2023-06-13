@@ -30,17 +30,5 @@ data "azurerm_key_vault_secret" "key_from_vault" {
 resource "azurerm_key_vault_secret" "s2s" {
   name         = "civil-sdt-service-s2s-secret"
   value        = data.azurerm_key_vault_secret.key_from_vault.value
-  key_vault_id = data.azurerm_key_vault.civil_vault.id
+  key_vault_id = module.civil_sdt_key_vault.key_vault_id
 }
-
-# The api-gateway-s2s-secret is needed for phase 2.  How does this relate to civil-sdt-service-s2s-secret above?
-#data "azurerm_key_vault_secret" "api_gw_s2s_key" {
-#  name         = "microservicekey-api-gw"
-#  key_vault_id = data.azurerm_key_vault.s2s_vault.id
-#}
-#
-#resource "azurerm_key_vault_secret" "api_gw_s2s_secret" {
-#  name         = "api-gateway-s2s-secret"
-#  value        = data.azurerm_key_vault_secret.api_gw_s2s_key.value
-#  key_vault_id = data.azurerm_key_vault.civil_vault.id
-#}

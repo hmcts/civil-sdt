@@ -5,10 +5,12 @@ import org.springframework.stereotype.Component;
 import uk.gov.moj.sdt.cmc.consumers.model.claimdefences.ClaimDefencesResponse;
 import uk.gov.moj.sdt.cmc.consumers.request.BreathingSpaceRequest;
 import uk.gov.moj.sdt.cmc.consumers.request.ClaimStatusUpdateRequest;
+import uk.gov.moj.sdt.cmc.consumers.request.claim.ClaimRequest;
 import uk.gov.moj.sdt.cmc.consumers.request.JudgementWarrantRequest;
 import uk.gov.moj.sdt.cmc.consumers.request.WarrantRequest;
 import uk.gov.moj.sdt.cmc.consumers.request.judgement.JudgementRequest;
 import uk.gov.moj.sdt.cmc.consumers.response.BreathingSpaceResponse;
+import uk.gov.moj.sdt.cmc.consumers.response.ClaimResponse;
 import uk.gov.moj.sdt.cmc.consumers.response.ClaimStatusUpdateResponse;
 import uk.gov.moj.sdt.cmc.consumers.response.JudgementWarrantResponse;
 import uk.gov.moj.sdt.cmc.consumers.response.WarrantResponse;
@@ -25,6 +27,8 @@ public class CMCApiFallback implements CMCApi {
 
     private IClaimStatusUpdateService claimStatusUpdate;
 
+    private IClaimRequestService claimRequestService;
+
     private IWarrantService warrantService;
 
     private IJudgementWarrantService judgementWarrantService;
@@ -33,12 +37,14 @@ public class CMCApiFallback implements CMCApi {
                           @Qualifier("MockClaimDefencesService") IClaimDefencesService claimDefences,
                           @Qualifier("MockJudgementRequestService") IJudgementService judgementService,
                           @Qualifier("MockClaimStatusUpdateService") IClaimStatusUpdateService claimStatusUpdate,
+                          @Qualifier("MockClaimRequestService") IClaimRequestService claimRequestService,
                           @Qualifier("MockWarrantService") IWarrantService warrantService,
                           @Qualifier("MockJudgementWarrantService") IJudgementWarrantService judgementWarrantService) {
         this.breathingSpace = breathingSpace;
         this.claimDefences = claimDefences;
         this.judgementService = judgementService;
         this.claimStatusUpdate = claimStatusUpdate;
+        this.claimRequestService = claimRequestService;
         this.warrantService = warrantService;
         this.judgementWarrantService = judgementWarrantService;
     }
@@ -90,4 +96,11 @@ public class CMCApiFallback implements CMCApi {
                                                                judgmentWarrantRequest);
     }
 
+
+    @Override
+    public ClaimResponse createSDTClaim(String idamId,
+                                        String sdtRequestId,
+                                        ClaimRequest claimRequest) {
+        return this.claimRequestService.claimRequest(idamId, sdtRequestId, claimRequest);
+    }
 }

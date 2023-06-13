@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import uk.gov.moj.sdt.cmc.consumers.api.IBreathingSpaceService;
+import uk.gov.moj.sdt.cmc.consumers.api.IClaimRequestService;
 import uk.gov.moj.sdt.cmc.consumers.api.IClaimDefencesService;
 import uk.gov.moj.sdt.cmc.consumers.api.IClaimStatusUpdateService;
 import uk.gov.moj.sdt.cmc.consumers.api.IJudgementService;
@@ -17,10 +18,12 @@ import uk.gov.moj.sdt.cmc.consumers.converter.XmlConverter;
 import uk.gov.moj.sdt.cmc.consumers.model.claimdefences.ClaimDefencesResponse;
 import uk.gov.moj.sdt.cmc.consumers.request.BreathingSpaceRequest;
 import uk.gov.moj.sdt.cmc.consumers.request.ClaimStatusUpdateRequest;
+import uk.gov.moj.sdt.cmc.consumers.request.claim.ClaimRequest;
 import uk.gov.moj.sdt.cmc.consumers.request.JudgementWarrantRequest;
 import uk.gov.moj.sdt.cmc.consumers.request.WarrantRequest;
 import uk.gov.moj.sdt.cmc.consumers.request.judgement.JudgementRequest;
 import uk.gov.moj.sdt.cmc.consumers.response.BreathingSpaceResponse;
+import uk.gov.moj.sdt.cmc.consumers.response.ClaimResponse;
 import uk.gov.moj.sdt.cmc.consumers.response.ClaimStatusUpdateResponse;
 import uk.gov.moj.sdt.cmc.consumers.response.JudgementWarrantResponse;
 import uk.gov.moj.sdt.cmc.consumers.response.WarrantResponse;
@@ -50,8 +53,9 @@ public class CMCConsumerGateway implements IConsumerGateway {
     public static final String TO_DATE = "toDate";
 
     private IBreathingSpaceService breathingSpace;
-
     private IClaimStatusUpdateService claimStatusUpdate;
+
+    private IClaimRequestService claimRequestService;
 
     private IClaimDefencesService claimDefences;
 
@@ -72,6 +76,7 @@ public class CMCConsumerGateway implements IConsumerGateway {
     public CMCConsumerGateway(@Qualifier("BreathingSpaceService") IBreathingSpaceService breathingSpace,
                               @Qualifier("JudgementRequestService") IJudgementService judgementService,
                               @Qualifier("ClaimStatusUpdateService") IClaimStatusUpdateService claimStatusUpdate,
+                              @Qualifier("ClaimRequestService") IClaimRequestService claimRequestService,
                               @Qualifier("ClaimDefencesService") IClaimDefencesService claimDefences,
                               @Qualifier("WarrantService") IWarrantService warrantService,
                               @Qualifier("JudgementWarrantService") IJudgementWarrantService judgementWarrantService,
@@ -85,6 +90,7 @@ public class CMCConsumerGateway implements IConsumerGateway {
         this.claimDefences = claimDefences;
         this.warrantService = warrantService;
         this.judgementWarrantService = judgementWarrantService;
+        this.claimRequestService = claimRequestService;
         this.xmlToObject = xmlToObject;
         this.xmlElementValueReader = xmlElementValueReader;
         this.idamRepository = idamRepository;
@@ -120,6 +126,10 @@ public class CMCConsumerGateway implements IConsumerGateway {
                 ClaimStatusUpdateRequest request = xmlToObject.convertXmlToObject(requestPayload, ClaimStatusUpdateRequest.class);
                 ClaimStatusUpdateResponse response = claimStatusUpdate.claimStatusUpdate(idamId, sdtRequestReference, request);
                 individualRequest.setRequestStatus(response.getProcessingStatus().name());
+            } else if (RequestType.CLAIM.getType().equals(requestType)) {
+                ClaimRequest request = xmlToObject.convertXmlToObject(requestPayload, ClaimRequest.class);
+                ClaimResponse response = claimRequestService.claimRequest(idamId, sdtRequestReference, request);
+                individualRequest.setTargetApplicationResponse(xmlToObject.convertObjectToXml(response).getBytes(StandardCharsets.UTF_8));
             } else if (RequestType.WARRANT.getType().equals(requestType)) {
                 WarrantRequest request = xmlToObject.convertXmlToObject(requestPayload, WarrantRequest.class);
                 WarrantResponse response = warrantService.warrantRequest(sdtSystemUserAuthToken, serviceAuthToken,

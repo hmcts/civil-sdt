@@ -11,8 +11,10 @@ import uk.gov.moj.sdt.cmc.consumers.request.BreathingSpaceRequest;
 import uk.gov.moj.sdt.cmc.consumers.request.ClaimStatusUpdateRequest;
 import uk.gov.moj.sdt.cmc.consumers.request.JudgementWarrantRequest;
 import uk.gov.moj.sdt.cmc.consumers.request.WarrantRequest;
+import uk.gov.moj.sdt.cmc.consumers.request.claim.ClaimRequest;
 import uk.gov.moj.sdt.cmc.consumers.request.judgement.JudgementRequest;
 import uk.gov.moj.sdt.cmc.consumers.response.BreathingSpaceResponse;
+import uk.gov.moj.sdt.cmc.consumers.response.ClaimResponse;
 import uk.gov.moj.sdt.cmc.consumers.response.ClaimStatusUpdateResponse;
 import uk.gov.moj.sdt.cmc.consumers.response.JudgementWarrantResponse;
 import uk.gov.moj.sdt.cmc.consumers.response.WarrantResponse;
@@ -78,4 +80,12 @@ public interface CMCApi {
                                                      @RequestHeader(IDAM_ID_HEADER)  String idamId,
                                                      @RequestHeader(SDT_REQUEST_ID) String sdtRequestId,
                                                      @RequestBody JudgementWarrantRequest judgmentWarrantRequest);
+
+    @PostMapping("/createSDTClaim ")
+    ClaimResponse createSDTClaim(
+        @RequestHeader(IDAM_ID_HEADER)  String idamId,
+        @RequestHeader(SDT_REQUEST_ID) String sdtRequestId,
+        @RequestBody ClaimRequest claimRequest
+    );
+
 }
