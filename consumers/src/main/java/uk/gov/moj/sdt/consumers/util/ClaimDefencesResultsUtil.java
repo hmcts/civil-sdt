@@ -1,15 +1,13 @@
 package uk.gov.moj.sdt.consumers.util;
 
-import org.springframework.stereotype.Component;
-import uk.gov.moj.sdt.cmc.consumers.model.ResponseType;
-import uk.gov.moj.sdt.cmc.consumers.model.claimdefences.ClaimDefencesResult;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-@Component
+import uk.gov.moj.sdt.cmc.consumers.model.ResponseType;
+import uk.gov.moj.sdt.cmc.consumers.model.claimdefences.ClaimDefencesResult;
+
 public class ClaimDefencesResultsUtil {
 
     public List<ClaimDefencesResult> createClaimDefencesList() {
