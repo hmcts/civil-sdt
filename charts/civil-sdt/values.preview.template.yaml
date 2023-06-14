@@ -12,7 +12,7 @@ java:
   postgresql:
     enabled: true
   keyVaults:
-    civil:
+    civil-sdt:
       secrets:
         - name: civil-sdt-service-s2s-secret
           alias: CIVIL_SDT_S2S_KEY
@@ -22,7 +22,6 @@ java:
           alias: SDT_DB_PASSWORD
         - name: civil-sdt-servicebus-connection-string
           alias: CIVIL_SDT_SERVICEBUS_CONNECTION_STRING
-    civil-sdt:
       disabled: true
   secrets:
     CIVIL_SDT_SERVICEBUS_CONNECTION_STRING:
