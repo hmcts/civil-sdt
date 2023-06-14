@@ -30,6 +30,7 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.services;
 
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -59,6 +60,7 @@ import uk.gov.moj.sdt.utils.SdtContext;
 import uk.gov.moj.sdt.utils.Utilities;
 import uk.gov.moj.sdt.utils.concurrent.api.IInFlightMessage;
 import uk.gov.moj.sdt.utils.mbeans.SdtMetricsMBean;
+import uk.gov.moj.sdt.validators.BulkSubmissionValidator;
 import uk.gov.moj.sdt.validators.exception.CustomerReferenceNotUniqueException;
 
 /**
@@ -104,6 +106,8 @@ public class BulkSubmissionService implements IBulkSubmissionService {
      */
     private ISdtBulkReferenceGenerator sdtBulkReferenceGenerator;
 
+    private BulkSubmissionValidator bulkSubmissionValidator;
+
     @Autowired
     public BulkSubmissionService(@Qualifier("ServiceRequestDao")
                                      IGenericDao genericDao,
@@ -118,8 +122,9 @@ public class BulkSubmissionService implements IBulkSubmissionService {
                                      ISdtBulkReferenceGenerator sdtBulkReferenceGenerator,
                                  @Qualifier("ErrorMessagesCache")
                                      ICacheable errorMessagesCache,
-                                 @Qualifier("concurrencyMap")
-                                     Map concurrencyMap) {
+                                 BulkSubmissionValidator bulkSubmissionValidator,
+                                 @Qualifier("concurrentMap")
+                                         Map<String, IInFlightMessage> concurrentMap) {
         this.genericDao = genericDao;
         this.bulkCustomerDao = bulkCustomerDao;
         this.targetApplicationDao = targetApplicationDao;
@@ -127,7 +132,8 @@ public class BulkSubmissionService implements IBulkSubmissionService {
         this.messagingUtility = messagingUtility;
         this.sdtBulkReferenceGenerator = sdtBulkReferenceGenerator;
         this.errorMessagesCache = errorMessagesCache;
-        this.concurrencyMap = concurrencyMap;
+        this.bulkSubmissionValidator = bulkSubmissionValidator;
+        this.concurrencyMap = concurrentMap;
     }
 
     /**
@@ -144,11 +150,13 @@ public class BulkSubmissionService implements IBulkSubmissionService {
 
     @Override
     public void saveBulkSubmission(final IBulkSubmission bulkSubmission) {
+
         enrich(bulkSubmission);
 
         this.checkConcurrent(bulkSubmission);
 
         enrich(bulkSubmission.getIndividualRequests());
+        bulkSubmissionValidator.validateCMCRequests(bulkSubmission);
 
         // Now persist the bulk submissions.
         getGenericDao().persist(bulkSubmission);
@@ -196,7 +204,7 @@ public class BulkSubmissionService implements IBulkSubmissionService {
 
         // Get the Raw XML from the ThreadLocal and insert in the BulkSubmission
         String rawInXml = SdtContext.getContext().getRawInXml();
-        bulkSubmission.setPayload(rawInXml == null ? "".getBytes() : rawInXml.getBytes());
+        bulkSubmission.setPayload(rawInXml == null ? "".getBytes() : rawInXml.getBytes(StandardCharsets.UTF_8));
 
         // Get the Bulk Customer from the customer dao for the SDT customer Id
         final IBulkCustomer bulkCustomer =

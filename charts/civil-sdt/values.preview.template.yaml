@@ -13,6 +13,15 @@ java:
     enabled: true
   keyVaults:
     civil-sdt:
+      secrets:
+        - name: civil-sdt-service-s2s-secret
+          alias: CIVIL_SDT_S2S_KEY
+        - name: civil-sdt-POSTGRES-USER
+          alias: SDT_DB_USERNAME
+        - name: civil-sdt-POSTGRES-PASS
+          alias: SDT_DB_PASSWORD
+        - name: civil-sdt-servicebus-connection-string
+          alias: CIVIL_SDT_SERVICEBUS_CONNECTION_STRING
       disabled: true
   secrets:
     CIVIL_SDT_SERVICEBUS_CONNECTION_STRING:

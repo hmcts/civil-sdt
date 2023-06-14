@@ -33,6 +33,7 @@ package uk.gov.moj.sdt.validators;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -55,6 +56,7 @@ import uk.gov.moj.sdt.domain.api.IGlobalParameter;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.domain.cache.api.ICacheable;
 import uk.gov.moj.sdt.utils.Utilities;
+import uk.gov.moj.sdt.utils.cmc.RequestTypeXmlNodeValidator;
 import uk.gov.moj.sdt.validators.exception.CustomerNotSetupException;
 import uk.gov.moj.sdt.validators.exception.CustomerReferenceNotUniqueException;
 import uk.gov.moj.sdt.validators.exception.RequestCountMismatchException;
@@ -110,6 +112,9 @@ class BulkSubmissionValidatorTest extends AbstractValidatorUnitTest {
      */
     @Mock
     private IBulkSubmissionDao mockIBulkSubmissionDao;
+
+    @Mock
+    private RequestTypeXmlNodeValidator requestTypeXmlNodeValidator;
 
     /**
      * Subject for test.
@@ -172,6 +177,7 @@ class BulkSubmissionValidatorTest extends AbstractValidatorUnitTest {
                                                 globalParameterCache,
                                                 errorMessagesCache,
                                                 mockIBulkSubmissionDao,
+                                                requestTypeXmlNodeValidator,
                                                 new ConcurrentHashMap());
     }
 

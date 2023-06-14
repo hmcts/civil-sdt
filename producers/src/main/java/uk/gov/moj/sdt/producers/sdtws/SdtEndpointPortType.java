@@ -33,6 +33,7 @@ package uk.gov.moj.sdt.producers.sdtws;
 
 import javax.jws.WebService;
 
+import lombok.NoArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -57,6 +58,7 @@ import uk.gov.moj.sdt.ws._2013.sdt.submitqueryresponseschema.SubmitQueryResponse
  */
 
 // CHECKSTYLE:OFF
+@NoArgsConstructor
 @Service("ISdtEndpointPortType")
 @WebService(serviceName = "SdtEndpoint", portName = "SdtEndpointPort", targetNamespace = "http://ws.sdt.moj.gov.uk/2013/sdt/SdtEndpoint", wsdlLocation = "wsdl/SdtEndpoint.wsdl", endpointInterface = "uk.gov.moj.sdt.ws._2013.sdt.sdtendpoint.ISdtEndpointPortType")
 // CHECKSTYLE:ON
@@ -90,8 +92,6 @@ public class SdtEndpointPortType implements ISdtEndpointPortType {
         setWsReadSubmitQueryHandler(wsReadSubmitQueryHandler);
     }
 
-    public SdtEndpointPortType() {}
-
     @Override
     public BulkResponseType submitBulk(final BulkRequestType bulkRequest) {
         if (LOGGER.isDebugEnabled()) {
@@ -102,9 +102,7 @@ public class SdtEndpointPortType implements ISdtEndpointPortType {
         BulkResponseType response = null;
         try {
             response = wsCreateBulkRequestHandler.submitBulk(bulkRequest);
-        }
-        catch (Exception throwable)
-        {
+        } catch (Exception throwable) {
             handleException(throwable);
         }
 
@@ -121,9 +119,7 @@ public class SdtEndpointPortType implements ISdtEndpointPortType {
         BulkFeedbackResponseType response = null;
         try {
             response = wsReadBulkRequestHandler.getBulkFeedback(bulkFeedbackRequest);
-        }
-        catch (Exception throwable)
-        {
+        } catch (Exception throwable) {
             handleException(throwable);
         }
 
@@ -141,9 +137,7 @@ public class SdtEndpointPortType implements ISdtEndpointPortType {
 
         try {
             response = wsReadSubmitQueryHandler.submitQuery(submitQueryRequest);
-        }
-        catch (Exception throwable)
-        {
+        } catch (Exception throwable) {
             handleException(throwable);
         }
 
@@ -158,7 +152,6 @@ public class SdtEndpointPortType implements ISdtEndpointPortType {
      */
     private void handleException(final Throwable throwable) {
         LOGGER.error("Unexpected error - ", throwable);
-
         throw new RuntimeException(
                 "A SDT system component error has occurred. Please contact the SDT support team for assistance");
     }

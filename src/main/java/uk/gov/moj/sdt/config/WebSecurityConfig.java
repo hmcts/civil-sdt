@@ -15,8 +15,10 @@ import org.springframework.security.web.SecurityFilterChain;
 public class WebSecurityConfig {
 
     @Bean
+    @SuppressWarnings("java:S4502")
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.csrf().disable().authorizeHttpRequests().anyRequest().permitAll();
+        http.csrf().disable()
+            .authorizeHttpRequests().anyRequest().permitAll();
         return http.build();
     }
 }

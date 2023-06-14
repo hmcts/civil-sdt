@@ -44,10 +44,12 @@ import uk.gov.moj.sdt.utils.SdtContext;
 import uk.gov.moj.sdt.utils.Utilities;
 import uk.gov.moj.sdt.utils.concurrent.InFlightMessage;
 import uk.gov.moj.sdt.utils.concurrent.api.IInFlightMessage;
+import uk.gov.moj.sdt.validators.BulkSubmissionValidator;
 import uk.gov.moj.sdt.validators.exception.CustomerReferenceNotUniqueException;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -103,6 +105,10 @@ class BulkSubmissionServiceTest extends AbstractSdtUnitTestBase {
     @Mock
     private Map<String, IInFlightMessage> mockConcurrencyMap;
 
+    @Mock
+    private BulkSubmissionValidator bulkSubmissionValidator;
+
+
     /**
      *
      */
@@ -143,6 +149,7 @@ class BulkSubmissionServiceTest extends AbstractSdtUnitTestBase {
                                                           mockMessagingUtility,
                                                           mockSdtBulkReferenceGenerator,
                                                           mockErrorMessagesCache,
+                                                          bulkSubmissionValidator,
                                                           mockConcurrencyMap);
     }
 
@@ -444,7 +451,7 @@ class BulkSubmissionServiceTest extends AbstractSdtUnitTestBase {
         bulkSubmission.setCustomerReference("TEST_CUST_REF");
         bulkSubmission.setId(1L);
         bulkSubmission.setNumberOfRequest(2);
-        bulkSubmission.setPayload("TEST_XML".getBytes());
+        bulkSubmission.setPayload("TEST_XML".getBytes(StandardCharsets.UTF_8));
         bulkSubmission.setSubmissionStatus("SUBMITTED");
 
         final IndividualRequest individualRequest = new IndividualRequest();

@@ -71,7 +71,7 @@ public class IndividualRequestMdbTest extends AbstractSdtUnitTestBase {
 
         individualRequestMdb.readMessage(objMessage);
 
-        verify(mockTargetSubmissionService).processRequestToSubmit(sdtMessage.getSdtRequestReference());
+        verify(mockTargetSubmissionService).processRequestToSubmit(sdtMessage.getSdtRequestReference(), null);
         verify(objMessage).getObject();
 
         assertTrue(true,TEST_SUCCESSFULLY_COMPLETED);
@@ -94,7 +94,7 @@ public class IndividualRequestMdbTest extends AbstractSdtUnitTestBase {
         when(objMessage.getObject()).thenReturn((Serializable) sdtMessage);
 
         doThrow(new RuntimeException("Data error occurred"))
-            .when(mockTargetSubmissionService).processRequestToSubmit(sdtMessage.getSdtRequestReference());
+            .when(mockTargetSubmissionService).processRequestToSubmit(sdtMessage.getSdtRequestReference(), null);
 
         try {
             individualRequestMdb.readMessage(objMessage);
@@ -103,7 +103,7 @@ public class IndividualRequestMdbTest extends AbstractSdtUnitTestBase {
             assertTrue(true,"Expected to throw the exception");
         }
 
-        verify(mockTargetSubmissionService).processRequestToSubmit(sdtMessage.getSdtRequestReference());
+        verify(mockTargetSubmissionService).processRequestToSubmit(sdtMessage.getSdtRequestReference(), null);
         verify(objMessage).getObject();
 
         assertTrue(true,TEST_SUCCESSFULLY_COMPLETED);

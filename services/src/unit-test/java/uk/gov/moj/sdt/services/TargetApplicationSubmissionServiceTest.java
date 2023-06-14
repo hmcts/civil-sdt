@@ -1,53 +1,55 @@
 package uk.gov.moj.sdt.services;
 
-import ch.qos.logback.classic.Logger;
-import ch.qos.logback.classic.spi.ILoggingEvent;
-import ch.qos.logback.core.read.ListAppender;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.slf4j.LoggerFactory;
-import uk.gov.moj.sdt.consumers.ConsumerGateway;
-import uk.gov.moj.sdt.consumers.api.IConsumerGateway;
-import uk.gov.moj.sdt.consumers.exception.SoapFaultException;
-import uk.gov.moj.sdt.consumers.exception.TimeoutException;
-import uk.gov.moj.sdt.dao.IndividualRequestDao;
-import uk.gov.moj.sdt.dao.api.IIndividualRequestDao;
-import uk.gov.moj.sdt.domain.GlobalParameter;
-import uk.gov.moj.sdt.domain.ServiceRouting;
-import uk.gov.moj.sdt.domain.TargetApplication;
-import uk.gov.moj.sdt.domain.ErrorMessage;
-import uk.gov.moj.sdt.domain.BulkCustomer;
-import uk.gov.moj.sdt.domain.ErrorLog;
-import uk.gov.moj.sdt.domain.IndividualRequest;
-import uk.gov.moj.sdt.domain.ServiceType;
-import uk.gov.moj.sdt.domain.BulkSubmission;
-import uk.gov.moj.sdt.domain.api.IServiceRouting;
-import uk.gov.moj.sdt.domain.api.IServiceType;
-import uk.gov.moj.sdt.domain.api.ITargetApplication;
-import uk.gov.moj.sdt.domain.api.IBulkCustomer;
-import uk.gov.moj.sdt.domain.api.IErrorMessage;
-import uk.gov.moj.sdt.domain.api.IErrorLog;
-import uk.gov.moj.sdt.domain.api.IGlobalParameter;
-import uk.gov.moj.sdt.domain.api.IIndividualRequest;
-import uk.gov.moj.sdt.domain.api.IBulkSubmission;
-import uk.gov.moj.sdt.domain.cache.api.ICacheable;
-import uk.gov.moj.sdt.services.messaging.MessageWriter;
-import uk.gov.moj.sdt.services.messaging.api.IMessageWriter;
-import uk.gov.moj.sdt.services.messaging.api.ISdtMessage;
-import uk.gov.moj.sdt.services.utils.GenericXmlParser;
-import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
-import uk.gov.moj.sdt.utils.SdtContext;
-
-import javax.xml.ws.WebServiceException;
+import java.nio.charset.StandardCharsets;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Supplier;
+import javax.xml.ws.WebServiceException;
+
+import ch.qos.logback.classic.Logger;
+import ch.qos.logback.classic.spi.ILoggingEvent;
+import ch.qos.logback.core.read.ListAppender;
+import org.jetbrains.annotations.NotNull;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.slf4j.LoggerFactory;
+import uk.gov.moj.sdt.consumers.api.IConsumerGateway;
+import uk.gov.moj.sdt.consumers.exception.SoapFaultException;
+import uk.gov.moj.sdt.consumers.exception.TimeoutException;
+import uk.gov.moj.sdt.dao.api.IIndividualRequestDao;
+import uk.gov.moj.sdt.domain.BulkCustomer;
+import uk.gov.moj.sdt.domain.BulkSubmission;
+import uk.gov.moj.sdt.domain.ErrorLog;
+import uk.gov.moj.sdt.domain.ErrorMessage;
+import uk.gov.moj.sdt.domain.GlobalParameter;
+import uk.gov.moj.sdt.domain.IndividualRequest;
+import uk.gov.moj.sdt.domain.ServiceRouting;
+import uk.gov.moj.sdt.domain.ServiceType;
+import uk.gov.moj.sdt.domain.TargetApplication;
+import uk.gov.moj.sdt.domain.api.IBulkCustomer;
+import uk.gov.moj.sdt.domain.api.IBulkSubmission;
+import uk.gov.moj.sdt.domain.api.IErrorLog;
+import uk.gov.moj.sdt.domain.api.IErrorMessage;
+import uk.gov.moj.sdt.domain.api.IGlobalParameter;
+import uk.gov.moj.sdt.domain.api.IIndividualRequest;
+import uk.gov.moj.sdt.domain.api.IServiceRouting;
+import uk.gov.moj.sdt.domain.api.IServiceType;
+import uk.gov.moj.sdt.domain.api.ITargetApplication;
+import uk.gov.moj.sdt.domain.cache.api.ICacheable;
+import uk.gov.moj.sdt.services.messaging.api.IMessageWriter;
+import uk.gov.moj.sdt.services.messaging.api.ISdtMessage;
+import uk.gov.moj.sdt.services.utils.GenericXmlParser;
+import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
+import uk.gov.moj.sdt.utils.SdtContext;
+import uk.gov.moj.sdt.utils.cmc.CCDReferenceValidator;
+import uk.gov.moj.sdt.utils.cmc.RequestTypeXmlNodeValidator;
+import uk.gov.moj.sdt.utils.cmc.xml.XmlElementValueReader;
 
 import static ch.qos.logback.classic.Level.DEBUG;
 import static ch.qos.logback.classic.Level.ERROR;
@@ -57,14 +59,22 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyBoolean;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.anyBoolean;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.same;
 import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.doCallRealMethod;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.isA;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static uk.gov.moj.sdt.utils.cmc.RequestType.CLAIM;
+import static uk.gov.moj.sdt.utils.cmc.RequestType.JUDGMENT;
 
 /**
  * Test class for TargetApplicationSubmissionService.
@@ -72,7 +82,35 @@ import static org.mockito.Mockito.when;
  * @author Manoj Kulkarni
  */
 @ExtendWith(MockitoExtension.class)
-public class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestBase {
+class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestBase {
+
+    private static final String TEST_1 = "TEST_1";
+
+    private static final String TARGET_APP_TIMEOUT = "TARGET_APP_TIMEOUT";
+
+    private static final String TARGET_APP_RESP_TIMEOUT = "TARGET_APP_RESP_TIMEOUT";
+
+    private static final String RECEIVED = "Received";
+
+    private static final String FORWARDED = "Forwarded";
+
+    private static final String MCOL_INDV_REQ_DELAY = "MCOL_INDV_REQ_DELAY";
+
+    private static final String TWELVE_THOUSAND = "12000";
+
+    private static final String DELAY_REQUEST_PROCESSING = "Delay request processing for 10 milliseconds";
+
+    private static final String RESPONSE = "response";
+
+    private static final String BULK_SUBMISSION_COMPLETED_DATE = "Bulk submission completed date should be populated";
+
+    private static final String BULK_SUBMISSION_STATUS_IS_INCORRECT = "Bulk submission status is incorrect";
+
+    private static final String REQ_NOT_ACK = "REQ_NOT_ACK";
+
+    private static String REQUEST_NOT_ACKNOWLEDGED = "Request Not Acknowledged";
+
+    private static final String MAX_FORWARDING_ATTEMPTS = "MAX_FORWARDING_ATTEMPTS";
 
     /**
      * Target Application Submision Service object.
@@ -90,6 +128,9 @@ public class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestB
      */
     @Mock
     private IConsumerGateway mockConsumerGateway;
+
+    @Mock
+    private IConsumerGateway mockCmcConsumerGateway;
 
     /**
      * The mocked ICacheable reference to the global parameters cache.
@@ -109,33 +150,15 @@ public class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestB
     @Mock
     private ICacheable mockErrorMsgCacheable;
 
-    private static final String TEST_1 = "TEST_1";
+    @Mock
+    private CCDReferenceValidator ccdReferenceValidator;
 
-    private static final String TARGET_APP_TIMEOUT = "TARGET_APP_TIMEOUT";
+    @Mock
+    private RequestTypeXmlNodeValidator requestTypeXmlNodeValidator;
 
-    private static final String TARGET_APP_RESP_TIMEOUT = "TARGET_APP_RESP_TIMEOUT";
+    @Mock
+    private XmlElementValueReader xmlReader;
 
-    private static final String RECEIVED = "Received";
-
-    private static final String FORWARDED = "Forwarded";
-
-    private static final String MCOL_INDV_REQ_DELAY = "MCOL_INDV_REQ_DELAY";
-
-    private static final String TWELVE_THOUSAND = "12000";
-
-    protected static String DELAY_REQUEST_PROCESSING = "Delay request processing for 10 milliseconds";
-
-    private static String RESPONSE = "response";
-
-    private static String BULK_SUBMISSION_COMPLETED_DATE = "Bulk submission completed date should be populated";
-
-    private static String BULK_SUBMISSION_STATUS_IS_INCORRECT = "Bulk submission status is incorrect";
-
-    private static String REQ_NOT_ACK = "REQ_NOT_ACK";
-
-    private static String REQUEST_NOT_ACKNOWLEDGED = "Request Not Acknowledged";
-
-    private static String MAX_FORWARDING_ATTEMPTS = "MAX_FORWARDING_ATTEMPTS";
     /**
      * Method to do any pre-test set-up.
      */
@@ -149,7 +172,9 @@ public class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestB
         targetAppSubmissionService = new TargetApplicationSubmissionService(mockIndividualRequestDao,
                                                                             genericParser,
                                                                             mockConsumerGateway,
-                                                                            mockMessageWriter);
+                                                                            mockCmcConsumerGateway,
+                                                                            mockMessageWriter,
+                                                                            requestTypeXmlNodeValidator);
         targetAppSubmissionService.setGlobalParametersCache(mockCacheable);
         targetAppSubmissionService.setErrorMessagesCache(mockErrorMsgCacheable);
 
@@ -159,88 +184,13 @@ public class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestB
      * This method checks an all positive scenario for processing request to submit.
      */
     @Test
-    public void processRequestToSubmitAllSuccess() {
+    void processRequestToSubmitAllSuccess() {
 
         final IIndividualRequest individualRequest = new IndividualRequest();
         Logger logger = (Logger) LoggerFactory.getLogger(TargetApplicationSubmissionService.class);
 
         // Set logging level to debug so that afterCompletion logging is captured
         logger.setLevel(DEBUG);
-
-        // Create appender and add to logger
-        ListAppender<ILoggingEvent> listAppender = new ListAppender<>();
-        listAppender.start();
-        logger.addAppender(listAppender);
-
-        // Set-up the individual request object
-
-        individualRequest.setSdtRequestReference(TEST_1);
-        individualRequest.setRequestStatus(RECEIVED);
-        setUpIndividualRequest(individualRequest);
-
-        when(this.mockIndividualRequestDao.getRequestBySdtReference(TEST_1)).thenReturn(
-                individualRequest);
-
-        final IGlobalParameter individualReqProcessingDelay = new GlobalParameter();
-        individualReqProcessingDelay.setValue("10");
-        individualReqProcessingDelay.setName(MCOL_INDV_REQ_DELAY);
-        when(this.mockCacheable.getValue(IGlobalParameter.class, MCOL_INDV_REQ_DELAY)).thenReturn(
-                individualReqProcessingDelay);
-
-        individualRequest.setRequestStatus(FORWARDED);
-
-        final IGlobalParameter connectionTimeOutParam = new GlobalParameter();
-        connectionTimeOutParam.setName(TARGET_APP_TIMEOUT);
-        connectionTimeOutParam.setValue("1000");
-        when(this.mockCacheable.getValue(IGlobalParameter.class, TARGET_APP_TIMEOUT)).thenReturn(
-                connectionTimeOutParam);
-
-        final IGlobalParameter receiveTimeOutParam = new GlobalParameter();
-        receiveTimeOutParam.setName(TARGET_APP_RESP_TIMEOUT);
-        receiveTimeOutParam.setValue(TWELVE_THOUSAND);
-        when(this.mockCacheable.getValue(IGlobalParameter.class, TARGET_APP_RESP_TIMEOUT)).thenReturn(
-                receiveTimeOutParam);
-
-        doAnswer(invocation -> {
-            IndividualRequest argument = invocation.getArgument(0);
-            argument.setRequestStatus(IIndividualRequest.IndividualRequestStatus.ACCEPTED.getStatus());
-            return null;
-        }).when(mockConsumerGateway).individualRequest(individualRequest, 1000, 12000);
-
-        when(this.mockIndividualRequestDao.queryAsCount(eq(IndividualRequest.class), isA(
-            Supplier.class))).thenReturn(0L);
-
-        // Setup dummy target response
-        SdtContext.getContext().setRawInXml(RESPONSE);
-
-        this.targetAppSubmissionService.processRequestToSubmit(TEST_1);
-
-        List<ILoggingEvent> logList = listAppender.list;
-
-        logger.detachAndStopAllAppenders();
-
-        //Check that DEBUG logging is occurring
-        assertTrue(verifyLog(logList, DELAY_REQUEST_PROCESSING));
-
-        // Verify the Mock
-        verify(mockIndividualRequestDao,times(2)).persist(individualRequest);
-        verify(mockConsumerGateway).individualRequest(individualRequest, 1000, 12000);
-        assertEquals(IBulkSubmission.BulkRequestStatus.COMPLETED
-                .getStatus(), individualRequest.getBulkSubmission().getSubmissionStatus(), BULK_SUBMISSION_STATUS_IS_INCORRECT);
-        assertNotNull( individualRequest.getBulkSubmission().getCompletedDate(),
-                       BULK_SUBMISSION_COMPLETED_DATE);
-        assertNotNull(individualRequest.getBulkSubmission().getUpdatedDate(),
-                      BULK_SUBMISSION_COMPLETED_DATE);
-    }
-
-    @Test
-    public void processRequestToSubmitAllSuccessLogSetToError() {
-
-        final IIndividualRequest individualRequest = new IndividualRequest();
-        Logger logger = (Logger) LoggerFactory.getLogger(TargetApplicationSubmissionService.class);
-
-        // Set logging level to debug so that afterCompletion logging is captured
-        logger.setLevel(ERROR);
 
         // Create appender and add to logger
         ListAppender<ILoggingEvent> listAppender = new ListAppender<>();
@@ -288,7 +238,64 @@ public class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestB
         // Setup dummy target response
         SdtContext.getContext().setRawInXml(RESPONSE);
 
-        this.targetAppSubmissionService.processRequestToSubmit(TEST_1);
+        this.targetAppSubmissionService.processRequestToSubmit(TEST_1, false);
+
+        List<ILoggingEvent> logList = listAppender.list;
+
+        logger.detachAndStopAllAppenders();
+
+        //Check that DEBUG logging is occurring
+        assertTrue(verifyLog(logList, DELAY_REQUEST_PROCESSING));
+
+        // Verify the Mock
+        verify(mockIndividualRequestDao,times(2)).persist(individualRequest);
+        verify(mockConsumerGateway).individualRequest(individualRequest, 1000, 12000);
+        assertEquals(IBulkSubmission.BulkRequestStatus.COMPLETED
+                         .getStatus(), individualRequest.getBulkSubmission().getSubmissionStatus(), BULK_SUBMISSION_STATUS_IS_INCORRECT);
+        assertNotNull( individualRequest.getBulkSubmission().getCompletedDate(),
+                       BULK_SUBMISSION_COMPLETED_DATE);
+        assertNotNull(individualRequest.getBulkSubmission().getUpdatedDate(),
+                      BULK_SUBMISSION_COMPLETED_DATE);
+    }
+
+    @Test
+    public void processRequestToSubmitAllSuccessLogSetToError() {
+
+        final IIndividualRequest individualRequest = new IndividualRequest();
+        Logger logger = (Logger) LoggerFactory.getLogger(TargetApplicationSubmissionService.class);
+
+        // Set logging level to debug so that afterCompletion logging is captured
+        logger.setLevel(ERROR);
+
+        // Create appender and add to logger
+        ListAppender<ILoggingEvent> listAppender = new ListAppender<>();
+        listAppender.start();
+        logger.addAppender(listAppender);
+
+        // Set-up the individual request object
+
+        individualRequest.setSdtRequestReference(TEST_1);
+        individualRequest.setRequestStatus(RECEIVED);
+        setUpIndividualRequest(individualRequest);
+
+        when(this.mockIndividualRequestDao.getRequestBySdtReference(TEST_1)).thenReturn(
+            individualRequest);
+
+        mockGlobalParameterCache(MCOL_INDV_REQ_DELAY, TARGET_APP_TIMEOUT, TARGET_APP_RESP_TIMEOUT, TWELVE_THOUSAND);
+
+        doAnswer(invocation -> {
+            IndividualRequest argument = invocation.getArgument(0);
+            argument.setRequestStatus(IIndividualRequest.IndividualRequestStatus.ACCEPTED.getStatus());
+            return null;
+        }).when(mockConsumerGateway).individualRequest(individualRequest, 1000, 12000);
+
+        when(this.mockIndividualRequestDao.queryAsCount(eq(IndividualRequest.class), isA(
+            Supplier.class))).thenReturn(0L);
+
+        // Setup dummy target response
+        SdtContext.getContext().setRawInXml(RESPONSE);
+
+        this.targetAppSubmissionService.processRequestToSubmit(TEST_1, false);
 
         List<ILoggingEvent> logList = listAppender.list;
 
@@ -301,8 +308,7 @@ public class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestB
         verify(mockCacheable).getValue(IGlobalParameter.class, TARGET_APP_TIMEOUT);
         verify(mockCacheable).getValue(IGlobalParameter.class, TARGET_APP_RESP_TIMEOUT);
         verify(mockIndividualRequestDao).getRequestBySdtReference(TEST_1);
-        verify(mockIndividualRequestDao).queryAsCount(eq(IndividualRequest.class), isA(
-            Supplier.class));
+        verify(mockIndividualRequestDao).queryAsCount(eq(IndividualRequest.class), isA(Supplier.class));
     }
 
     /**
@@ -311,7 +317,7 @@ public class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestB
      * is not marked as completed.
      */
     @Test
-    public void processRequestToSubmitSuccess() {
+    void processRequestToSubmitSuccess() {
 
         final IIndividualRequest individualRequest = new IndividualRequest();
 
@@ -322,27 +328,9 @@ public class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestB
         setUpIndividualRequest(individualRequest);
 
         when(this.mockIndividualRequestDao.getRequestBySdtReference(TEST_1)).thenReturn(
-                individualRequest);
+            individualRequest);
 
-        final IGlobalParameter individualReqProcessingDelay = new GlobalParameter();
-        individualReqProcessingDelay.setValue("10");
-        individualReqProcessingDelay.setName(MCOL_INDV_REQ_DELAY);
-        when(this.mockCacheable.getValue(IGlobalParameter.class, MCOL_INDV_REQ_DELAY)).thenReturn(
-                individualReqProcessingDelay);
-
-        individualRequest.setRequestStatus(FORWARDED);
-
-        final IGlobalParameter connectionTimeOutParam = new GlobalParameter();
-        connectionTimeOutParam.setName(TARGET_APP_TIMEOUT);
-        connectionTimeOutParam.setValue("1000");
-        when(this.mockCacheable.getValue(IGlobalParameter.class, TARGET_APP_TIMEOUT)).thenReturn(
-                connectionTimeOutParam);
-
-        final IGlobalParameter receiveTimeOutParam = new GlobalParameter();
-        receiveTimeOutParam.setName(TARGET_APP_RESP_TIMEOUT);
-        receiveTimeOutParam.setValue(TWELVE_THOUSAND);
-        when(this.mockCacheable.getValue(IGlobalParameter.class, TARGET_APP_RESP_TIMEOUT)).thenReturn(
-                receiveTimeOutParam);
+        mockGlobalParameterCache(MCOL_INDV_REQ_DELAY, TARGET_APP_TIMEOUT, TARGET_APP_RESP_TIMEOUT, TWELVE_THOUSAND);
 
         doAnswer(invocation -> {
             IndividualRequest argument = invocation.getArgument(0);
@@ -359,9 +347,9 @@ public class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestB
         // Setup dummy target response
         SdtContext.getContext().setRawInXml(RESPONSE);
 
-        this.targetAppSubmissionService.processRequestToSubmit(TEST_1);
+        this.targetAppSubmissionService.processRequestToSubmit(TEST_1, false);
 
-        verify(mockIndividualRequestDao,times(2)).persist(individualRequest);
+        verify(mockIndividualRequestDao, times(2)).persist(individualRequest);
         verify(mockConsumerGateway).individualRequest(individualRequest, 1000, 12000);
         verify(mockCacheable).getValue(IGlobalParameter.class, MCOL_INDV_REQ_DELAY);
         verify(mockCacheable).getValue(IGlobalParameter.class, TARGET_APP_TIMEOUT);
@@ -383,7 +371,7 @@ public class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestB
         listAppender.start();
         logger.addAppender(listAppender);
 
-        this.targetAppSubmissionService.processRequestToSubmit(TEST_1);
+        this.targetAppSubmissionService.processRequestToSubmit(TEST_1, false);
 
         List<ILoggingEvent> logList = listAppender.list;
 
@@ -397,7 +385,7 @@ public class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestB
      * Test method to test for the time out.
      */
     @Test
-    public void processRequestToSubmitTimeOut() {
+    void processRequestToSubmitTimeOut() {
         Logger logger = (Logger) LoggerFactory.getLogger(TargetApplicationSubmissionService.class);
         logger.setLevel(DEBUG);
 
@@ -410,27 +398,9 @@ public class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestB
         setUpIndividualRequest(individualRequest);
 
         when(this.mockIndividualRequestDao.getRequestBySdtReference(TEST_1)).thenReturn(
-                individualRequest);
+            individualRequest);
 
-        final IGlobalParameter individualReqProcessingDelay = new GlobalParameter();
-        individualReqProcessingDelay.setValue("10");
-        individualReqProcessingDelay.setName(MCOL_INDV_REQ_DELAY);
-        when(this.mockCacheable.getValue(IGlobalParameter.class, MCOL_INDV_REQ_DELAY)).thenReturn(
-                individualReqProcessingDelay);
-
-        individualRequest.setRequestStatus(FORWARDED);
-
-        final IGlobalParameter connectionTimeOutParam = new GlobalParameter();
-        connectionTimeOutParam.setName(TARGET_APP_TIMEOUT);
-        connectionTimeOutParam.setValue("1000");
-        when(this.mockCacheable.getValue(IGlobalParameter.class, TARGET_APP_TIMEOUT)).thenReturn(
-                connectionTimeOutParam);
-
-        final IGlobalParameter receiveTimeOutParam = new GlobalParameter();
-        receiveTimeOutParam.setName(TARGET_APP_RESP_TIMEOUT);
-        receiveTimeOutParam.setValue(TWELVE_THOUSAND);
-        when(this.mockCacheable.getValue(IGlobalParameter.class, TARGET_APP_RESP_TIMEOUT)).thenReturn(
-                receiveTimeOutParam);
+        mockGlobalParameterCache(MCOL_INDV_REQ_DELAY, TARGET_APP_TIMEOUT, TARGET_APP_RESP_TIMEOUT, TWELVE_THOUSAND);
 
         final TimeoutException timeoutEx = new TimeoutException("Timeout occurred", "Timeout occurred");
 
@@ -452,14 +422,14 @@ public class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestB
         maxForwardingAttemptsParam.setName(MAX_FORWARDING_ATTEMPTS);
         maxForwardingAttemptsParam.setValue("3");
         when(this.mockCacheable.getValue(IGlobalParameter.class, MAX_FORWARDING_ATTEMPTS)).thenReturn(
-                maxForwardingAttemptsParam);
+            maxForwardingAttemptsParam);
 
         // Create appender and add to logger
         ListAppender<ILoggingEvent> listAppender = new ListAppender<>();
         listAppender.start();
         logger.addAppender(listAppender);
 
-        this.targetAppSubmissionService.processRequestToSubmit(TEST_1);
+        this.targetAppSubmissionService.processRequestToSubmit(TEST_1, false);
 
         List<ILoggingEvent> logList = listAppender.list;
 
@@ -484,7 +454,7 @@ public class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestB
      * Test method to test for web service exception.
      */
     @Test
-    public void processRequestToSubmitForWebServiceException() {
+    void processRequestToSubmitForWebServiceException() {
 
         Logger logger = (Logger) LoggerFactory.getLogger(TargetApplicationSubmissionService.class);
         logger.setLevel(DEBUG);
@@ -528,7 +498,7 @@ public class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestB
         listAppender.start();
         logger.addAppender(listAppender);
 
-        this.targetAppSubmissionService.processRequestToSubmit(TEST_1);
+        this.targetAppSubmissionService.processRequestToSubmit(TEST_1, false);
 
         List<ILoggingEvent> logList = listAppender.list;
         assertFalse(logList.isEmpty());
@@ -548,7 +518,7 @@ public class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestB
      * Test method to test for the soap fault error.
      */
     @Test
-    public void processRequestToSubmitSoapFault() {
+    void processRequestToSubmitSoapFault() {
         Logger logger = (Logger) LoggerFactory.getLogger(TargetApplicationSubmissionService.class);
         logger.setLevel(DEBUG);
 
@@ -561,27 +531,9 @@ public class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestB
         setUpIndividualRequest(individualRequest);
 
         when(this.mockIndividualRequestDao.getRequestBySdtReference(TEST_1)).thenReturn(
-                individualRequest);
+            individualRequest);
 
-        final IGlobalParameter individualReqProcessingDelay = new GlobalParameter();
-        individualReqProcessingDelay.setValue("10");
-        individualReqProcessingDelay.setName(MCOL_INDV_REQ_DELAY);
-        when(this.mockCacheable.getValue(IGlobalParameter.class, MCOL_INDV_REQ_DELAY)).thenReturn(
-                individualReqProcessingDelay);
-
-        individualRequest.setRequestStatus(FORWARDED);
-
-        final IGlobalParameter connectionTimeOutParam = new GlobalParameter();
-        connectionTimeOutParam.setName(TARGET_APP_TIMEOUT);
-        connectionTimeOutParam.setValue("1000");
-        when(this.mockCacheable.getValue(IGlobalParameter.class, TARGET_APP_TIMEOUT)).thenReturn(
-                connectionTimeOutParam);
-
-        final IGlobalParameter receiveTimeOutParam = new GlobalParameter();
-        receiveTimeOutParam.setName(TARGET_APP_RESP_TIMEOUT);
-        receiveTimeOutParam.setValue(TWELVE_THOUSAND);
-        when(this.mockCacheable.getValue(IGlobalParameter.class, TARGET_APP_RESP_TIMEOUT)).thenReturn(
-                receiveTimeOutParam);
+        mockGlobalParameterCache(MCOL_INDV_REQ_DELAY, TARGET_APP_TIMEOUT, TARGET_APP_RESP_TIMEOUT, TWELVE_THOUSAND);
 
         final SoapFaultException soapEx = new SoapFaultException("Soap Fault", "Soap Fault occurred");
 
@@ -591,7 +543,7 @@ public class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestB
         listAppender.start();
         logger.addAppender(listAppender);
 
-        this.targetAppSubmissionService.processRequestToSubmit(TEST_1);
+        this.targetAppSubmissionService.processRequestToSubmit(TEST_1, false);
 
         List<ILoggingEvent> logList = listAppender.list;
         assertFalse(logList.isEmpty());
@@ -600,8 +552,8 @@ public class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestB
         logger.detachAndStopAllAppenders();
 
         assertEquals(
-                IIndividualRequest.IndividualRequestStatus.FORWARDED.getStatus(),
-                individualRequest.getRequestStatus(),"Individual Request status not as expected");
+            IIndividualRequest.IndividualRequestStatus.FORWARDED.getStatus(),
+            individualRequest.getRequestStatus(),"Individual Request status not as expected");
 
         assertNull(individualRequest
                        .getBulkSubmission().getCompletedDate(),"Bulk submission completed date should not be populated");
@@ -619,7 +571,7 @@ public class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestB
      * Test method to test for the rejected error.
      */
     @Test
-    public void processRequestToSubmitRejected() {
+    void processRequestToSubmitRejected() {
         Logger logger = (Logger) LoggerFactory.getLogger(TargetApplicationSubmissionService.class);
         logger.setLevel(DEBUG);
 
@@ -632,28 +584,9 @@ public class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestB
         setUpIndividualRequest(individualRequest);
 
         when(this.mockIndividualRequestDao.getRequestBySdtReference(TEST_1)).thenReturn(
-                individualRequest);
+            individualRequest);
 
-        final IGlobalParameter individualReqProcessingDelay = new GlobalParameter();
-        individualReqProcessingDelay.setValue("10");
-        individualReqProcessingDelay.setName(MCOL_INDV_REQ_DELAY);
-        when(this.mockCacheable.getValue(IGlobalParameter.class, MCOL_INDV_REQ_DELAY)).thenReturn(
-                individualReqProcessingDelay);
-
-        individualRequest.setRequestStatus(FORWARDED);
-
-        final IGlobalParameter connectionTimeOutParam = new GlobalParameter();
-        connectionTimeOutParam.setName(TARGET_APP_TIMEOUT);
-        connectionTimeOutParam.setValue("1000");
-        when(this.mockCacheable.getValue(IGlobalParameter.class, TARGET_APP_TIMEOUT)).thenReturn(
-                connectionTimeOutParam);
-
-        final IGlobalParameter receiveTimeOutParam = new GlobalParameter();
-        receiveTimeOutParam.setName(TARGET_APP_RESP_TIMEOUT);
-        receiveTimeOutParam.setValue(TWELVE_THOUSAND);
-        when(this.mockCacheable.getValue(IGlobalParameter.class, TARGET_APP_RESP_TIMEOUT)).thenReturn(
-                receiveTimeOutParam);
-
+        mockGlobalParameterCache(MCOL_INDV_REQ_DELAY, TARGET_APP_TIMEOUT, TARGET_APP_RESP_TIMEOUT, TWELVE_THOUSAND);
 
         doAnswer(invocation -> {
             IndividualRequest argument = invocation.getArgument(0);
@@ -670,7 +603,7 @@ public class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestB
         listAppender.start();
         logger.addAppender(listAppender);
 
-        this.targetAppSubmissionService.processRequestToSubmit(TEST_1);
+        this.targetAppSubmissionService.processRequestToSubmit(TEST_1, false);
 
         List<ILoggingEvent> logList = listAppender.list;
         assertFalse(logList.isEmpty());
@@ -681,9 +614,9 @@ public class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestB
         assertEquals( IBulkSubmission.BulkRequestStatus.COMPLETED.getStatus(),
                       individualRequest.getBulkSubmission().getSubmissionStatus(),BULK_SUBMISSION_STATUS_IS_INCORRECT);
         assertNotNull(individualRequest
-                .getBulkSubmission().getCompletedDate(),BULK_SUBMISSION_COMPLETED_DATE);
+                          .getBulkSubmission().getCompletedDate(),BULK_SUBMISSION_COMPLETED_DATE);
         assertNotNull(individualRequest
-                .getBulkSubmission().getUpdatedDate(), "Bulk submission updated date should be populated");
+                          .getBulkSubmission().getUpdatedDate(), "Bulk submission updated date should be populated");
 
         verify(mockConsumerGateway).individualRequest(individualRequest, 1000, 12000);
         verify(mockCacheable).getValue(IGlobalParameter.class, TARGET_APP_TIMEOUT);
@@ -698,7 +631,7 @@ public class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestB
      * that is to be rejected.
      */
     @Test
-    public void processDlqRequestRejected() {
+    void processDlqRequestRejected() {
         Logger logger = (Logger) LoggerFactory.getLogger(TargetApplicationSubmissionService.class);
         logger.setLevel(DEBUG);
         final String requestStatus = "REJECTED";
@@ -714,23 +647,23 @@ public class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestB
         contactNameParameter.setValue("Tester");
         contactNameParameter.setName("CONTACT_DETAILS");
         when(this.mockCacheable.getValue(IGlobalParameter.class, "CONTACT_DETAILS")).thenReturn(
-                contactNameParameter);
+            contactNameParameter);
 
         final IErrorMessage errorMsg = new ErrorMessage();
         errorMsg.setErrorCode("CUST_XML_ERR");
         errorMsg.setErrorDescription("SDT Client Data Error");
         errorMsg.setErrorText("Individual Request format could not be processed by "
-                + "the Target Application. Please check the data and resubmit the "
-                + "request, or contact {0} for assistance.");
+                                  + "the Target Application. Please check the data and resubmit the "
+                                  + "request, or contact {0} for assistance.");
 
         when(this.mockErrorMsgCacheable.getValue(IErrorMessage.class, "CUST_XML_ERR"))
-                .thenReturn(errorMsg);
+            .thenReturn(errorMsg);
 
         final String contactName = "Test";
 
         // Now create an ErrorLog object with the ErrorMessage object and the IndividualRequest object
         final IErrorLog errorLog =
-                new ErrorLog(errorMsg.getErrorCode(), MessageFormat.format(errorMsg.getErrorText(), contactName));
+            new ErrorLog(errorMsg.getErrorCode(), MessageFormat.format(errorMsg.getErrorText(), contactName));
 
         individualRequest.setErrorLog(errorLog);
         individualRequest.setRequestStatus(IIndividualRequest.IndividualRequestStatus.REJECTED.getStatus());
@@ -738,7 +671,7 @@ public class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestB
         final IBulkSubmission bulkSubmission = individualRequest.getBulkSubmission();
 
         when(
-                this.mockIndividualRequestDao.queryAsCount(eq(IndividualRequest.class), isA(Supplier.class))).thenReturn(0L);
+            this.mockIndividualRequestDao.queryAsCount(eq(IndividualRequest.class), isA(Supplier.class))).thenReturn(0L);
 
         ListAppender<ILoggingEvent> listAppender = new ListAppender<>();
         listAppender.start();
@@ -754,9 +687,9 @@ public class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestB
         assertEquals( IBulkSubmission.BulkRequestStatus.COMPLETED.getStatus(),
                       individualRequest.getBulkSubmission().getSubmissionStatus(),BULK_SUBMISSION_STATUS_IS_INCORRECT);
         assertNotNull(individualRequest
-                .getBulkSubmission().getCompletedDate(), BULK_SUBMISSION_COMPLETED_DATE);
+                          .getBulkSubmission().getCompletedDate(), BULK_SUBMISSION_COMPLETED_DATE);
         assertNotNull(individualRequest
-                .getBulkSubmission().getUpdatedDate(),"Bulk submission updated date should be populated");
+                          .getBulkSubmission().getUpdatedDate(),"Bulk submission updated date should be populated");
         assertFalse( individualRequest.isDeadLetter(),"Individual Request should not be marked as dead letter" );
 
         verify(mockIndividualRequestDao).persist(bulkSubmission);
@@ -772,7 +705,7 @@ public class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestB
      * that is to be Forwarded.
      */
     @Test
-    public void processDlqRequestForwarded() {
+    void processDlqRequestForwarded() {
 
         final String sdtRequestRef = "TEST_2";
         final IIndividualRequest individualRequest = new IndividualRequest();
@@ -787,7 +720,7 @@ public class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestB
 
         assertFalse(individualRequest.isDeadLetter(),"Individual Request should not be marked as dead letter");
         assertEquals(IIndividualRequest.IndividualRequestStatus.FORWARDED.getStatus(),
-                individualRequest.getRequestStatus(),"Individual Request status is not FORWARDED");
+                     individualRequest.getRequestStatus(),"Individual Request status is not FORWARDED");
 
         verify(mockIndividualRequestDao).persist(individualRequest);
     }
@@ -838,28 +771,215 @@ public class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestB
         bulkSubmission.setIndividualRequests(requests);
 
         request.setBulkSubmission(bulkSubmission);
+        request.setRequestPayload("Test Xml".getBytes(StandardCharsets.UTF_8));
     }
 
     @Test
-    void testSetIndividualRequestDaoConsumerWriter(){
-        IIndividualRequestDao individualRequestDaoMock = mock(IndividualRequestDao.class);
-        IConsumerGateway consumerGatewayMock = mock(ConsumerGateway.class);
-        IMessageWriter mockIMessageWriter = mock(MessageWriter.class);
+    void processCCDReferenceRequestToSubmitSuccess() {
+        final String sdtRequestRef = TEST_1;
+        final IIndividualRequest individualRequest = new IndividualRequest();
+        individualRequest.setSdtRequestReference(sdtRequestRef);
+        individualRequest.setRequestStatus(RECEIVED);
+        setUpIndividualRequest(individualRequest);
+        individualRequest.setRequestType(JUDGMENT.getType());
 
-        targetAppSubmissionService.setMessageWriter(mockIMessageWriter);
-        targetAppSubmissionService.setRequestConsumer(consumerGatewayMock);
-        targetAppSubmissionService.setIndividualRequestDao(individualRequestDaoMock);
+        when(this.mockIndividualRequestDao.getRequestBySdtReference(sdtRequestRef)).thenReturn(individualRequest);
 
-        Object consumerResult = this.getAccessibleField(TargetApplicationSubmissionService.class, "requestConsumer",
-                                                IConsumerGateway.class, targetAppSubmissionService);
-        Object messageWriterResult = this.getAccessibleField(TargetApplicationSubmissionService.class, "messageWriter",
-                                                             IMessageWriter.class, targetAppSubmissionService);
+        final IGlobalParameter individualReqProcessingDelay = new GlobalParameter();
+        individualReqProcessingDelay.setValue("10");
+        individualReqProcessingDelay.setName(MCOL_INDV_REQ_DELAY);
+        when(this.mockCacheable.getValue(IGlobalParameter.class, MCOL_INDV_REQ_DELAY)).thenReturn(individualReqProcessingDelay);
+
+        final IGlobalParameter connectionTimeOutParam = new GlobalParameter();
+        connectionTimeOutParam.setName(TARGET_APP_TIMEOUT);
+        connectionTimeOutParam.setValue("1000");
+        when(this.mockCacheable.getValue(IGlobalParameter.class, TARGET_APP_TIMEOUT)).thenReturn(connectionTimeOutParam);
+
+        final IGlobalParameter receiveTimeOutParam = new GlobalParameter();
+        receiveTimeOutParam.setName(TARGET_APP_RESP_TIMEOUT);
+        receiveTimeOutParam.setValue(TWELVE_THOUSAND);
+        when(this.mockCacheable.getValue(IGlobalParameter.class, TARGET_APP_RESP_TIMEOUT)).thenReturn(receiveTimeOutParam);
+
+        final List<IIndividualRequest> indRequests = new ArrayList<>();
+        indRequests.add(individualRequest);
+
+        when(this.mockIndividualRequestDao.queryAsCount(same(IndividualRequest.class), isA(Supplier.class))).thenReturn(Long.valueOf(indRequests.size()));
+        when(requestTypeXmlNodeValidator.isCMCRequestType(anyString(), anyString(), anyString(), anyBoolean())).thenReturn(true);
+
+        SdtContext.getContext().setRawInXml(RESPONSE);
+
+        this.targetAppSubmissionService.processRequestToSubmit(sdtRequestRef, false);
+        verify(mockCmcConsumerGateway).individualRequest(any(IIndividualRequest.class), anyLong(), anyLong());
+        verify(mockCacheable).getValue(IGlobalParameter.class, TARGET_APP_RESP_TIMEOUT);
+        verify(mockCacheable).getValue(IGlobalParameter.class, TARGET_APP_TIMEOUT);
+        verify(mockCacheable).getValue(IGlobalParameter.class, MCOL_INDV_REQ_DELAY);
+    }
+
+    @Test
+    void processCCDReferenceFailsOnUnSupportedRequest() {
+        final String sdtRequestRef = TEST_1;
+        final IIndividualRequest individualRequest = new IndividualRequest();
+        individualRequest.setSdtRequestReference(sdtRequestRef);
+        individualRequest.setRequestStatus(RECEIVED);
+        setUpIndividualRequest(individualRequest);
+        individualRequest.setRequestType(CLAIM.getType());
+
+        SdtContext.getContext().setRawInXml(RESPONSE);
+
+        final IErrorMessage errorMsg = expectErrorMessage(
+            "CUST_XML_ERR",
+            "SDT Client Data Error",
+            "Exception calling target application for SDT reference"
+        );
+
+        final String contactName = "Test";
+        final IErrorLog errorLog =
+            new ErrorLog(errorMsg.getErrorCode(), MessageFormat.format(errorMsg.getErrorText(), contactName));
+
+        individualRequest.setErrorLog(errorLog);
+        individualRequest.setRequestStatus(IIndividualRequest.IndividualRequestStatus.REJECTED.getStatus());
+        when(this.mockIndividualRequestDao.getRequestBySdtReference(sdtRequestRef)).thenReturn(individualRequest);
+
+        this.targetAppSubmissionService.processRequestToSubmit(sdtRequestRef, false);
+
+        verify(mockConsumerGateway).individualRequest(any(IIndividualRequest.class), anyLong(), anyLong());
+    }
+
+    @Test
+    void processCCDReferenceRequestWhenCaseNotOffLine() {
+        final String sdtRequestRef = "TEST_1";
+        final IIndividualRequest individualRequest = new IndividualRequest();
+
+        individualRequest.setSdtRequestReference(sdtRequestRef);
+        individualRequest.setRequestStatus(RECEIVED);
+        setUpIndividualRequest(individualRequest);
+        individualRequest.setRequestType(JUDGMENT.getType());
+        individualRequest.setRequestPayload("Test Xml".getBytes(StandardCharsets.UTF_8));
+
+        when(this.mockIndividualRequestDao.getRequestBySdtReference(sdtRequestRef)).thenReturn(individualRequest);
+
+        mockGlobalParameterCache("MCOL_INDV_REQ_DELAY",
+                                 "TARGET_APP_TIMEOUT",
+                                 "TARGET_APP_RESP_TIMEOUT",
+                                 "12000");
+
+        when(requestTypeXmlNodeValidator.isCMCRequestType(anyString(), anyString(), anyString(), anyBoolean())).thenReturn(true);
 
 
-        assertEquals(consumerGatewayMock, consumerResult, "consumerGateway should be correctly set");
-        assertNotNull(targetAppSubmissionService.getIndividualRequestDao(),"Object should have been populated");
-        assertEquals(targetAppSubmissionService.getIndividualRequestDao(),individualRequestDaoMock,"Object should have been populated");
-        assertEquals(mockIMessageWriter, messageWriterResult,"MessageWriter should be correctly set");
+        this.targetAppSubmissionService.processRequestToSubmit(sdtRequestRef, false);
+
+        assertEquals(IIndividualRequest.IndividualRequestStatus.FORWARDED.getStatus(), individualRequest.getRequestStatus());
+
+        verify(mockCmcConsumerGateway).individualRequest(any(IIndividualRequest.class), anyLong(), anyLong());
+        verify(mockIndividualRequestDao, times(2)).persist(individualRequest);
+        verify(mockCacheable).getValue(IGlobalParameter.class, "TARGET_APP_RESP_TIMEOUT");
+        verify(mockCacheable).getValue(IGlobalParameter.class, "TARGET_APP_TIMEOUT");
+        verify(mockCacheable).getValue(IGlobalParameter.class, "MCOL_INDV_REQ_DELAY");
+        verify(mockIndividualRequestDao).getRequestBySdtReference(sdtRequestRef);
+        verify(requestTypeXmlNodeValidator, times(2)).isCMCRequestType(anyString(), anyString(), anyString(), anyBoolean());
+    }
+
+    @Test
+    void processCCDReferenceRequestFailOnCaseOffLine() {
+        final String sdtRequestRef = "TEST_1";
+        final IIndividualRequest individualRequest = new IndividualRequest();
+
+        individualRequest.setSdtRequestReference(sdtRequestRef);
+        individualRequest.setRequestStatus("Received");
+        setUpIndividualRequest(individualRequest);
+        individualRequest.setRequestType(JUDGMENT.getType());
+
+        when(this.mockIndividualRequestDao.getRequestBySdtReference(sdtRequestRef)).thenReturn(individualRequest);
+
+        individualRequest.setSdtRequestReference(sdtRequestRef);
+        individualRequest.setRequestStatus(RECEIVED);
+        setUpIndividualRequest(individualRequest);
+        individualRequest.setRequestType(JUDGMENT.getType());
+        individualRequest.setRequestPayload("Test Xml".getBytes(StandardCharsets.UTF_8));
+
+        when(this.mockIndividualRequestDao.getRequestBySdtReference(sdtRequestRef)).thenReturn(individualRequest);
+
+        mockGlobalParameterCache("MCOL_INDV_REQ_DELAY",
+                                 "TARGET_APP_TIMEOUT",
+                                 "TARGET_APP_RESP_TIMEOUT",
+                                 "12000");
+
+        when(requestTypeXmlNodeValidator.isCMCRequestType(anyString(), anyString(), anyString(), anyBoolean())).thenReturn(true);
+
+
+        this.targetAppSubmissionService.processRequestToSubmit(sdtRequestRef, false);
+
+        assertEquals(IIndividualRequest.IndividualRequestStatus.FORWARDED.getStatus(), individualRequest.getRequestStatus());
+
+        verify(mockCmcConsumerGateway).individualRequest(any(IIndividualRequest.class), anyLong(), anyLong());
+        verify(mockIndividualRequestDao, times(2)).persist(individualRequest);
+        verify(mockCacheable).getValue(IGlobalParameter.class, "TARGET_APP_RESP_TIMEOUT");
+        verify(mockCacheable).getValue(IGlobalParameter.class, "TARGET_APP_TIMEOUT");
+        verify(mockCacheable).getValue(IGlobalParameter.class, "MCOL_INDV_REQ_DELAY");
+        verify(mockIndividualRequestDao).getRequestBySdtReference(sdtRequestRef);
+        verify(requestTypeXmlNodeValidator, times(2)).isCMCRequestType(anyString(), anyString(), anyString(), anyBoolean());
+    }
+
+    private void mockGlobalParameterCache(String MCOL_INDV_REQ_DELAY, String TARGET_APP_TIMEOUT, String TARGET_APP_RESP_TIMEOUT, String value) {
+        final IGlobalParameter individualReqProcessingDelay = new GlobalParameter();
+        individualReqProcessingDelay.setValue("10");
+        individualReqProcessingDelay.setName(MCOL_INDV_REQ_DELAY);
+        when(this.mockCacheable.getValue(IGlobalParameter.class, MCOL_INDV_REQ_DELAY)).thenReturn(
+            individualReqProcessingDelay);
+
+        final IGlobalParameter connectionTimeOutParam = new GlobalParameter();
+        connectionTimeOutParam.setName(TARGET_APP_TIMEOUT);
+        connectionTimeOutParam.setValue("1000");
+        when(this.mockCacheable.getValue(IGlobalParameter.class, TARGET_APP_TIMEOUT)).thenReturn(connectionTimeOutParam);
+
+        final IGlobalParameter receiveTimeOutParam = new GlobalParameter();
+        receiveTimeOutParam.setName(TARGET_APP_RESP_TIMEOUT);
+        receiveTimeOutParam.setValue(value);
+        when(this.mockCacheable.getValue(IGlobalParameter.class,
+                                         TARGET_APP_RESP_TIMEOUT
+        )).thenReturn(receiveTimeOutParam);
+    }
+
+    @Test
+    void processClaimRequestWhenBulkCustomerReadyForAlternateService() {
+        final String sdtRequestRef = "TEST_1";
+        final IIndividualRequest individualRequest = new IndividualRequest();
+        individualRequest.setSdtRequestReference(sdtRequestRef);
+        individualRequest.setRequestStatus("Received");
+        setUpIndividualRequest(individualRequest);
+        individualRequest.setRequestType(CLAIM.getType());
+        individualRequest.setRequestPayload("Test Xml".getBytes(StandardCharsets.UTF_8));
+        individualRequest.setRequestStatus("Forwarded");
+        individualRequest.getBulkSubmission().getBulkCustomer().setReadyForAlternateService(true);
+
+        mockGlobalParameterCache("MCOL_INDV_REQ_DELAY",
+                                 "TARGET_APP_TIMEOUT",
+                                 "TARGET_APP_RESP_TIMEOUT",
+                                 "12000");
+
+        final IErrorMessage errorMsg = expectErrorMessage(
+            "CUST_XML_ERR",
+            "SDT Client Data Error",
+            "Exception calling target application for SDT reference"
+        );
+
+        final String contactName = "Test";
+        final IErrorLog errorLog =
+            new ErrorLog(errorMsg.getErrorCode(), MessageFormat.format(errorMsg.getErrorText(), contactName));
+
+        individualRequest.setErrorLog(errorLog);
+        individualRequest.setRequestStatus(IIndividualRequest.IndividualRequestStatus.REJECTED.getStatus());
+        when(this.mockIndividualRequestDao.getRequestBySdtReference(sdtRequestRef)).thenReturn(individualRequest);
+        doCallRealMethod().when(requestTypeXmlNodeValidator).isCMCClaimRequest(CLAIM.getType(), true);
+
+        this.targetAppSubmissionService.processRequestToSubmit(sdtRequestRef, false);
+
+        verify(mockCmcConsumerGateway).individualRequest(any(IIndividualRequest.class), anyLong(), anyLong());
+        verify(requestTypeXmlNodeValidator, times(2)).isCMCClaimRequest(CLAIM.getType(), true);
+        verify(mockIndividualRequestDao, times(2)).persist(individualRequest);
+        verify(mockCacheable).getValue(IGlobalParameter.class, "TARGET_APP_RESP_TIMEOUT");
+        verify(mockCacheable).getValue(IGlobalParameter.class, "TARGET_APP_TIMEOUT");
+        verify(mockCacheable).getValue(IGlobalParameter.class, "MCOL_INDV_REQ_DELAY");
     }
 
 
@@ -874,4 +994,15 @@ public class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestB
         return verifyLog;
     }
 
+    @NotNull
+    private IErrorMessage expectErrorMessage(String custXmlErr, String sdtClientDataError, String errorText) {
+        final IErrorMessage errorMsg = new ErrorMessage();
+        errorMsg.setErrorCode(custXmlErr);
+        errorMsg.setErrorDescription(sdtClientDataError);
+        errorMsg.setErrorText(errorText);
+
+        return errorMsg;
+    }
+
 }
+

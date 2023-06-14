@@ -1,5 +1,10 @@
 package uk.gov.moj.sdt.producers.sdtws.config;
 
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -11,12 +16,6 @@ import org.springframework.jmx.export.assembler.MethodNameBasedMBeanInfoAssemble
 import org.springframework.jmx.support.RegistrationPolicy;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 import uk.gov.moj.sdt.utils.mbeans.api.ISdtManagementMBean;
-import uk.gov.moj.sdt.utils.mbeans.api.ISdtMetricsMBean;
-
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -28,9 +27,6 @@ class ProducersConfigTest extends AbstractSdtUnitTestBase {
 
     @Mock
     ISdtManagementMBean mockSdtManagementMBean;
-
-    @Mock
-    ISdtMetricsMBean mockSdtMetricsMBean;
 
     @BeforeEach
     @Override
@@ -80,7 +76,7 @@ class ProducersConfigTest extends AbstractSdtUnitTestBase {
 
     @Test
     void testMBeanExporterProducerMetrics() {
-        MBeanExporter result = producersConfig.mBeanExporterProducerMetrics(mockSdtMetricsMBean);
+        MBeanExporter result = producersConfig.mBeanExporterProducerMetrics();
 
         Map<String, Object> resultBeans = (Map<String, Object>) getAccessibleField(
             MBeanExporter.class,
@@ -105,8 +101,7 @@ class ProducersConfigTest extends AbstractSdtUnitTestBase {
 
         assertEquals(1, resultBeans.size());
         assertTrue(resultBeans.containsKey("bean:name=sdtProducersMetrics"), "beans map does not contain entry with expected key");
-        assertEquals(mockSdtMetricsMBean, resultBeans.get("bean:name=sdtProducersMetrics"), "beans map does not contain expected bean");
-        assertEquals(20, resultManagedMethods.size());
+        assertEquals(19, resultManagedMethods.size());
         HashSet<String> expectedMethods = new HashSet<>();
         expectedMethods.addAll(List.of(
             "getTime",
@@ -126,7 +121,6 @@ class ProducersConfigTest extends AbstractSdtUnitTestBase {
             "getLastRefStats",
             "getPerformanceLoggingString",
             "uncache",
-            "setPerformanceLoggingFlags",
             "reset",
             "dumpMetrics"
         ));
