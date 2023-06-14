@@ -1,9 +1,9 @@
 output "vaultName" {
-  value = module.civil_sdt_key_vault.key_vault_name
+  value = data.azurerm_key_vault.key_vault.name
 }
 
 output "vaultUri" {
-  value = module.civil_sdt_key_vault.key_vault_uri
+  value = data.azurerm_key_vault.key_vault.vault_uri
 }
 
 output "sb_primary_send_and_listen_connection_string" {

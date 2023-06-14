@@ -18,5 +18,5 @@ resource "azurerm_application_insights" "appinsights" {
 resource "azurerm_key_vault_secret" "appinsights-connection-string" {
   name         = "civil-sdt-appinsights-connection-string"
   value        = azurerm_application_insights.appinsights.connection_string
-  key_vault_id = module.civil_sdt_key_vault.key_vault_id
+  key_vault_id = data.azurerm_key_vault.key_vault.id
 }
