@@ -14,7 +14,7 @@ java:
   keyVaults:
     civil:
       secrets:
-        - name: s2s-secret
+        - name: civil-sdt-service-s2s-secret
           alias: CIVIL_SDT_S2S_KEY
         - name: civil-sdt-POSTGRES-USER
           alias: SDT_DB_USERNAME

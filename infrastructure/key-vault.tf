@@ -19,7 +19,7 @@ data "azurerm_key_vault_secret" "key_from_vault" {
 }
 
 resource "azurerm_key_vault_secret" "s2s" {
-  name         = "s2s-secret"
+  name         = "civil-sdt-service-s2s-secret"
   value        = data.azurerm_key_vault_secret.key_from_vault.value
   key_vault_id = data.azurerm_key_vault.key_vault.id
 }
