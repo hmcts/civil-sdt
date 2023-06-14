@@ -86,7 +86,7 @@ feign:
         loggerLevel: FULL
 idam:
   s2s-authorised:
-    services: ${CIVIL_SDT_S2S_AUTHORISED_SERVICES:}
+    services: ${CIVIL_SDT_S2S_AUTHORISED_SERVICES:civil_sdt}
   s2s-auth:
     microservice: civil_sdt
     totp_secret: ${CIVIL_SDT_S2S_KEY:AAAAAAAAAAAAAAAA}
