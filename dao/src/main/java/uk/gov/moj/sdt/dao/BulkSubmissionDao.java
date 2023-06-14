@@ -69,8 +69,8 @@ public class BulkSubmissionDao extends GenericDao<BulkSubmission> implements IBu
         TypedQuery<BulkSubmission> typedQuery = getEntityManager().createQuery(criteriaQuery.select(root)
                 .where(sdtCustomerPredicate, customerReferencePredicate, sdtDatePredicate));
 
-        try {
-            return typedQuery.getSingleResult();
+try {
+            return typedQuery.getResultStream().findFirst().orElse(null);
         } catch(NoResultException e) {
             return null;
         }
@@ -97,7 +97,7 @@ public class BulkSubmissionDao extends GenericDao<BulkSubmission> implements IBu
                 .where(sdtCustomerPredicate, sdtBulkRefPredicate, sdtDatePredicate));
 
         try {
-            return typedQuery.getSingleResult();
+            return typedQuery.getResultStream().findFirst().orElse(null);
         } catch(NoResultException e) {
             return null;
         }

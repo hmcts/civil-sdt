@@ -36,6 +36,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import uk.gov.moj.sdt.response.SubmitQueryResponse;
+import uk.gov.moj.sdt.cmc.consumers.util.ResponsesSummaryUtil;
 import uk.gov.moj.sdt.consumers.api.IConsumerGateway;
 import uk.gov.moj.sdt.consumers.exception.OutageException;
 import uk.gov.moj.sdt.consumers.exception.SoapFaultException;
@@ -79,6 +81,8 @@ public class SubmitQueryService implements ISubmitQueryService {
      */
     private IConsumerGateway requestConsumer;
 
+    private IConsumerGateway cmcRequestConsumer;
+
     /**
      * The ICacheable reference to the global parameters cache.
      */
@@ -104,9 +108,18 @@ public class SubmitQueryService implements ISubmitQueryService {
      */
     private IBulkCustomerDao bulkCustomerDao;
 
+    private ResponsesSummaryUtil responsesSummaryUtil;
+
+    /**
+     * Place holder object to sync processing.
+     */
+    private Object lock = new Object();
+
     @Autowired
     public SubmitQueryService(@Qualifier("ConsumerGateway")
                                   IConsumerGateway requestConsumer,
+                              @Qualifier("CMCConsumerGateway")
+                              IConsumerGateway cmcRequestConsumer,
                               @Qualifier("GlobalParametersCache")
                                   ICacheable globalParametersCache,
                               @Qualifier("ErrorMessagesCache")
@@ -116,19 +129,17 @@ public class SubmitQueryService implements ISubmitQueryService {
                               @Qualifier("SubmitQueryResponseXmlParser")
                                   GenericXmlParser queryResponseXmlParser,
                               @Qualifier("BulkCustomerDao")
-                                  IBulkCustomerDao bulkCustomerDao) {
+                                  IBulkCustomerDao bulkCustomerDao,
+                              ResponsesSummaryUtil responsesSummaryUtil) {
         this.requestConsumer = requestConsumer;
+        this.cmcRequestConsumer = cmcRequestConsumer;
         this.globalParametersCache = globalParametersCache;
         this.errorMessagesCache = errorMessagesCache;
         this.queryRequestXmlParser = queryRequestXmlParser;
         this.queryResponseXmlParser = queryResponseXmlParser;
         this.bulkCustomerDao = bulkCustomerDao;
+        this.responsesSummaryUtil = responsesSummaryUtil;
     }
-
-    /**
-     * Place holder object to sync processing.
-     */
-    private Object lock = new Object();
 
     /**
      * threshold for incoming requests for each target application.
@@ -276,6 +287,8 @@ public class SubmitQueryService implements ISubmitQueryService {
         // Setup raw XML from target application for addition to raw out stream
         // in interceptor.
         SdtContext.getContext().setRawOutXml(targetAppResponse);
+
+        LOGGER.debug("rawOutXml {}", SdtContext.getContext().getRawOutXml());
     }
 
     /**
@@ -409,16 +422,31 @@ public class SubmitQueryService implements ISubmitQueryService {
         long connectionTimeOut = 0;
 
         if (requestTimeOutParam != null) {
-            requestTimeOut = Long.valueOf(requestTimeOutParam.getValue());
+            requestTimeOut = Long.parseLong(requestTimeOutParam.getValue());
         }
 
         if (connectionTimeOutParam != null) {
-            connectionTimeOut = Long.valueOf(connectionTimeOutParam.getValue());
+            connectionTimeOut = Long.parseLong(connectionTimeOutParam.getValue());
         }
 
         LOGGER.debug("Send submit query request to target application");
 
-        this.requestConsumer.submitQuery(submitQueryRequest, connectionTimeOut, requestTimeOut);
+        SubmitQueryResponse mcolSubmitQueryResponse = requestConsumer.submitQuery(submitQueryRequest, connectionTimeOut, requestTimeOut);
+        SubmitQueryResponse cmcSubmitQueryResponse = cmcRequestConsumer.submitQuery(submitQueryRequest, connectionTimeOut, requestTimeOut);
+
+        // adjust results count
+        String summaryResultsXML = "";
+        if (null != cmcSubmitQueryResponse && null != cmcSubmitQueryResponse.getClaimDefencesResults()
+                && !cmcSubmitQueryResponse.getClaimDefencesResults().isEmpty()) {
+            submitQueryRequest.setResultCount(submitQueryRequest.getResultCount()
+                    + cmcSubmitQueryResponse.getClaimDefencesResults().size());
+
+            summaryResultsXML = responsesSummaryUtil.getSummaryResults(mcolSubmitQueryResponse,
+                    cmcSubmitQueryResponse.getClaimDefencesResults());
+        }
+
+        // Set summary results XML to be picked up later
+        SdtContext.getContext().setClaimDefencesSummaryResultsXml(summaryResultsXML);
     }
 
     /**

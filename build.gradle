@@ -14,7 +14,6 @@ plugins {
   id 'com.github.spacialcircumstances.gradle-cucumber-reporting' version '0.1.23'
   id 'org.sonarqube' version '3.4.0.2513'
   id 'uk.gov.hmcts.java' version '0.12.27'
-  id "com.jfrog.bintray" version "1.8.5" apply false
   id "info.solidsoft.pitest" version '1.5.1' apply(false)
   id "org.jetbrains.gradle.plugin.idea-ext" version "0.7"
 }
@@ -163,13 +162,13 @@ ext {
   postgresqlVersion = '42.5.1'
   reformLogging= '5.1.9'
   restAssuredVersion = '4.3.0!!'
-  springCloudVersion = '2022.0.0'
-  tomcatVersion = '9.0.74'
+  springCloudVersion = '2021.0.6'
+  tomcatVersion = '9.0.75'
   cxfVersion = '3.5.5'
   jaxwsVersion = "2.3.1"
   activeMQVersion = '5.16.1'
   testcontainers = '1.17.5'
-  sdtCommonVersion = '1.0.0-SDT-85.1.1'
+  sdtCommonVersion = '1.0.0-SDT-130.3.0'
   limits = [
     'instruction': 99,
     'branch'     : 99,
@@ -202,22 +201,22 @@ dependencyManagement {
   imports {
     mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
   }
+  dependencies {
+    // CVE-2023-24998
+    dependencySet(group: 'commons-fileupload', version: '1.5') {
+      entry 'commons-fileupload'
+    }
+    dependencySet(group: 'org.apache.tomcat.embed', version: '9.0.75') {
+      entry 'tomcat-embed-core'
+      entry 'tomcat-embed-el'
+      entry 'tomcat-embed-websocket'
+    }
+  }
 }
 
 allprojects {
   group 'uk.gov.hmcts.civil.sdt'
   version '0.0.1-SNAPSHOT'
-
-  repositories {
-    mavenLocal()
-    mavenCentral()
-    maven {
-      url  "https://jitpack.io"
-    }
-    flatDir {
-      dirs "$rootProject.projectDir/libs"
-    }
-  }
 
   apply plugin: 'java'
 
@@ -277,6 +276,7 @@ allprojects {
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-aop'
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-cache'
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa'
+    implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign', version: '4.0.0'
     implementation(group: 'org.springframework.boot', name: 'spring-boot-starter-jdbc') {
       exclude group: 'org.apache.tomcat', module: 'tomcat-jdbc'
     }
@@ -286,6 +286,7 @@ allprojects {
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web-services'
     implementation group: 'org.springframework.security', name: 'spring-security-config'
     implementation group: 'org.springframework.security', name: 'spring-security-web'
+    implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign'
 
 
     implementation group: 'com.github.hmcts', name: 'civil-sdt-common', version: sdtCommonVersion
@@ -295,6 +296,9 @@ allprojects {
       tests to fail when running under openJDK 11.0.17 and above.  This dependency can be removed when the bug is fixed.
     */
     implementation group: 'xerces', name: 'xercesImpl', version: '2.12.2'
+    implementation group: 'com.github.hmcts', name: 'idam-java-client', version: '3.0.1'
+    implementation group: 'com.github.hmcts', name: 'service-auth-provider-java-client', version: '4.0.3'
+
     testImplementation libraries.junit5
     testImplementation group: 'com.fasterxml.jackson.module', name: 'jackson-module-jaxb-annotations', version: '2.13.2'
     testImplementation "com.github.hmcts:fortify-client:1.2.2:all"
@@ -401,6 +405,27 @@ subprojects { subproject ->
   apply plugin: 'io.spring.dependency-management'
   apply plugin: 'jacoco'
   apply plugin: 'uk.gov.hmcts.java'
+
+  dependencyManagement {
+    imports {
+      mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+    }
+    dependencies {
+      // CVE-2023-24998
+      dependencySet(group: 'commons-fileupload', version: '1.5') {
+        entry 'commons-fileupload'
+      }
+      dependencySet(group: 'org.apache.tomcat.embed', version: '9.0.75') {
+        entry 'tomcat-embed-core'
+        entry 'tomcat-embed-el'
+        entry 'tomcat-embed-websocket'
+      }
+    }
+  }
+
+  dependencies {
+    implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign'
+  }
 
   sourceSets {
     unitTest {

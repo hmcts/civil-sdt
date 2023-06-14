@@ -43,6 +43,15 @@ spring:
       connectionTimeout: 60000
   jpa:
     database: postgresql
+    properties:
+      hibernate:
+        order_inserts: true
+        order_updates: true
+        jdbc:
+          batch_versioned_data: true
+          batch_size: 100
+        temp:
+          use_jdbc_metadata_defaults: false
   flyway:
     ignore-missing-migrations: 'true'
     baseline-version: '0001'
@@ -51,7 +60,7 @@ spring:
 
 sdt:
   tx-timeout:
-    default:  1000
+    default: 1000
   service:
       config:
           concurrentConsumers: ${CONCURRENT_CONSUMERS:1}
@@ -64,3 +73,29 @@ sdt:
   purge:
     cron: ${PURGE_SCHEDULE_CRON:0 10 5 * * ?}
     commitInterval: ${PURGE_COMMIT_INTERVAL:1000}
+feign:
+  circuitbreaker:
+    enabled: true
+  client:
+    config:
+      default:
+        connectTimeout: 5000
+        readTimeout: 5000
+        loggerLevel: BASIC
+      postFeignClient:
+        loggerLevel: FULL
+idam:
+  s2s-authorised:
+    services: ${CIVIL_SDT_S2S_AUTHORISED_SERVICES:civil_sdt}
+  s2s-auth:
+    microservice: civil_sdt
+    totp_secret: ${CIVIL_SDT_S2S_KEY:AAAAAAAAAAAAAAAA}
+    url: ${IDAM_S2S_URL:http://localhost:4502}
+  sdt:
+    username: ${IDAM_SDT_USERNAME:master.sdt@gmail.com}
+    password: ${IDAM_SDT_PASSWORD:Pa55word11}
+  api:
+    url: ${IDAM_API_URL:http://localhost:5000}
+civil:
+  api:
+    url: ${CIVIL_API_URL:http://localhost:5000}

@@ -30,6 +30,8 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.interceptors.in;
 
+import java.lang.reflect.Field;
+
 import org.apache.cxf.binding.soap.SoapMessage;
 import org.apache.cxf.interceptor.Fault;
 import org.apache.cxf.phase.Phase;
@@ -37,11 +39,8 @@ import org.apache.cxf.phase.PhaseInterceptorChain;
 import org.apache.cxf.wsdl.interceptors.DocLiteralInInterceptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
 import uk.gov.moj.sdt.interceptors.AbstractSdtInterceptor;
 import uk.gov.moj.sdt.utils.mbeans.SdtMetricsMBean;
-
-import java.lang.reflect.Field;
 
 /**
  * Interceptor class which handles bulk submission message received by SDT.
@@ -50,7 +49,6 @@ import java.lang.reflect.Field;
  *
  * @author Robin Compston
  */
-@Component("SdtUnmarshallInterceptor")
 public class SdtUnmarshallInterceptor extends AbstractSdtInterceptor {
     /**
      * Logger object.

@@ -1,12 +1,14 @@
 package uk.gov.moj.sdt.consumers.config;
 
-import org.apache.cxf.binding.soap.SoapMessage;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.cxf.feature.LoggingFeature;
 import org.apache.cxf.interceptor.Interceptor;
 import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
 import org.apache.cxf.message.Message;
-import org.apache.cxf.phase.PhaseInterceptor;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -18,11 +20,6 @@ import uk.gov.moj.sdt.interceptors.out.CacheEndOutboundInterceptor;
 import uk.gov.moj.sdt.interceptors.out.CacheSetupOutboundInterceptor;
 import uk.gov.moj.sdt.interceptors.out.XmlOutboundInterceptor;
 import uk.gov.moj.sdt.ws._2013.sdt.targetappinternalendpoint.ITargetAppInternalEndpointPortType;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 @ComponentScan("uk.gov.moj.sdt")
 @Configuration
@@ -39,17 +36,15 @@ public class ConsumersConfig {
 
     @Bean
     @Scope("prototype")
-    public ITargetAppInternalEndpointPortType createTargetAppInternalEndpointPortType(@Qualifier("XmlOutboundInterceptor")
-                                                                                          XmlOutboundInterceptor xmlOutboundInterceptor,
-                                                                                      @Qualifier("CacheSetupOutboundInterceptor")
-                                                                                      CacheSetupOutboundInterceptor cacheSetupOutboundInterceptor,
-                                                                                      @Qualifier("CacheEndOutboundInterceptor")
-                                                                                          CacheEndOutboundInterceptor cacheEndOutboundInterceptor,
-                                                                                      @Qualifier("XmlInboundInterceptor")
-                                                                                          XmlInboundInterceptor xmlInboundInterceptor,
-                                                                                      @Qualifier("SdtUnmarshallInterceptor")
-                                                                                          SdtUnmarshallInterceptor sdtUnmarshallInterceptor
-                                                                                      ) {
+    public ITargetAppInternalEndpointPortType createTargetAppInternalEndpointPortType() {
+
+
+        XmlOutboundInterceptor xmlOutboundInterceptor = new XmlOutboundInterceptor();
+        CacheSetupOutboundInterceptor cacheSetupOutboundInterceptor = new CacheSetupOutboundInterceptor();
+        CacheEndOutboundInterceptor cacheEndOutboundInterceptor = new CacheEndOutboundInterceptor();
+        XmlInboundInterceptor xmlInboundInterceptor = new XmlInboundInterceptor();
+        SdtUnmarshallInterceptor sdtUnmarshallInterceptor = new SdtUnmarshallInterceptor();
+
         JaxWsProxyFactoryBean jaxWsProxyFactoryBean = new JaxWsProxyFactoryBean();
         jaxWsProxyFactoryBean.setAddress(OVERRIDDEN_DYNAMICALLY);
         jaxWsProxyFactoryBean.setBindingId(SOAP_BINDINGS_HTTP);

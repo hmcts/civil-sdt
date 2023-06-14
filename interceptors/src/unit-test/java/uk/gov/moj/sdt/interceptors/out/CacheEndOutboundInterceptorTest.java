@@ -48,6 +48,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PipedOutputStream;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 /**
  * Test class.
  *
@@ -70,7 +72,7 @@ class CacheEndOutboundInterceptorTest extends AbstractSdtUnitTestBase {
 
         cacheEndOutboundInterceptor.handleMessage(soapMessage);
 
-        Assertions.assertNotNull(soapMessage.getContent(OutputStream.class));
+        assertNotNull(soapMessage.getContent(OutputStream.class));
     }
 
     @Test
@@ -80,7 +82,7 @@ class CacheEndOutboundInterceptorTest extends AbstractSdtUnitTestBase {
 
         RuntimeException runtimeException = Assertions.assertThrows(RuntimeException.class, () -> cacheEndOutboundInterceptor.handleMessage(soapMessage));
 
-        Assertions.assertNotNull(runtimeException.getMessage());
+        assertNotNull(runtimeException.getMessage());
     }
 
     /**
@@ -92,9 +94,10 @@ class CacheEndOutboundInterceptorTest extends AbstractSdtUnitTestBase {
      */
     private SoapMessage getDummySoapMessageWithCachedOutputStream() throws IOException {
         SoapMessage soapMessage = new SoapMessage(new MessageImpl());
-        CachedOutputStream cachedOutputStream = new CachedOutputStream();
-        cachedOutputStream.write("<xml>content</xml>".getBytes());
-        soapMessage.setContent(OutputStream.class, cachedOutputStream);
+        try (CachedOutputStream cachedOutputStream = new CachedOutputStream()) {
+            cachedOutputStream.write("<xml>content</xml>".getBytes());
+            soapMessage.setContent(OutputStream.class, cachedOutputStream);
+        }
         return soapMessage;
     }
 

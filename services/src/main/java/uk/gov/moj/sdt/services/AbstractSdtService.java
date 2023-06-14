@@ -30,23 +30,27 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.services;
 
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import uk.gov.moj.sdt.dao.api.IIndividualRequestDao;
-import uk.gov.moj.sdt.domain.IndividualRequest;
-import uk.gov.moj.sdt.domain.api.IBulkSubmission;
-import uk.gov.moj.sdt.domain.api.IIndividualRequest;
-import uk.gov.moj.sdt.services.utils.GenericXmlParser;
-
-import org.springframework.beans.factory.annotation.Qualifier;
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+import java.util.List;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-import java.util.Arrays;
 
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
+import uk.gov.moj.sdt.dao.api.IIndividualRequestDao;
+import uk.gov.moj.sdt.domain.IndividualRequest;
+import uk.gov.moj.sdt.domain.api.IBulkSubmission;
+import uk.gov.moj.sdt.domain.api.IIndividualRequest;
+import uk.gov.moj.sdt.services.utils.GenericXmlParser;
+import uk.gov.moj.sdt.utils.cmc.RequestTypeXmlNodeValidator;
+
+import static uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus.ACCEPTED;
 import static uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus.REJECTED;
 
 /**
@@ -60,6 +64,8 @@ public abstract class AbstractSdtService {
      */
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractSdtService.class);
 
+    private static final String CLAIM_NUMBER = "claimNumber";
+
     /**
      * Individual Request Dao to perform operations on the individual request object.
      */
@@ -70,12 +76,16 @@ public abstract class AbstractSdtService {
      */
     private GenericXmlParser individualResponseXmlParser;
 
+    private RequestTypeXmlNodeValidator requestTypeXmlNodeValidator;
+
     protected AbstractSdtService(@Qualifier("IndividualRequestDao")
                                       IIndividualRequestDao individualRequestDao,
                               @Qualifier("IndividualResponseXmlParser")
-                                  GenericXmlParser individualResponseXmlParser) {
+                                  GenericXmlParser individualResponseXmlParser,
+                                 RequestTypeXmlNodeValidator requestTypeXmlNodeValidator) {
         this.individualRequestDao = individualRequestDao;
         this.individualResponseXmlParser = individualResponseXmlParser;
+        this.requestTypeXmlNodeValidator = requestTypeXmlNodeValidator;
     }
 
     /**
@@ -102,7 +112,7 @@ public abstract class AbstractSdtService {
         if (populateTargetAppResponse) {
             final String targetAppResponse = individualResponseXmlParser.parse();
             if (StringUtils.isNotBlank(targetAppResponse)) {
-                individualRequest.setTargetApplicationResponse(targetAppResponse.getBytes());
+                individualRequest.setTargetApplicationResponse(targetAppResponse.getBytes(StandardCharsets.UTF_8));
             }
         }
 
@@ -114,9 +124,7 @@ public abstract class AbstractSdtService {
 
         final IBulkSubmission bulkSubmission = individualRequest.getBulkSubmission();
 
-        final String[] completeRequestStatus =
-                new String[]{IIndividualRequest.IndividualRequestStatus.ACCEPTED.getStatus(),
-                        REJECTED.getStatus()};
+        final List<String> completeRequestStatus = Arrays.asList(ACCEPTED.getStatus(), REJECTED.getStatus());
 
 
         final long requestsCount = this.getIndividualRequestDao().queryAsCount(
@@ -180,15 +188,30 @@ public abstract class AbstractSdtService {
         this.individualRequestDao = individualRequestDao;
     }
 
+    protected boolean isCMCRequestType(IIndividualRequest individualRequest) {
+        return isCMCRequestType(individualRequest, false);
+    }
+
+    protected boolean isCMCRequestType(IIndividualRequest individualRequest, boolean throwException) {
+        String requestType = individualRequest.getRequestType();
+        Boolean readyForAlternateSubmission = individualRequest.getBulkSubmission().getBulkCustomer().getReadyForAlternateService();
+        return requestTypeXmlNodeValidator.isCMCClaimRequest(requestType, readyForAlternateSubmission)
+            || requestTypeXmlNodeValidator.isCMCRequestType(requestType,
+                                                            new String(individualRequest.getRequestPayload(), StandardCharsets.UTF_8),
+                                                            CLAIM_NUMBER,
+                                                            throwException);
+    }
+
+
     private CriteriaQuery<IndividualRequest> createCriteria(IIndividualRequestDao individualRequestDao, String sdtBulkReference,
-                                       String[] completeRequestStatus) {
+                                       List<String> completeRequestStatus) {
         CriteriaBuilder criteriaBuilder = individualRequestDao.getEntityManager().getCriteriaBuilder();
         CriteriaQuery<IndividualRequest> criteriaQuery = criteriaBuilder.createQuery(IndividualRequest.class);
         Root<IndividualRequest> root = criteriaQuery.from(IndividualRequest.class);
         Predicate[] predicates = new Predicate[2];
         predicates[0] = criteriaBuilder.equal(root.get("sdtBulkReference"), sdtBulkReference);
         Expression<String> requestStatusExpression = root.get("requestStatus");
-        predicates[1] = requestStatusExpression.in(Arrays.stream(completeRequestStatus).toList());
+        predicates[1] = requestStatusExpression.in(completeRequestStatus);
         return criteriaQuery.select(root).where(predicates);
     }
 }

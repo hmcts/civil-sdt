@@ -3,8 +3,6 @@ package uk.gov.moj.sdt.interceptors.out;
 import org.apache.cxf.binding.soap.SoapMessage;
 import org.apache.cxf.interceptor.Fault;
 import org.apache.cxf.phase.Phase;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import uk.gov.moj.sdt.interceptors.AbstractServiceRequest;
 import uk.gov.moj.sdt.interceptors.service.RequestDaoService;
 
@@ -13,12 +11,10 @@ import uk.gov.moj.sdt.interceptors.service.RequestDaoService;
  *
  * @author d195274
  */
-@Component("ServiceRequestOutboundInterceptor")
 public class ServiceRequestOutboundInterceptor extends AbstractServiceRequest {
     /**
      * Default constructor.
      */
-    @Autowired
     public ServiceRequestOutboundInterceptor(RequestDaoService requestDaoService) {
         super(Phase.PREPARE_SEND_ENDING);
         setRequestDaoService(requestDaoService);

@@ -36,7 +36,6 @@ import org.apache.cxf.phase.Phase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import uk.gov.moj.sdt.interceptors.AbstractServiceRequest;
 import uk.gov.moj.sdt.interceptors.service.RequestDaoService;
 
@@ -52,7 +51,6 @@ import uk.gov.moj.sdt.interceptors.service.RequestDaoService;
  *
  * @author d195274
  */
-@Component("ServiceRequestInboundInterceptor")
 public class ServiceRequestInboundInterceptor extends AbstractServiceRequest {
 
     /**

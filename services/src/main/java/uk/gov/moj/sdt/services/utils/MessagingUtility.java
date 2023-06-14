@@ -78,17 +78,20 @@ public class MessagingUtility implements IMessagingUtility {
 
             @Override
             public void run() {
-                final String targetAppCode =
-                        individualRequest.getBulkSubmission().getTargetApplication().getTargetApplicationCode();
-                final ISdtMessage messageObj = new SdtMessage();
-
-                messageObj.setSdtRequestReference(individualRequest.getSdtRequestReference());
-
-                getMessageWriter().queueMessage(messageObj, targetAppCode, false);
+                queueRequest(individualRequest);
             }
 
         });
+    }
 
+    private void queueRequest(IIndividualRequest individualRequest) {
+        final String targetAppCode =
+                individualRequest.getBulkSubmission().getTargetApplication().getTargetApplicationCode();
+        final ISdtMessage messageObj = new SdtMessage();
+
+        messageObj.setSdtRequestReference(individualRequest.getSdtRequestReference());
+
+        getMessageWriter().queueMessage(messageObj, targetAppCode, false);
     }
 
     /**

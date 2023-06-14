@@ -11,6 +11,7 @@ services:
     image: hmcts/civil-sdt
     environment:
       # these environment variables are used by java-logging library
+      - CIVIL_SDT_S2S_KEY=AAAAAAAAAAAAAAAA
       - ROOT_APPENDER
       - JSON_CONSOLE_PRETTY_PRINT
       - ROOT_LOGGING_LEVEL
