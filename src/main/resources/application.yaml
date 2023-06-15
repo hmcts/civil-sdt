@@ -69,9 +69,9 @@ sdt:
           idleTaskExecutionLimit:  ${IDLE_TASK_EXECUTION_LIMIT:10}
           idleConsumerLimit:  ${IDLE_CONSUMER_LIMIT:5}
   retry-send:
-      cron: ${RETRY_SEND_CRON:0 0/5 * * * ?}
+      cron: ${RETRY_SEND_CRON:0 0 * * * ?}
   purge:
-    cron: ${PURGE_SCHEDULE_CRON:0 0/10 * * * ?}
+    cron: ${PURGE_SCHEDULE_CRON:0 15 0 * * ?}
     commitInterval: ${PURGE_COMMIT_INTERVAL:1000}
 feign:
   circuitbreaker:
