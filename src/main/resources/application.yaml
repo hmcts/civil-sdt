@@ -71,7 +71,7 @@ sdt:
   retry-send:
       cron: ${RETRY_SEND_CRON:0 0 * * * ?}
   purge:
-    cron: ${PURGE_SCHEDULE_CRON:0 10 5 * * ?}
+    cron: ${PURGE_SCHEDULE_CRON:0 15 0 * * ?}
     commitInterval: ${PURGE_COMMIT_INTERVAL:1000}
 feign:
   circuitbreaker:
