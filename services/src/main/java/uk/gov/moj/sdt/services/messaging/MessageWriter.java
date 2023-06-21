@@ -133,6 +133,9 @@ public class MessageWriter implements IMessageWriter {
 
         CachingConnectionFactory cachingConnectionFactory =
             (CachingConnectionFactory) this.jmsTemplate.getConnectionFactory();
+        if (cachingConnectionFactory == null) {
+            throw new java.lang.IllegalStateException("JmsTemplate has no connection factory");
+        }
         cachingConnectionFactory.resetConnection();
 
         try {

@@ -187,6 +187,31 @@ class MessageWriterTest extends AbstractSdtUnitTestBase {
     }
 
     @Test
+    void testResetConnectionAndQueueMessageNoConnectionFactory() {
+        javax.jms.IllegalStateException javaxIllegalStateException =
+            new javax.jms.IllegalStateException(ILLEGAL_STATE_EXCEPTION_MESSAGE);
+        org.springframework.jms.IllegalStateException springIllegalStateException =
+            new org.springframework.jms.IllegalStateException(javaxIllegalStateException);
+
+        doThrow(springIllegalStateException).
+            when(mockJmsTemplate).convertAndSend(UNIT_TEST_QUEUE, sdtMessage);
+
+        when(mockJmsTemplate.getConnectionFactory()).thenReturn(null);
+
+        try {
+            messageWriter.queueMessage(sdtMessage, UNIT_TEST, false);
+            fail("IllegalStateException (java.lang) should be thrown");
+        }
+        catch (IllegalStateException e) {
+            // Expected exception thrown, continue with test
+            assertEquals("JmsTemplate has no connection factory", e.getMessage(), "Unexpected exception message");
+        }
+
+        verify(mockJmsTemplate).getConnectionFactory();
+        verify(mockJmsTemplate).convertAndSend(UNIT_TEST_QUEUE, sdtMessage);
+    }
+
+    @Test
     void testResetConnectionAndQueueMessageUncategorizedJmsException() {
         javax.jms.IllegalStateException javaxIllegalStateException =
             new javax.jms.IllegalStateException(ILLEGAL_STATE_EXCEPTION_MESSAGE);
@@ -273,7 +298,7 @@ class MessageWriterTest extends AbstractSdtUnitTestBase {
 
         try {
             messageWriter.queueMessage(sdtMessage, UNIT_TEST, false);
-            fail("IllegalStateException should be thrown");
+            fail("IllegalStateException (org.springframework.jms) should be thrown");
         }
         catch(org.springframework.jms.IllegalStateException e) {
             // Expected exception thrown, continue with test
