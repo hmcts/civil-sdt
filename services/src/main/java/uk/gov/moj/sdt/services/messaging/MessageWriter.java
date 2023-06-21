@@ -34,7 +34,9 @@ package uk.gov.moj.sdt.services.messaging;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jms.IllegalStateException;
 import org.springframework.jms.UncategorizedJmsException;
+import org.springframework.jms.connection.CachingConnectionFactory;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Component;
 import uk.gov.moj.sdt.services.messaging.api.IMessageWriter;
@@ -74,7 +76,6 @@ public class MessageWriter implements IMessageWriter {
 
     private final QueueConfig queueConfig;
 
-
     /**
      * Creates a message sender with the JmsTemplate.
      *
@@ -93,8 +94,9 @@ public class MessageWriter implements IMessageWriter {
         // Check the target application code is valid and return queue name.
         final String queueName = getQueueName(targetAppCode, deadLetter);
 
-        LOGGER.debug("Sending message with SDT request reference [" + sdtMessage.getSdtRequestReference() +
-                "] to queue [" + queueName + "]");
+        LOGGER.debug("Sending message with SDT request reference [{}] to queue [{}]",
+                     sdtMessage.getSdtRequestReference(),
+                     queueName);
 
         // Set meta data in message.
         sdtMessage.setMessageSentTimestamp(new GregorianCalendar().getTimeInMillis());
@@ -104,16 +106,50 @@ public class MessageWriter implements IMessageWriter {
         SdtMetricsMBean.getMetrics().upRequestQueueLength();
 
         try {
+            this.jmsTemplate.convertAndSend(queueName, sdtMessage);
+        } catch (final IllegalStateException e) {
+            String message = e.getMessage();
+            if (message != null && message.contains("MessageProducer was closed")) {
+                // Link to queue timed out due to idle period expiring, reset and try again.
+                // No need to update queue metrics as message was not queued.
+                resetConnectionAndQueueMessage(sdtMessage, queueName);
+            } else {
+                throw e;
+            }
+        } catch (final UncategorizedJmsException e) {
+            logQueueConnectFailure(sdtMessage, queueName, e);
+        }
+    }
 
+    /**
+     * Reset connection and try writing message to the queue again
+     * @param sdtMessage The message object to be written to the message queue.
+     * @param queueName The queue to write the message object to
+     */
+    private void resetConnectionAndQueueMessage(final ISdtMessage sdtMessage, final String queueName) {
+        LOGGER.debug("Reset connection and resend SDT request reference [{}] to queue [{}]",
+                     sdtMessage.getSdtRequestReference(),
+                     queueName);
+
+        CachingConnectionFactory cachingConnectionFactory =
+            (CachingConnectionFactory) this.jmsTemplate.getConnectionFactory();
+        cachingConnectionFactory.resetConnection();
+
+        try {
             this.jmsTemplate.convertAndSend(queueName, sdtMessage);
         } catch (final UncategorizedJmsException e) {
-            // We failed to send the message to the queue: this will be detected by the recovery mechanism which will
-            // periodically check the database and requeue any messages that are stuck on a state indicating that they
-            // have not been sent to the case management system.
-            LOGGER.error("Failed to connect to the ServiceBus queue [" + queueName +
-                    "] while queueing message request reference [" + sdtMessage.getSdtRequestReference() + "]", e);
-
+            logQueueConnectFailure(sdtMessage, queueName, e);
         }
+    }
+
+    private void logQueueConnectFailure(ISdtMessage sdtMessage, String queueName, Exception e) {
+        // We failed to send the message to the queue: this will be detected by the recovery mechanism which will
+        // periodically check the database and requeue any messages that are stuck on a state indicating that they
+        // have not been sent to the case management system.
+        LOGGER.error("Failed to connect to the ServiceBus queue [{}] while queueing message request reference [{}]",
+                     queueName,
+                     sdtMessage.getSdtRequestReference(),
+                     e);
     }
 
     /**
@@ -159,8 +195,7 @@ public class MessageWriter implements IMessageWriter {
         } else {
             // Check that the target application code is mapped to a queue name
             if (!this.getQueueNameMap().containsKey(targetApplicationCode)) {
-                LOGGER.error("Attempting to write to unknown queue for target application [" + targetApplicationCode +
-                        "]");
+                LOGGER.error("Attempting to write to unknown queue for target application [{}]", targetApplicationCode);
                 throw new IllegalArgumentException("Target application code [" + targetApplicationCode +
                         "] does not have a JMS queue mapped.");
             } else {
