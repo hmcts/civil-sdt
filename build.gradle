@@ -168,7 +168,7 @@ ext {
   jaxwsVersion = "2.3.1"
   activeMQVersion = '5.16.1'
   testcontainers = '1.17.5'
-  sdtCommonVersion = '1.0.0'
+  sdtCommonVersion = '1.0.0-SDT-129.0.2'
   limits = [
     'instruction': 99,
     'branch'     : 99,
@@ -686,7 +686,6 @@ dependencies {
   implementation project(':consumers')
   implementation project(':dao')
   implementation project(':handlers')
-  implementation project(':interceptors')
   implementation project(':producers')
   implementation project(':services')
   implementation project(':transformers')

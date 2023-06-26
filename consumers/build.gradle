@@ -10,7 +10,6 @@ dependencyCheck {
 }
 
 dependencies {
-    implementation project(':interceptors')
     implementation project(':transformers')
 }
 
