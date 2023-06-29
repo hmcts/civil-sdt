@@ -9,10 +9,6 @@ dependencyCheck {
     suppressionFile = "${rootDir}/config/owasp/suppressions.xml"
 }
 
-dependencies {
-    implementation project(':transformers')
-}
-
 bootJar {
     enabled = false
 }

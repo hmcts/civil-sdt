@@ -12,7 +12,6 @@ dependencyCheck {
 dependencies {
     implementation project(':consumers')
     implementation project(':dao')
-    implementation project(':validators')
     testImplementation project(":consumers").sourceSets.integTest.output
     testImplementation project(":dao").sourceSets.integTest.output
 }

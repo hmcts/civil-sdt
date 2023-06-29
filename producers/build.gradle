@@ -10,7 +10,6 @@ dependencyCheck {
 }
 
 dependencies {
-    implementation project(':handlers')
     implementation project(':services')
 }
 
