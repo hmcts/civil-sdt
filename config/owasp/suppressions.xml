@@ -21,8 +21,10 @@
   <!--Please add all the temporary suppression under the below section-->
   <suppress>
     <notes>Temporary Suppressions
+      CVE-2023-2976
       CVE-2023-35116
     </notes>
+    <cve>CVE-2023-2976</cve>
     <cve>CVE-2023-35116</cve>
   </suppress>
   <!--End of temporary suppression section -->

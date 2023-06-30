@@ -2,9 +2,11 @@ package uk.gov.moj.sdt.interceptors.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.stereotype.Component;
 import uk.gov.moj.sdt.dao.ServiceRequestDao;
 import uk.gov.moj.sdt.domain.api.IDomainObject;
 
+@Component
 public class PersistServiceRequestImpl implements IPersistServiceRequest {
 
     private ServiceRequestDao serviceRequestDao;
