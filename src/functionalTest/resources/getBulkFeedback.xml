@@ -1,0 +1,11 @@
+<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:bul="http://ws.sdt.moj.gov.uk/2013/sdt/BulkFeedbackRequestSchema">
+   <soap:Header/>
+   <soap:Body>
+      <bul:bulkFeedbackRequest>
+         <bul:header>
+            <bul:sdtCustomerId>12345678</bul:sdtCustomerId>
+            <bul:sdtBulkReference>MCOL-20131223144458-000000030</bul:sdtBulkReference>
+         </bul:header>
+      </bul:bulkFeedbackRequest>
+   </soap:Body>
+</soap:Envelope>

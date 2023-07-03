@@ -1,0 +1,26 @@
+<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:bul="http://ws.sdt.moj.gov.uk/2013/sdt/BulkRequestSchema" xmlns:brthsp="http://ws.sdt.moj.gov.uk/2013/mcol/BreathingSpaceSchema">
+   <soap:Header/>
+   <soap:Body>
+      <bul:bulkRequest>
+         <bul:header>
+            <bul:sdtCustomerId>10000002</bul:sdtCustomerId>
+            <bul:targetApplicationId>mcol</bul:targetApplicationId>
+            <bul:requestCount>1</bul:requestCount>
+            <bul:customerReference>RANDOM_NUMBER</bul:customerReference>
+         </bul:header>
+         <bul:requests>
+            <!--1 to 2000 repetitions:-->
+            <bul:request requestType="mcolBreathingSpace" requestId="RANDOM_NUMBER">
+                <bul:mcolBreathingSpace>
+                    <!-- Specified claim number must exist and have status issued, part admission or defence -->
+                    <brthsp:claimNumber>H0PR0001</brthsp:claimNumber>
+                    <!-- Defendant id must be 1 or 2 -->
+                    <brthsp:defendantId>1</brthsp:defendantId>
+                    <!-- Breathing space notification type must be BS, BC, MH or MC -->
+                    <brthsp:breathingSpaceNotificationType>BT</brthsp:breathingSpaceNotificationType>
+                </bul:mcolBreathingSpace>
+            </bul:request>
+         </bul:requests>
+      </bul:bulkRequest>
+   </soap:Body>
+</soap:Envelope>
