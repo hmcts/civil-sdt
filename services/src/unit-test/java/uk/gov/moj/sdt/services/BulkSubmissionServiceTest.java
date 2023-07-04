@@ -108,7 +108,6 @@ class BulkSubmissionServiceTest extends AbstractSdtUnitTestBase {
     @Mock
     private BulkSubmissionValidator bulkSubmissionValidator;
 
-
     /**
      *
      */
@@ -192,7 +191,6 @@ class BulkSubmissionServiceTest extends AbstractSdtUnitTestBase {
         verify(mockBulkCustomerDao).getBulkCustomerBySdtId(10);
         verify(mockGenericDao).fetch(IServiceRequest.class, 1);
         verify(mockConcurrencyMap).get(key);
-
     }
 
     @Test
@@ -251,8 +249,6 @@ class BulkSubmissionServiceTest extends AbstractSdtUnitTestBase {
         verify(mockGenericDao).fetch(IServiceRequest.class, 1);
     }
 
-
-
    @Test
     void testSaveBulkSubmissionTargetFoundIsEnqueueableSetToFalse() throws IOException {
 
@@ -301,7 +297,6 @@ class BulkSubmissionServiceTest extends AbstractSdtUnitTestBase {
         verify(individualRequestMock).isEnqueueable();
         verify(individualRequestMock).getRequestStatus();
     }
-
 
     /**
      * This method tests bulk submission with multiple individual request containing
@@ -481,7 +476,6 @@ class BulkSubmissionServiceTest extends AbstractSdtUnitTestBase {
         bulkSubmission.addIndividualRequest(individualRequest);
     }
 
-
     @Test
     public void setErrorMessagesCacheTest() throws IllegalAccessException, NoSuchFieldException {
 
@@ -497,7 +491,6 @@ class BulkSubmissionServiceTest extends AbstractSdtUnitTestBase {
 
         assertEquals(errorMessagesCacheMock, result, "The errorMessagesCache should be set to the expected object");
     }
-
 
     @Test
     public void setMockSdtBulkReferenceGeneratorTest() {
@@ -572,12 +565,11 @@ class BulkSubmissionServiceTest extends AbstractSdtUnitTestBase {
         assertEquals(bulkCustomerDaoMock, result, "The BulkCustomerDao was not set to the expected object.");
     }
 
-
     /**
      * Method to check logging message in log list
-     * @param logList
-     * @param message
-     * @return boolean
+     * @param logList The list of log messages
+     * @param message The log message to check for
+     * @return boolean Whether the log message is found in the list of log messages or not
      */
     private static boolean verifyLog(List<ILoggingEvent> logList, String message) {
         boolean verifyLog = false;

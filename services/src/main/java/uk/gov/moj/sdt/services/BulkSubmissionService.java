@@ -30,12 +30,6 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.services;
 
-import java.nio.charset.StandardCharsets;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,6 +56,12 @@ import uk.gov.moj.sdt.utils.concurrent.api.IInFlightMessage;
 import uk.gov.moj.sdt.utils.mbeans.SdtMetricsMBean;
 import uk.gov.moj.sdt.validators.BulkSubmissionValidator;
 import uk.gov.moj.sdt.validators.exception.CustomerReferenceNotUniqueException;
+
+import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Implementation of the IBulkSubmissionService interface providing methods
@@ -369,11 +369,12 @@ public class BulkSubmissionService implements IBulkSubmissionService {
                 final String errorCodeStr = IErrorMessage.ErrorCode.DUP_CUST_FILEID.toString();
                 final IErrorMessage errorMessage = errorMessagesCache.getValue(IErrorMessage.class, errorCodeStr);
 
-                LOGGER.error("Concurrent message detected for customer [" +
-                        bulkSubmission.getBulkCustomer().getSdtCustomerId() + "], customer reference [" +
-                        bulkSubmission.getCustomerReference() + "], with SDT bulk reference [" +
-                        bulkSubmission.getSdtBulkReference() + "]. Returning original SDT bulk reference [" +
-                        winningSdtBulkReference + "].");
+                LOGGER.error("Concurrent message detected for customer [{}], customer reference [{}], " +
+                                 "with SDT bulk reference [{}]. Returning original SDT bulk reference [{}]",
+                             bulkSubmission.getBulkCustomer().getSdtCustomerId(),
+                             bulkSubmission.getCustomerReference(),
+                             bulkSubmission.getSdtBulkReference(),
+                             winningSdtBulkReference);
                 throw new CustomerReferenceNotUniqueException(errorCodeStr, errorMessage.getErrorText(), replacements);
             }
         }
