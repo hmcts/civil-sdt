@@ -1,26 +1,44 @@
 package uk.gov.moj.sdt.services.messaging;
 
+import ch.qos.logback.classic.Level;
+import ch.qos.logback.classic.Logger;
+import ch.qos.logback.classic.spi.ILoggingEvent;
+import ch.qos.logback.core.read.ListAppender;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.NullSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.slf4j.LoggerFactory;
+import org.springframework.jms.UncategorizedJmsException;
+import org.springframework.jms.connection.CachingConnectionFactory;
 import org.springframework.jms.core.JmsTemplate;
 import uk.gov.moj.sdt.services.messaging.api.ISdtMessage;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-
+import static org.mockito.Mockito.when;
 
 /**
  * Test class for testing the MessageWriter implementation.
@@ -36,14 +54,18 @@ class MessageWriterTest extends AbstractSdtUnitTestBase {
 
     private static final String DLQ_SUFFIX = "/$deadletterqueue";
 
-    private MessageWriter messageWriter;
-
-    private static final String SUCCESS = "Success";
-
     private static final String NOT_EXPECTED_TO_FAIL = "Not Expected to fail";
 
+    private static final String ILLEGAL_STATE_EXCEPTION_MESSAGE =
+        "The MessageProducer was closed due to an unrecoverable error.; nested exception is " +
+            "javax.jms.IllegalStateException: The MessageProducer was closed due to an unrecoverable error.";
+
+    private MessageWriter messageWriter;
+
     @Mock
-    JmsTemplate mockJmsTemplate;
+    private JmsTemplate mockJmsTemplate;
+
+    private ISdtMessage sdtMessage;
 
     /**
      * Set up the variables.
@@ -52,48 +74,35 @@ class MessageWriterTest extends AbstractSdtUnitTestBase {
     @Override
     public void setUp() {
         QueueConfig queueConfig = new QueueConfig();
-        Map<String, String> mockedMap = new HashMap<>();
-        queueConfig.setTargetAppQueue(mockedMap);
+        Map<String, String> targetAppQueueMap = new HashMap<>();
+        targetAppQueueMap.put(UNIT_TEST, UNIT_TEST_QUEUE);
+        queueConfig.setTargetAppQueue(targetAppQueueMap);
         messageWriter = new MessageWriter(mockJmsTemplate, queueConfig);
+
+        sdtMessage = new SdtMessage();
+        sdtMessage.setSdtRequestReference("Test");
     }
 
-    /**
-     * Test method to test the sending of message.
-     */
-    @Test
-    void testQueueMessageWithEmptyTargetApp() {
-        // Setup finished, now tell the mock what to expect.
-        final ISdtMessage sdtMessage = new SdtMessage();
-        sdtMessage.setSdtRequestReference("Test");
-
-        // Send the message.
+    @ParameterizedTest
+    @MethodSource("invalidTargetAppCodes")
+    void testQueueMessageInvalidArgumentException(String targetAppCode, String exceptionMessage) {
         try {
-            messageWriter.queueMessage(sdtMessage, null, false);
-            fail("Should have thrown an Illegal Argument Exception as the target app code is null.");
+            messageWriter.queueMessage(sdtMessage, targetAppCode, false);
+            fail("Should have thrown an Illegal Argument exception as the target app code is invalid");
         } catch (final IllegalArgumentException e) {
-            assertTrue(true, "Illegal Argument specified for the target application");
+            // Expected exception thrown, continue with test
+            assertEquals(exceptionMessage, e.getMessage(), "Unexpected exception message");
         }
+
         verify(mockJmsTemplate, never()).convertAndSend(anyString(), any(ISdtMessage.class));
     }
 
-    /**
-     * Test message with an invalid queue name i.e. where the target application
-     * to queue name map is not valid
-     */
-    @Test
-    void testQueueMessageWithInvalidTarget() {
-        // Setup finished, now tell the mock what to expect.
-        final ISdtMessage sdtMessage = new SdtMessage();
-        sdtMessage.setSdtRequestReference("Test");
-
-        // Send the message.
-        try {
-            messageWriter.queueMessage(sdtMessage, "UnitTest", false);
-            fail("Should have thrown an Illegal Argument exception here as the target app code is invalid");
-        } catch (final IllegalArgumentException e) {
-            assertTrue(true, "Target application code does not have a mapped queue name");
-        }
-        verify(mockJmsTemplate, never()).convertAndSend(anyString(), any(ISdtMessage.class));
+    static Stream<Arguments> invalidTargetAppCodes() {
+        return Stream.of(
+            arguments(null, "Target application code must be supplied."),
+            arguments("", "Target application code must be supplied."),
+            arguments("UnitTest", "Target application code [UnitTest] does not have a JMS queue mapped.")
+        );
     }
 
     /**
@@ -101,24 +110,14 @@ class MessageWriterTest extends AbstractSdtUnitTestBase {
      */
     @Test
     void testQueueMessage() {
-        // Setup finished, now tell the mock what to expect.
-        final ISdtMessage sdtMessage = new SdtMessage();
-        sdtMessage.setSdtRequestReference("Test");
-
         // Send the message.
         try {
-            final Map<String, String> queueNameMap = new HashMap<>();
-            queueNameMap.put(UNIT_TEST, UNIT_TEST_QUEUE);
-
-            messageWriter.setQueueNameMap(queueNameMap);
-
             messageWriter.queueMessage(sdtMessage, UNIT_TEST, false);
             assertNotEquals(0L, sdtMessage.getMessageSentTimestamp());
             verify(mockJmsTemplate).convertAndSend(UNIT_TEST_QUEUE, sdtMessage);
         } catch (final IllegalArgumentException e) {
             fail(NOT_EXPECTED_TO_FAIL);
         }
-
     }
 
     /**
@@ -126,22 +125,214 @@ class MessageWriterTest extends AbstractSdtUnitTestBase {
      */
     @Test
     void testQueueMessageForDeadLetter() {
-            // Setup finished, now tell the mock what to expect.
-            final ISdtMessage sdtMessage = new SdtMessage();
-            sdtMessage.setSdtRequestReference("Test");
+        // Send the message.
+        try {
+            messageWriter.queueMessage(sdtMessage, UNIT_TEST, true);
+            assertNotEquals(0L, sdtMessage.getMessageSentTimestamp());
+            verify(mockJmsTemplate).convertAndSend(UNIT_TEST_QUEUE + DLQ_SUFFIX, sdtMessage);
+        } catch (final IllegalArgumentException e) {
+            fail(NOT_EXPECTED_TO_FAIL);
+        }
+    }
 
-            // Send the message.
-            try {
-                final Map<String, String> queueNameMap = new HashMap<>();
-                queueNameMap.put(UNIT_TEST, UNIT_TEST_QUEUE);
+    @Test
+    void testQueueMessageUncategorizedJmsException() {
+        UncategorizedJmsException uncategorizedJmsException = new UncategorizedJmsException("Some JMS exception");
 
-                messageWriter.setQueueNameMap(queueNameMap);
+        doThrow(uncategorizedJmsException).
+            when(mockJmsTemplate).convertAndSend(UNIT_TEST_QUEUE, sdtMessage);
 
-                messageWriter.queueMessage(sdtMessage, UNIT_TEST, true);
-                assertNotEquals(0L, sdtMessage.getMessageSentTimestamp());
-                verify(mockJmsTemplate).convertAndSend(UNIT_TEST_QUEUE + DLQ_SUFFIX, sdtMessage);
-            } catch (final IllegalArgumentException e) {
-                fail(NOT_EXPECTED_TO_FAIL);
-            }
+        Logger messageWriterLogger = (Logger) LoggerFactory.getLogger(MessageWriter.class);
+        ListAppender<ILoggingEvent> listAppender = new ListAppender<>();
+        listAppender.start();
+        messageWriterLogger.addAppender(listAppender);
+
+        messageWriter.queueMessage(sdtMessage, UNIT_TEST, false);
+
+        List<ILoggingEvent> logsList = listAppender.list;
+        ILoggingEvent lastLogEntry = logsList.get(logsList.size() - 1);
+
+        assertEquals(Level.ERROR, lastLogEntry.getLevel(), "Last log entry does not have expected level");
+        assertEquals("Failed to connect to the ServiceBus queue [UnitTestQueue] while queueing message request reference [Test]",
+                     lastLogEntry.getFormattedMessage());
+
+        listAppender.stop();
+        messageWriterLogger.detachAndStopAllAppenders();
+
+        verify(mockJmsTemplate).convertAndSend(UNIT_TEST_QUEUE, sdtMessage);
+    }
+
+    @Test
+    void testResetConnectionAndQueueMessage() {
+        // Using two exception classes with the same name so need to qualify declarations
+        javax.jms.IllegalStateException javaxIllegalStateException =
+            new javax.jms.IllegalStateException(ILLEGAL_STATE_EXCEPTION_MESSAGE);
+        org.springframework.jms.IllegalStateException springIllegalStateException =
+            new org.springframework.jms.IllegalStateException(javaxIllegalStateException);
+
+        // Set up behaviour of void convertAndSend() method.  Raise an exception the first time it's called,
+        // then do nothing the second time.
+        doThrow(springIllegalStateException).
+            doNothing().
+            when(mockJmsTemplate).convertAndSend(UNIT_TEST_QUEUE, sdtMessage);
+
+        CachingConnectionFactory mockCachingConnectionFactory = mock(CachingConnectionFactory.class);
+        when(mockJmsTemplate.getConnectionFactory()).thenReturn(mockCachingConnectionFactory);
+
+        messageWriter.queueMessage(sdtMessage, UNIT_TEST, false);
+
+        verify(mockJmsTemplate).getConnectionFactory();
+        verify(mockCachingConnectionFactory).resetConnection();
+        verify(mockJmsTemplate, times(2)).convertAndSend(UNIT_TEST_QUEUE, sdtMessage);
+    }
+
+    @Test
+    void testResetConnectionAndQueueMessageNoConnectionFactory() {
+        javax.jms.IllegalStateException javaxIllegalStateException =
+            new javax.jms.IllegalStateException(ILLEGAL_STATE_EXCEPTION_MESSAGE);
+        org.springframework.jms.IllegalStateException springIllegalStateException =
+            new org.springframework.jms.IllegalStateException(javaxIllegalStateException);
+
+        doThrow(springIllegalStateException).
+            when(mockJmsTemplate).convertAndSend(UNIT_TEST_QUEUE, sdtMessage);
+
+        when(mockJmsTemplate.getConnectionFactory()).thenReturn(null);
+
+        try {
+            messageWriter.queueMessage(sdtMessage, UNIT_TEST, false);
+            fail("IllegalStateException (java.lang) should be thrown");
+        }
+        catch (IllegalStateException e) {
+            // Expected exception thrown, continue with test
+            assertEquals("JmsTemplate has no connection factory", e.getMessage(), "Unexpected exception message");
+        }
+
+        verify(mockJmsTemplate).getConnectionFactory();
+        verify(mockJmsTemplate).convertAndSend(UNIT_TEST_QUEUE, sdtMessage);
+    }
+
+    @Test
+    void testResetConnectionAndQueueMessageUncategorizedJmsException() {
+        javax.jms.IllegalStateException javaxIllegalStateException =
+            new javax.jms.IllegalStateException(ILLEGAL_STATE_EXCEPTION_MESSAGE);
+        org.springframework.jms.IllegalStateException springIllegalStateException =
+            new org.springframework.jms.IllegalStateException(javaxIllegalStateException);
+
+        UncategorizedJmsException uncategorizedJmsException = new UncategorizedJmsException("Some JMS exception");
+
+        // Set up behaviour of void convertAndSend() method.  Raise an IllegalStateException the first time it's called,
+        // then an UncategorizedJmsException the second time.
+        doThrow(springIllegalStateException).
+            doThrow(uncategorizedJmsException).
+            when(mockJmsTemplate).convertAndSend(UNIT_TEST_QUEUE, sdtMessage);
+
+        CachingConnectionFactory mockCachingConnectionFactory = mock(CachingConnectionFactory.class);
+        when(mockJmsTemplate.getConnectionFactory()).thenReturn(mockCachingConnectionFactory);
+
+        Logger messageWriterLogger = (Logger) LoggerFactory.getLogger(MessageWriter.class);
+        ListAppender<ILoggingEvent> listAppender = new ListAppender<>();
+        listAppender.start();
+        messageWriterLogger.addAppender(listAppender);
+
+        messageWriter.queueMessage(sdtMessage, UNIT_TEST, false);
+
+        List<ILoggingEvent> logsList = listAppender.list;
+        ILoggingEvent lastLogEntry = logsList.get(logsList.size() - 1);
+
+        assertEquals(Level.ERROR, lastLogEntry.getLevel(), "Last log entry does not have expected level");
+        assertEquals("Failed to connect to the ServiceBus queue [UnitTestQueue] while queueing message request reference [Test]",
+                     lastLogEntry.getFormattedMessage());
+
+        listAppender.stop();
+        messageWriterLogger.detachAndStopAllAppenders();
+
+        verify(mockJmsTemplate).getConnectionFactory();
+        verify(mockCachingConnectionFactory).resetConnection();
+        verify(mockJmsTemplate, times(2)).convertAndSend(UNIT_TEST_QUEUE, sdtMessage);
+    }
+
+    @Test
+    void testResetConnectionAndQueueMessageOtherException() {
+        javax.jms.IllegalStateException javaxIllegalStateException =
+            new javax.jms.IllegalStateException(ILLEGAL_STATE_EXCEPTION_MESSAGE);
+        org.springframework.jms.IllegalStateException springIllegalStateException =
+            new org.springframework.jms.IllegalStateException(javaxIllegalStateException);
+
+        javax.jms.InvalidClientIDException javaxInvalidClientIDException =
+            new javax.jms.InvalidClientIDException("");
+        org.springframework.jms.InvalidClientIDException jmsInvalidClientIDException =
+            new org.springframework.jms.InvalidClientIDException(javaxInvalidClientIDException);
+
+        // Set up behaviour of void convertAndSend() method.  Raise an IllegalStateException the first time it's called,
+        // then an InvalidClientIDException the second time.
+        doThrow(springIllegalStateException).
+            doThrow(jmsInvalidClientIDException).
+            when(mockJmsTemplate).convertAndSend(UNIT_TEST_QUEUE, sdtMessage);
+
+        CachingConnectionFactory mockCachingConnectionFactory = mock(CachingConnectionFactory.class);
+        when(mockJmsTemplate.getConnectionFactory()).thenReturn(mockCachingConnectionFactory);
+
+        try {
+            messageWriter.queueMessage(sdtMessage, UNIT_TEST, false);
+            fail("InvalidClientIDException should be thrown");
+        } catch (org.springframework.jms.InvalidClientIDException e) {
+            // Expected exception thrown, continue with test
+        }
+
+        verify(mockJmsTemplate).getConnectionFactory();
+        verify(mockCachingConnectionFactory).resetConnection();
+        verify(mockJmsTemplate, times(2)).convertAndSend(UNIT_TEST_QUEUE, sdtMessage);
+    }
+
+    @ParameterizedTest
+    @NullSource
+    @ValueSource(strings = {"Other exception message"})
+    void testOtherIllegalStateExceptionMessage(String exceptionMessage) {
+        javax.jms.IllegalStateException javaxIllegalStateException =
+            new javax.jms.IllegalStateException(exceptionMessage);
+        org.springframework.jms.IllegalStateException springIllegalStateException =
+            new org.springframework.jms.IllegalStateException(javaxIllegalStateException);
+
+        doThrow(springIllegalStateException).
+            when(mockJmsTemplate).convertAndSend(UNIT_TEST_QUEUE, sdtMessage);
+
+        try {
+            messageWriter.queueMessage(sdtMessage, UNIT_TEST, false);
+            fail("IllegalStateException (org.springframework.jms) should be thrown");
+        }
+        catch(org.springframework.jms.IllegalStateException e) {
+            // Expected exception thrown, continue with test
+        }
+
+        verify(mockJmsTemplate).convertAndSend(UNIT_TEST_QUEUE, sdtMessage);
+    }
+
+    @Test
+    void testLastQueueId() {
+        long firstQueueId = MessageWriter.getLastQueueId();
+        long secondQueueId = MessageWriter.getLastQueueId();
+
+        assertTrue(secondQueueId > firstQueueId, "Last Queue Id not incremented");
+    }
+
+    @Test
+    void testSetQueueNameMap() {
+        String testQueueKey = "queueKey";
+        String testQueueName = "queueName";
+
+        final Map<String, String> testQueueNameMap = new HashMap<>();
+        testQueueNameMap.put(testQueueKey, testQueueName);
+
+        messageWriter.setQueueNameMap(testQueueNameMap);
+
+        QueueConfig queueConfig = (QueueConfig) getAccessibleField(MessageWriter.class,
+                                                                   "queueConfig",
+                                                                   QueueConfig.class,
+                                                                   messageWriter);
+
+        Map<String, String> retrievedQueueNameMap = queueConfig.getTargetAppQueue();
+        assertEquals(1, retrievedQueueNameMap.size(), "Unexpected number of items in queue name map");
+        String retrievedQueueName = retrievedQueueNameMap.get(testQueueKey);
+        assertEquals(testQueueName, retrievedQueueName, "Expected queue not found in queue name map");
     }
 }
