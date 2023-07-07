@@ -1,13 +1,49 @@
 #!groovy
 
+import uk.gov.hmcts.contino.AppPipelineDsl
+import uk.gov.hmcts.contino.GithubAPI
+properties(
+    [
+        [
+            $class       : 'GithubProjectProperty',
+            projectUrlStr: 'https://github.com/hmcts/ccd-data-store-api'
+        ],
+        pipelineTriggers([[$class: 'GitHubPushTrigger']])
+    ]
+)
+
 @Library("Infrastructure")
+
+env.CIVIL_SDT_DEMO_URL = "http://civil-sdt-demo.service.core-compute-demo.internal"
 
 def type = "java"
 def product = "civil"
 def component = "sdt"
+def branchesToSync = ['demo', 'ithc', 'perftest', 'develop']
 
 withPipeline(type, product, component) {
   enableAksStagingDeployment()
   disableLegacyDeployment()
-  nonServiceApp()
+  disableLegacyDeploymentOnAAT()
+}
+
+afterAlways('test') {
+  // hmcts/cnp-jenkins-library may fail to copy artifacts after checkstyle error so repeat command (see /src/uk/gov/hmcts/contino/GradleBuilder.groovy)
+  steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/reports/checkstyle/*.html'
+}
+
+afterAlways('smoketest:preview') {
+  steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/Smoke Tests Report CIVIL-SDT/**/*'
+}
+
+afterAlways('smoketest:aat') {
+  steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/Smoke Tests Report CIVIL-SDT/**/*'
+}
+
+afterAlways('functionalTest:preview') {
+  steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/Functional Tests Report CIVIL-SDT/**/*'
+}
+
+afterAlways('functionalTest:aat') {
+  steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/Functional Tests Report CIVIL-SDT/**/*'
 }
