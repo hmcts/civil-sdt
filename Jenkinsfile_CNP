@@ -6,7 +6,7 @@ properties(
     [
         [
             $class       : 'GithubProjectProperty',
-            projectUrlStr: 'https://github.com/hmcts/ccd-data-store-api'
+            projectUrlStr: 'https://github.com/hmcts/civil-sdt'
         ],
         pipelineTriggers([[$class: 'GitHubPushTrigger']])
     ]
