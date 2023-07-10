@@ -107,7 +107,8 @@ public class CMCConsumerGateway implements IConsumerGateway {
         String idamId = SdtContext.getContext().getCustomerIdamId();
         String sdtSystemUserAuthToken = idamRepository.getSdtSystemUserAccessToken();
         String serviceAuthToken = s2SRepository.getS2SToken();
-        String requestPayload = new String(individualRequest.getRequestPayload(), StandardCharsets.UTF_8);
+        String requestPayload = null == individualRequest.getRequestPayload() ? "" :
+            new String(individualRequest.getRequestPayload(), StandardCharsets.UTF_8);
         try {
             if (RequestType.JUDGMENT.getType().equals(requestType)) {
                 JudgementRequest judgementRequest = xmlToObject.convertXmlToObject(requestPayload,
@@ -119,7 +120,6 @@ public class CMCConsumerGateway implements IConsumerGateway {
                 individualRequest.setTargetApplicationResponse(xmlToObject.convertObjectToXml(judgementResponse).getBytes(StandardCharsets.UTF_8));
             } else if (RequestType.BREATHING_SPACE.getType().equals(requestType)) {
                 BreathingSpaceRequest request = xmlToObject.convertXmlToObject(requestPayload, BreathingSpaceRequest.class);
-
                 BreathingSpaceResponse response = breathingSpace.breathingSpace(idamId, sdtRequestReference, request);
                 individualRequest.setRequestStatus(response.getProcessingStatus().name());
             } else if (RequestType.CLAIM_STATUS_UPDATE.getType().equals(requestType)) {

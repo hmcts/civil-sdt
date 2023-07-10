@@ -194,14 +194,17 @@ public abstract class AbstractSdtService {
 
     protected boolean isCMCRequestType(IIndividualRequest individualRequest, boolean throwException) {
         String requestType = individualRequest.getRequestType();
-        Boolean readyForAlternateSubmission = individualRequest.getBulkSubmission().getBulkCustomer().getReadyForAlternateService();
+        Boolean readyForAlternateSubmission =
+            individualRequest.getBulkSubmission().getBulkCustomer().getReadyForAlternateService();
+        String requestPayload = null == individualRequest.getRequestPayload() ? "" :
+            new String(individualRequest.getRequestPayload(), StandardCharsets.UTF_8);
+
         return requestTypeXmlNodeValidator.isCMCClaimRequest(requestType, readyForAlternateSubmission)
             || requestTypeXmlNodeValidator.isCMCRequestType(requestType,
-                                                            new String(individualRequest.getRequestPayload(), StandardCharsets.UTF_8),
+                                                            requestPayload,
                                                             CLAIM_NUMBER,
                                                             throwException);
     }
-
 
     private CriteriaQuery<IndividualRequest> createCriteria(IIndividualRequestDao individualRequestDao, String sdtBulkReference,
                                        List<String> completeRequestStatus) {
