@@ -26,8 +26,12 @@ services:
       - SDT_DB_HOST=civil-sdt-database
       - SDT_DB_USERNAME=std_user
       - SDT_DB_PASSWORD=std_pass
+      # Uncomment following line and 5005 port mapping line below to enable remote JVM debugging
+      #- JAVA_TOOL_OPTIONS=-agentlib:jdwp=transport=dt_socket,address=*:5005,server=y,suspend=n
     ports:
       - $SERVER_PORT:$SERVER_PORT
+      # Uncomment following line and JAVA_TOOL_OPTIONS line above to enable remote JVM debugging
+      #- 5005:5005
     depends_on:
       - civil-sdt-database
     links:
