@@ -546,7 +546,7 @@ subprojects { subproject ->
             logger.quiet(it)
           }
           logger.quiet("---------------------------------------------------------------")
-//          throw new GradleException("Code coverage failed")
+          throw new GradleException("Code coverage failed")
         } else{
           logger.quiet("Passed Code Coverage Checks")
         }
@@ -614,7 +614,6 @@ subprojects { subproject ->
     }
   }
 
-  test.finalizedBy jacocoTestReport
   check.dependsOn jacocoTestReport
 }
 // end::subprojects[]
