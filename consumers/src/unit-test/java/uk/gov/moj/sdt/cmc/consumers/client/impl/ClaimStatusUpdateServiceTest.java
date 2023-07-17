@@ -7,8 +7,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.moj.sdt.cmc.consumers.request.ClaimStatusUpdateRequest;
 import uk.gov.moj.sdt.cmc.consumers.response.ClaimStatusUpdateResponse;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -18,10 +18,10 @@ class ClaimStatusUpdateServiceTest extends CMCConsumersClientTestBase {
     private ClaimStatusUpdateService claimStatusUpdateService;
 
     @Mock
-    ClaimStatusUpdateRequest mockClaimStatusUpdateRequest;
+    private ClaimStatusUpdateRequest mockClaimStatusUpdateRequest;
 
     @Mock
-    ClaimStatusUpdateResponse mockClaimStatusUpdateResponse;
+    private ClaimStatusUpdateResponse mockClaimStatusUpdateResponse;
 
     @Override
     protected void setUpLocalTests() {
@@ -37,9 +37,9 @@ class ClaimStatusUpdateServiceTest extends CMCConsumersClientTestBase {
             claimStatusUpdateService.claimStatusUpdate(IDAM_ID_HEADER, SDT_REQUEST_ID, mockClaimStatusUpdateRequest);
 
         assertNotNull(claimStatusUpdateResponse, "ClaimStatusUpdateResponse should not be null");
-        assertEquals(mockClaimStatusUpdateResponse,
-                     claimStatusUpdateResponse,
-                     "Unexpected ClaimStatusUpdateResponse returned");
+        assertSame(mockClaimStatusUpdateResponse,
+                   claimStatusUpdateResponse,
+                   "Unexpected ClaimStatusUpdateResponse returned");
 
         verify(mockCmcApi).claimStatusUpdate(IDAM_ID_HEADER, SDT_REQUEST_ID, mockClaimStatusUpdateRequest);
     }

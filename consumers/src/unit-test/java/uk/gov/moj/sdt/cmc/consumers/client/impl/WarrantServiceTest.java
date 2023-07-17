@@ -8,8 +8,8 @@ import uk.gov.moj.sdt.cmc.consumers.request.WarrantRequest;
 import uk.gov.moj.sdt.cmc.consumers.response.WarrantResponse;
 
 import static com.google.common.net.HttpHeaders.AUTHORIZATION;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -45,7 +45,7 @@ class WarrantServiceTest extends CMCConsumersClientTestBase {
                                                                         mockWarrantRequest);
 
         assertNotNull(warrantResponse, "WarrantResponse should not be null");
-        assertEquals(mockWarrantResponse, warrantResponse, "Unexpected WarrantResponse returned");
+        assertSame(mockWarrantResponse, warrantResponse, "Unexpected WarrantResponse returned");
 
         verify(mockCmcApi).warrantRequest(AUTHORIZATION,
                                           SERVICE_AUTHORISATION,

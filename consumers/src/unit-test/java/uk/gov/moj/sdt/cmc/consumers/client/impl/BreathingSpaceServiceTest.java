@@ -7,8 +7,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.moj.sdt.cmc.consumers.request.BreathingSpaceRequest;
 import uk.gov.moj.sdt.cmc.consumers.response.BreathingSpaceResponse;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -39,7 +39,7 @@ class BreathingSpaceServiceTest extends CMCConsumersClientTestBase {
             breathingSpaceService.breathingSpace(IDAM_ID_HEADER, SDT_REQUEST_ID, mockBreathingSpaceRequest);
 
         assertNotNull(breathingSpaceResponse, "BreathingSpaceResponse should not be null");
-        assertEquals(mockBreathingSpaceResponse, breathingSpaceResponse, "Unexpected BreathingSpaceResponse returned");
+        assertSame(mockBreathingSpaceResponse, breathingSpaceResponse, "Unexpected BreathingSpaceResponse returned");
 
         verify(mockCmcApi).breathingSpace(IDAM_ID_HEADER, SDT_REQUEST_ID, mockBreathingSpaceRequest);
     }

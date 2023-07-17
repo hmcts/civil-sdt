@@ -10,7 +10,6 @@ class InstalmentPaymentTypeTest {
 
     private InstalmentPaymentType instalmentPaymentType;
 
-
     @BeforeEach
     void setUp() {
         instalmentPaymentType = new InstalmentPaymentType();
