@@ -1,5 +1,6 @@
 package uk.gov.moj.sdt.cmc.consumers;
 
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -38,6 +39,7 @@ import uk.gov.moj.sdt.cmc.consumers.response.JudgementWarrantResponse;
 import uk.gov.moj.sdt.cmc.consumers.response.ProcessingStatus;
 import uk.gov.moj.sdt.cmc.consumers.response.WarrantResponse;
 import uk.gov.moj.sdt.cmc.consumers.response.judgement.JudgementResponse;
+import uk.gov.moj.sdt.domain.IndividualRequest;
 import uk.gov.moj.sdt.domain.api.IBulkCustomer;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.domain.api.ISubmitQueryRequest;
@@ -50,16 +52,19 @@ import uk.gov.moj.sdt.utils.cmc.exception.CMCException;
 import uk.gov.moj.sdt.utils.cmc.exception.CaseOffLineException;
 import uk.gov.moj.sdt.utils.cmc.xml.XmlElementValueReader;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static uk.gov.moj.sdt.utils.cmc.RequestType.BREATHING_SPACE;
+import static uk.gov.moj.sdt.utils.cmc.RequestType.CLAIM;
 import static uk.gov.moj.sdt.utils.cmc.RequestType.CLAIM_STATUS_UPDATE;
+import static uk.gov.moj.sdt.utils.cmc.RequestType.JUDGMENT;
 import static uk.gov.moj.sdt.utils.cmc.RequestType.JUDGMENT_WARRANT;
 import static uk.gov.moj.sdt.utils.cmc.RequestType.WARRANT;
 import static uk.gov.moj.sdt.utils.cmc.exception.CMCExceptionMessages.CASE_OFF_LINE;
@@ -100,6 +105,12 @@ class CMCConsumerGatewayTest {
 
     @Mock
     private ClaimStatusUpdateRequest claimStatusUpdateRequest;
+
+    @Mock
+    private JudgementRequest judgementRequest;
+
+    @Mock
+    private ClaimRequest claimRequest;
 
     @Mock
     private IClaimDefencesService claimDefences;
@@ -155,16 +166,11 @@ class CMCConsumerGatewayTest {
         response.setProcessingStatus(ProcessingStatus.PROCESSED);
         when(breathingSpace.breathingSpace(any(), anyString(), any())).thenReturn(response);
 
-        when(individualRequest.getRequestPayload()).thenReturn(XML);
-        when(individualRequest.getSdtRequestReference()).thenReturn(SDT_REFERENCE);
-        when(xmlToObject.convertXmlToObject(anyString(), any())).thenReturn(breathingSpaceRequest);
-        when(individualRequest.getRequestType()).thenReturn(RequestType.BREATHING_SPACE.getType());
-
         cmcConsumerGateway.individualRequest(individualRequest, CONNECTION_TIME_OUT, RECEIVE_TIME_OUT);
 
         verify(breathingSpace).breathingSpace(any(), anyString(), any(BreathingSpaceRequest.class));
         verify(xmlToObject).convertXmlToObject(anyString(), any());
-        verify(individualRequest).getRequestPayload();
+        verify(individualRequest, times(2)).getRequestPayload();
         verify(individualRequest).setRequestStatus(ProcessingStatus.PROCESSED.name());
         verify(individualRequest).getSdtRequestReference();
         verify(individualRequest).getRequestType();
@@ -182,7 +188,7 @@ class CMCConsumerGatewayTest {
 
         verify(claimStatusUpdate).claimStatusUpdate(any(), anyString(), any(ClaimStatusUpdateRequest.class));
         verify(xmlToObject).convertXmlToObject(anyString(), any());
-        verify(individualRequest).getRequestPayload();
+        verify(individualRequest, times(2)).getRequestPayload();
         verify(individualRequest).getRequestType();
         verify(individualRequest).getSdtRequestReference();
         verify(individualRequest).setRequestStatus(ProcessingStatus.PROCESSED.name());
@@ -197,19 +203,15 @@ class CMCConsumerGatewayTest {
         when(judgementService.requestJudgment(any(), any(), any())).thenReturn(response);
 
         IIndividualRequest individualRequest = mock(IIndividualRequest.class);
-        JudgementRequest judgementRequest = mock(JudgementRequest.class);
-        when(individualRequest.getRequestPayload()).thenReturn(XML);
-        when(individualRequest.getSdtRequestReference()).thenReturn(SDT_REFERENCE);
-        when(xmlToObject.convertXmlToObject(anyString(), any())).thenReturn(judgementRequest);
+        setupMockBehaviour(JUDGMENT, individualRequest);
         when(xmlToObject.convertObjectToXml(response)).thenReturn(new String(XML));
-        when(individualRequest.getRequestType()).thenReturn(RequestType.JUDGMENT.getType());
 
         cmcConsumerGateway.individualRequest(individualRequest, CONNECTION_TIME_OUT, RECEIVE_TIME_OUT);
 
         verify(judgementService).requestJudgment(any(), any(), any(JudgementRequest.class));
         verify(xmlToObject).convertXmlToObject(anyString(), any());
         verify(xmlToObject).convertObjectToXml(any(JudgementResponse.class));
-        verify(individualRequest).getRequestPayload();
+        verify(individualRequest, times(2)).getRequestPayload();
         verify(individualRequest).getSdtRequestReference();
         verify(individualRequest).getRequestType();
         verify(individualRequest).setTargetApplicationResponse(XML);
@@ -222,25 +224,21 @@ class CMCConsumerGatewayTest {
         response.setIssueDate(date);
         response.setServiceDate(date);
         response.setClaimNumber("MCOL-0000001");
-        ClaimRequest request = new ClaimRequest();
-        when(xmlToObject.convertXmlToObject(anyString(), any())).thenReturn(request);
+
         when(xmlToObject.convertObjectToXml(any())).thenReturn("");
         when(claimRequestService.claimRequest(any(), any(), any())).thenReturn(response);
 
         IIndividualRequest individualRequest = mock(IIndividualRequest.class);
-        ClaimRequest claimRequest = mock(ClaimRequest.class);
-        when(individualRequest.getRequestPayload()).thenReturn(XML);
+        setupMockBehaviour(CLAIM, individualRequest);
+
         when(individualRequest.getSdtRequestReference()).thenReturn("MCOL-0000001");
-        when(xmlToObject.convertXmlToObject(anyString(), any())).thenReturn(claimRequest);
-        when(xmlToObject.convertObjectToXml(response)).thenReturn(new String(XML));
-        when(individualRequest.getRequestType()).thenReturn(RequestType.CLAIM.getType());
 
         cmcConsumerGateway.individualRequest(individualRequest, CONNECTION_TIME_OUT, RECEIVE_TIME_OUT);
 
         verify(claimRequestService).claimRequest(any(), any(), any(ClaimRequest.class));
         verify(xmlToObject).convertXmlToObject(anyString(), any());
         verify(xmlToObject).convertObjectToXml(any(ClaimResponse.class));
-        verify(individualRequest).getRequestPayload();
+        verify(individualRequest, times(2)).getRequestPayload();
         verify(individualRequest).getSdtRequestReference();
         verify(individualRequest).getRequestType();
         verify(individualRequest).setTargetApplicationResponse(XML);
@@ -251,8 +249,7 @@ class CMCConsumerGatewayTest {
         IIndividualRequest individualRequest = mock(IIndividualRequest.class);
         setupMockBehaviour(WARRANT, individualRequest);
         WarrantResponse response = new WarrantResponse();
-        WarrantRequest request = new WarrantRequest();
-        when(xmlToObject.convertXmlToObject(anyString(), any())).thenReturn(request);
+
         when(xmlToObject.convertObjectToXml(any())).thenReturn("");
         when(warrantService.warrantRequest(anyString(), anyString(), any(), anyString(), any())).thenReturn(response);
 
@@ -260,7 +257,7 @@ class CMCConsumerGatewayTest {
 
         verify(warrantService).warrantRequest(anyString(), anyString(), any(), anyString(), any(WarrantRequest.class));
         verify(xmlToObject).convertXmlToObject(anyString(), any());
-        verify(individualRequest).getRequestPayload();
+        verify(individualRequest, times(2)).getRequestPayload();
         verify(individualRequest).getRequestType();
         verify(individualRequest).getSdtRequestReference();
     }
@@ -270,16 +267,17 @@ class CMCConsumerGatewayTest {
         IIndividualRequest individualRequest = mock(IIndividualRequest.class);
         setupMockBehaviour(JUDGMENT_WARRANT, individualRequest);
         JudgementWarrantResponse response = new JudgementWarrantResponse();
-        JudgementWarrantRequest request = new JudgementWarrantRequest();
-        when(xmlToObject.convertXmlToObject(anyString(), any())).thenReturn(request);
+
         when(xmlToObject.convertObjectToXml(any())).thenReturn("");
-        when(judgementWarrantService.judgementWarrantRequest(anyString(), anyString(), any(), anyString(), any())).thenReturn(response);
+        when(judgementWarrantService.judgementWarrantRequest(anyString(), anyString(), any(), anyString(), any()))
+            .thenReturn(response);
 
         cmcConsumerGateway.individualRequest(individualRequest, CONNECTION_TIME_OUT, RECEIVE_TIME_OUT);
 
-        verify(judgementWarrantService).judgementWarrantRequest(anyString(), anyString(), any(), anyString(), any(JudgementWarrantRequest.class));
+        verify(judgementWarrantService)
+            .judgementWarrantRequest(anyString(), anyString(), any(), anyString(), any(JudgementWarrantRequest.class));
         verify(xmlToObject).convertXmlToObject(anyString(), any());
-        verify(individualRequest).getRequestPayload();
+        verify(individualRequest, times(2)).getRequestPayload();
         verify(individualRequest).getRequestType();
         verify(individualRequest).getSdtRequestReference();
     }
@@ -294,18 +292,13 @@ class CMCConsumerGatewayTest {
         doThrow(exception).when(judgementService).requestJudgment(any(), any(), any());
 
         IIndividualRequest individualRequest = mock(IIndividualRequest.class);
-        JudgementRequest judgementRequest = mock(JudgementRequest.class);
-        when(individualRequest.getRequestPayload()).thenReturn(XML);
-        when(individualRequest.getSdtRequestReference()).thenReturn(SDT_REFERENCE);
-        when(xmlToObject.convertXmlToObject(anyString(), any())).thenReturn(judgementRequest);
-        when(individualRequest.getRequestType()).thenReturn(RequestType.JUDGMENT.getType());
+        setupMockBehaviour(JUDGMENT, individualRequest);
 
         try {
             cmcConsumerGateway.individualRequest(individualRequest, CONNECTION_TIME_OUT, RECEIVE_TIME_OUT);
         } catch (CaseOffLineException coe) {
             assertEquals(CASE_OFF_LINE, coe.getMessage());
         }
-
     }
 
     @Test
@@ -318,18 +311,13 @@ class CMCConsumerGatewayTest {
         doThrow(exception).when(judgementService).requestJudgment(any(), any(), any());
 
         IIndividualRequest individualRequest = mock(IIndividualRequest.class);
-        JudgementRequest judgementRequest = mock(JudgementRequest.class);
-        when(individualRequest.getRequestPayload()).thenReturn(XML);
-        when(individualRequest.getSdtRequestReference()).thenReturn(SDT_REFERENCE);
-        when(xmlToObject.convertXmlToObject(anyString(), any())).thenReturn(judgementRequest);
-        when(individualRequest.getRequestType()).thenReturn(RequestType.JUDGMENT.getType());
+        setupMockBehaviour(JUDGMENT, individualRequest);
 
         try {
             cmcConsumerGateway.individualRequest(individualRequest, CONNECTION_TIME_OUT, RECEIVE_TIME_OUT);
         } catch (CMCException ce) {
             assertEquals("Timeout", ce.getMessage());
         }
-
     }
 
     @Test
@@ -353,11 +341,34 @@ class CMCConsumerGatewayTest {
         response.setResultCount(1);
         response.setResults(Lists.newArrayList(claimDefencesResult));
         when(claimDefences.claimDefences(any(), any(), any(), anyString(), anyString())).thenReturn(response);
-        SubmitQueryResponse submitQueryResponse = cmcConsumerGateway.submitQuery(submitQueryRequest, 1000, 1000);
+        SubmitQueryResponse submitQueryResponse =
+            cmcConsumerGateway.submitQuery(submitQueryRequest, 1000, 1000);
 
         assertNotNull(submitQueryResponse);
         assertEquals(1, submitQueryResponse.getClaimDefencesResults().size());
         assertEquals(1, submitQueryResponse.getClaimDefencesResultsCount().intValue());
+    }
+
+    @Test
+    void shouldHandleNullRequestPayload() throws IOException {
+        IIndividualRequest individualRequest = new IndividualRequest();
+        individualRequest.setSdtRequestReference(SDT_REFERENCE);
+        individualRequest.setRequestType(BREATHING_SPACE.getType());
+
+        BreathingSpaceResponse breathingSpaceResponse = new BreathingSpaceResponse();
+        breathingSpaceResponse.setProcessingStatus(ProcessingStatus.PROCESSED);
+
+        when(xmlToObject.convertXmlToObject("", BreathingSpaceRequest.class)).thenReturn(breathingSpaceRequest);
+        when(breathingSpace.breathingSpace(null, SDT_REFERENCE, breathingSpaceRequest))
+            .thenReturn(breathingSpaceResponse);
+
+        cmcConsumerGateway.individualRequest(individualRequest, CONNECTION_TIME_OUT, RECEIVE_TIME_OUT);
+
+        assertEquals(ProcessingStatus.PROCESSED.name(), individualRequest.getRequestStatus(),
+                     "Request has unexpected processing status");
+
+        verify(xmlToObject).convertXmlToObject("", BreathingSpaceRequest.class);
+        verify(breathingSpace).breathingSpace(null, SDT_REFERENCE, breathingSpaceRequest);
     }
 
     private Date formattedDate() throws ParseException {
@@ -371,10 +382,13 @@ class CMCConsumerGatewayTest {
         when(individualRequest.getRequestPayload()).thenReturn(XML);
         when(individualRequest.getRequestType()).thenReturn(requestType.getType());
         if (requestType.equals(BREATHING_SPACE)) {
-            BreathingSpaceRequest breathingSpaceRequest = mock(BreathingSpaceRequest.class);
             when(xmlToObject.convertXmlToObject(anyString(), any())).thenReturn(breathingSpaceRequest);
         } else if (requestType.equals(CLAIM_STATUS_UPDATE)) {
             when(xmlToObject.convertXmlToObject(anyString(), any())).thenReturn(claimStatusUpdateRequest);
+        } else if (requestType.equals(JUDGMENT)) {
+            when(xmlToObject.convertXmlToObject(anyString(), any())).thenReturn(judgementRequest);
+        } else if (requestType.equals(CLAIM)) {
+            when(xmlToObject.convertXmlToObject(anyString(), any())).thenReturn(claimRequest);
         } else if (requestType.equals(WARRANT)) {
             when(xmlToObject.convertXmlToObject(anyString(), any())).thenReturn(warrantRequest);
         } else if (requestType.equals(JUDGMENT_WARRANT)) {

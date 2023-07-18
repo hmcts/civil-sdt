@@ -1,14 +1,5 @@
 package uk.gov.moj.sdt.services;
 
-import java.nio.charset.StandardCharsets;
-import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.function.Supplier;
-import javax.xml.ws.WebServiceException;
-
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.read.ListAppender;
@@ -47,9 +38,16 @@ import uk.gov.moj.sdt.services.messaging.api.ISdtMessage;
 import uk.gov.moj.sdt.services.utils.GenericXmlParser;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 import uk.gov.moj.sdt.utils.SdtContext;
-import uk.gov.moj.sdt.utils.cmc.CCDReferenceValidator;
 import uk.gov.moj.sdt.utils.cmc.RequestTypeXmlNodeValidator;
-import uk.gov.moj.sdt.utils.cmc.xml.XmlElementValueReader;
+
+import javax.xml.ws.WebServiceException;
+import java.nio.charset.StandardCharsets;
+import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.function.Supplier;
 
 import static ch.qos.logback.classic.Level.DEBUG;
 import static ch.qos.logback.classic.Level.ERROR;
@@ -62,8 +60,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.anyBoolean;
-import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.same;
 import static org.mockito.Mockito.doAnswer;
@@ -73,6 +69,7 @@ import static org.mockito.Mockito.isA;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static uk.gov.moj.sdt.utils.cmc.RequestType.BREATHING_SPACE;
 import static uk.gov.moj.sdt.utils.cmc.RequestType.CLAIM;
 import static uk.gov.moj.sdt.utils.cmc.RequestType.JUDGMENT;
 
@@ -86,17 +83,23 @@ class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestBase {
 
     private static final String TEST_1 = "TEST_1";
 
+    private static final String MCOL_INDV_REQ_DELAY = "MCOL_INDV_REQ_DELAY";
+
     private static final String TARGET_APP_TIMEOUT = "TARGET_APP_TIMEOUT";
 
     private static final String TARGET_APP_RESP_TIMEOUT = "TARGET_APP_RESP_TIMEOUT";
+
+    private static final String CONTACT_DETAILS = "CONTACT_DETAILS";
 
     private static final String RECEIVED = "Received";
 
     private static final String FORWARDED = "Forwarded";
 
-    private static final String MCOL_INDV_REQ_DELAY = "MCOL_INDV_REQ_DELAY";
+    private static final String TEN_MILLISECONDS = "10";
 
-    private static final String TWELVE_THOUSAND = "12000";
+    private static final String ONE_THOUSAND_MILLISECONDS = "1000";
+
+    private static final String TWELVE_THOUSAND_MILLISECONDS = "12000";
 
     private static final String DELAY_REQUEST_PROCESSING = "Delay request processing for 10 milliseconds";
 
@@ -108,9 +111,19 @@ class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestBase {
 
     private static final String REQ_NOT_ACK = "REQ_NOT_ACK";
 
-    private static String REQUEST_NOT_ACKNOWLEDGED = "Request Not Acknowledged";
+    private static final String REQUEST_NOT_ACKNOWLEDGED = "Request Not Acknowledged";
 
     private static final String MAX_FORWARDING_ATTEMPTS = "MAX_FORWARDING_ATTEMPTS";
+
+    private static final String TARGET_APP_CODE_MCOL = "MCOL";
+
+    private static final String NODE_NAME_CLAIM_NUMBER = "claimNumber";
+
+    private static final String CUST_XML_ERR_CODE = "CUST_XML_ERR";
+
+    private static final String CUST_XML_ERR_DESCRIPTION = "SDT Client Data Error";
+
+    private static final String REQUEST_PAYLOAD = "Test Xml";
 
     /**
      * Target Application Submision Service object.
@@ -151,13 +164,7 @@ class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestBase {
     private ICacheable mockErrorMsgCacheable;
 
     @Mock
-    private CCDReferenceValidator ccdReferenceValidator;
-
-    @Mock
     private RequestTypeXmlNodeValidator requestTypeXmlNodeValidator;
-
-    @Mock
-    private XmlElementValueReader xmlReader;
 
     /**
      * Method to do any pre-test set-up.
@@ -207,7 +214,7 @@ class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestBase {
             individualRequest);
 
         final IGlobalParameter individualReqProcessingDelay = new GlobalParameter();
-        individualReqProcessingDelay.setValue("10");
+        individualReqProcessingDelay.setValue(TEN_MILLISECONDS);
         individualReqProcessingDelay.setName(MCOL_INDV_REQ_DELAY);
         when(this.mockCacheable.getValue(IGlobalParameter.class, MCOL_INDV_REQ_DELAY)).thenReturn(
             individualReqProcessingDelay);
@@ -216,13 +223,13 @@ class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestBase {
 
         final IGlobalParameter connectionTimeOutParam = new GlobalParameter();
         connectionTimeOutParam.setName(TARGET_APP_TIMEOUT);
-        connectionTimeOutParam.setValue("1000");
+        connectionTimeOutParam.setValue(ONE_THOUSAND_MILLISECONDS);
         when(this.mockCacheable.getValue(IGlobalParameter.class, TARGET_APP_TIMEOUT)).thenReturn(
             connectionTimeOutParam);
 
         final IGlobalParameter receiveTimeOutParam = new GlobalParameter();
         receiveTimeOutParam.setName(TARGET_APP_RESP_TIMEOUT);
-        receiveTimeOutParam.setValue(TWELVE_THOUSAND);
+        receiveTimeOutParam.setValue(TWELVE_THOUSAND_MILLISECONDS);
         when(this.mockCacheable.getValue(IGlobalParameter.class, TARGET_APP_RESP_TIMEOUT)).thenReturn(
             receiveTimeOutParam);
 
@@ -281,7 +288,7 @@ class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestBase {
         when(this.mockIndividualRequestDao.getRequestBySdtReference(TEST_1)).thenReturn(
             individualRequest);
 
-        mockGlobalParameterCache(MCOL_INDV_REQ_DELAY, TARGET_APP_TIMEOUT, TARGET_APP_RESP_TIMEOUT, TWELVE_THOUSAND);
+        mockGlobalParameterCache(TEN_MILLISECONDS, ONE_THOUSAND_MILLISECONDS, TWELVE_THOUSAND_MILLISECONDS);
 
         doAnswer(invocation -> {
             IndividualRequest argument = invocation.getArgument(0);
@@ -330,7 +337,7 @@ class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestBase {
         when(this.mockIndividualRequestDao.getRequestBySdtReference(TEST_1)).thenReturn(
             individualRequest);
 
-        mockGlobalParameterCache(MCOL_INDV_REQ_DELAY, TARGET_APP_TIMEOUT, TARGET_APP_RESP_TIMEOUT, TWELVE_THOUSAND);
+        mockGlobalParameterCache(TEN_MILLISECONDS, ONE_THOUSAND_MILLISECONDS, TWELVE_THOUSAND_MILLISECONDS);
 
         doAnswer(invocation -> {
             IndividualRequest argument = invocation.getArgument(0);
@@ -400,7 +407,7 @@ class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestBase {
         when(this.mockIndividualRequestDao.getRequestBySdtReference(TEST_1)).thenReturn(
             individualRequest);
 
-        mockGlobalParameterCache(MCOL_INDV_REQ_DELAY, TARGET_APP_TIMEOUT, TARGET_APP_RESP_TIMEOUT, TWELVE_THOUSAND);
+        mockGlobalParameterCache(TEN_MILLISECONDS, ONE_THOUSAND_MILLISECONDS, TWELVE_THOUSAND_MILLISECONDS);
 
         final TimeoutException timeoutEx = new TimeoutException("Timeout occurred", "Timeout occurred");
 
@@ -470,7 +477,7 @@ class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestBase {
             individualRequest);
 
         final IGlobalParameter individualReqProcessingDelay = new GlobalParameter();
-        individualReqProcessingDelay.setValue("10");
+        individualReqProcessingDelay.setValue(TEN_MILLISECONDS);
         individualReqProcessingDelay.setName(MCOL_INDV_REQ_DELAY);
         when(this.mockCacheable.getValue(IGlobalParameter.class, MCOL_INDV_REQ_DELAY)).thenReturn(
             individualReqProcessingDelay);
@@ -479,13 +486,13 @@ class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestBase {
 
         final IGlobalParameter connectionTimeOutParam = new GlobalParameter();
         connectionTimeOutParam.setName(TARGET_APP_TIMEOUT);
-        connectionTimeOutParam.setValue("1000");
+        connectionTimeOutParam.setValue(ONE_THOUSAND_MILLISECONDS);
         when(this.mockCacheable.getValue(IGlobalParameter.class, TARGET_APP_TIMEOUT)).thenReturn(
             connectionTimeOutParam);
 
         final IGlobalParameter receiveTimeOutParam = new GlobalParameter();
         receiveTimeOutParam.setName(TARGET_APP_RESP_TIMEOUT);
-        receiveTimeOutParam.setValue(TWELVE_THOUSAND);
+        receiveTimeOutParam.setValue(TWELVE_THOUSAND_MILLISECONDS);
         when(this.mockCacheable.getValue(IGlobalParameter.class, TARGET_APP_RESP_TIMEOUT)).thenReturn(
             receiveTimeOutParam);
 
@@ -533,7 +540,7 @@ class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestBase {
         when(this.mockIndividualRequestDao.getRequestBySdtReference(TEST_1)).thenReturn(
             individualRequest);
 
-        mockGlobalParameterCache(MCOL_INDV_REQ_DELAY, TARGET_APP_TIMEOUT, TARGET_APP_RESP_TIMEOUT, TWELVE_THOUSAND);
+        mockGlobalParameterCache(TEN_MILLISECONDS, ONE_THOUSAND_MILLISECONDS, TWELVE_THOUSAND_MILLISECONDS);
 
         final SoapFaultException soapEx = new SoapFaultException("Soap Fault", "Soap Fault occurred");
 
@@ -586,7 +593,7 @@ class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestBase {
         when(this.mockIndividualRequestDao.getRequestBySdtReference(TEST_1)).thenReturn(
             individualRequest);
 
-        mockGlobalParameterCache(MCOL_INDV_REQ_DELAY, TARGET_APP_TIMEOUT, TARGET_APP_RESP_TIMEOUT, TWELVE_THOUSAND);
+        mockGlobalParameterCache(TEN_MILLISECONDS, ONE_THOUSAND_MILLISECONDS, TWELVE_THOUSAND_MILLISECONDS);
 
         doAnswer(invocation -> {
             IndividualRequest argument = invocation.getArgument(0);
@@ -645,18 +652,18 @@ class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestBase {
 
         final IGlobalParameter contactNameParameter = new GlobalParameter();
         contactNameParameter.setValue("Tester");
-        contactNameParameter.setName("CONTACT_DETAILS");
-        when(this.mockCacheable.getValue(IGlobalParameter.class, "CONTACT_DETAILS")).thenReturn(
+        contactNameParameter.setName(CONTACT_DETAILS);
+        when(this.mockCacheable.getValue(IGlobalParameter.class, CONTACT_DETAILS)).thenReturn(
             contactNameParameter);
 
         final IErrorMessage errorMsg = new ErrorMessage();
-        errorMsg.setErrorCode("CUST_XML_ERR");
-        errorMsg.setErrorDescription("SDT Client Data Error");
+        errorMsg.setErrorCode(CUST_XML_ERR_CODE);
+        errorMsg.setErrorDescription(CUST_XML_ERR_DESCRIPTION);
         errorMsg.setErrorText("Individual Request format could not be processed by "
                                   + "the Target Application. Please check the data and resubmit the "
                                   + "request, or contact {0} for assistance.");
 
-        when(this.mockErrorMsgCacheable.getValue(IErrorMessage.class, "CUST_XML_ERR"))
+        when(this.mockErrorMsgCacheable.getValue(IErrorMessage.class, CUST_XML_ERR_CODE))
             .thenReturn(errorMsg);
 
         final String contactName = "Test";
@@ -694,8 +701,8 @@ class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestBase {
 
         verify(mockIndividualRequestDao).persist(bulkSubmission);
 
-        verify(mockCacheable).getValue(IGlobalParameter.class, "CONTACT_DETAILS");
-        verify(mockErrorMsgCacheable).getValue(IErrorMessage.class, "CUST_XML_ERR");
+        verify(mockCacheable).getValue(IGlobalParameter.class, CONTACT_DETAILS);
+        verify(mockErrorMsgCacheable).getValue(IErrorMessage.class, CUST_XML_ERR_CODE);
         verify(mockIndividualRequestDao).queryAsCount(eq(IndividualRequest.class), isA(Supplier.class));
 
     }
@@ -736,7 +743,7 @@ class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestBase {
         final ITargetApplication targetApp = new TargetApplication();
 
         targetApp.setId(1L);
-        targetApp.setTargetApplicationCode("MCOL");
+        targetApp.setTargetApplicationCode(TARGET_APP_CODE_MCOL);
         targetApp.setTargetApplicationName("TEST_TargetApp");
         final Set<IServiceRouting> serviceRoutings = new HashSet<>();
 
@@ -771,7 +778,7 @@ class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestBase {
         bulkSubmission.setIndividualRequests(requests);
 
         request.setBulkSubmission(bulkSubmission);
-        request.setRequestPayload("Test Xml".getBytes(StandardCharsets.UTF_8));
+        request.setRequestPayload(REQUEST_PAYLOAD.getBytes(StandardCharsets.UTF_8));
     }
 
     @Test
@@ -786,18 +793,18 @@ class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestBase {
         when(this.mockIndividualRequestDao.getRequestBySdtReference(sdtRequestRef)).thenReturn(individualRequest);
 
         final IGlobalParameter individualReqProcessingDelay = new GlobalParameter();
-        individualReqProcessingDelay.setValue("10");
+        individualReqProcessingDelay.setValue(TEN_MILLISECONDS);
         individualReqProcessingDelay.setName(MCOL_INDV_REQ_DELAY);
         when(this.mockCacheable.getValue(IGlobalParameter.class, MCOL_INDV_REQ_DELAY)).thenReturn(individualReqProcessingDelay);
 
         final IGlobalParameter connectionTimeOutParam = new GlobalParameter();
         connectionTimeOutParam.setName(TARGET_APP_TIMEOUT);
-        connectionTimeOutParam.setValue("1000");
+        connectionTimeOutParam.setValue(ONE_THOUSAND_MILLISECONDS);
         when(this.mockCacheable.getValue(IGlobalParameter.class, TARGET_APP_TIMEOUT)).thenReturn(connectionTimeOutParam);
 
         final IGlobalParameter receiveTimeOutParam = new GlobalParameter();
         receiveTimeOutParam.setName(TARGET_APP_RESP_TIMEOUT);
-        receiveTimeOutParam.setValue(TWELVE_THOUSAND);
+        receiveTimeOutParam.setValue(TWELVE_THOUSAND_MILLISECONDS);
         when(this.mockCacheable.getValue(IGlobalParameter.class, TARGET_APP_RESP_TIMEOUT)).thenReturn(receiveTimeOutParam);
 
         final List<IIndividualRequest> indRequests = new ArrayList<>();
@@ -827,8 +834,8 @@ class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestBase {
         SdtContext.getContext().setRawInXml(RESPONSE);
 
         final IErrorMessage errorMsg = expectErrorMessage(
-            "CUST_XML_ERR",
-            "SDT Client Data Error",
+            CUST_XML_ERR_CODE,
+            CUST_XML_ERR_DESCRIPTION,
             "Exception calling target application for SDT reference"
         );
 
@@ -847,94 +854,84 @@ class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestBase {
 
     @Test
     void processCCDReferenceRequestWhenCaseNotOffLine() {
-        final String sdtRequestRef = "TEST_1";
         final IIndividualRequest individualRequest = new IndividualRequest();
 
-        individualRequest.setSdtRequestReference(sdtRequestRef);
+        individualRequest.setSdtRequestReference(TEST_1);
         individualRequest.setRequestStatus(RECEIVED);
         setUpIndividualRequest(individualRequest);
         individualRequest.setRequestType(JUDGMENT.getType());
-        individualRequest.setRequestPayload("Test Xml".getBytes(StandardCharsets.UTF_8));
+        individualRequest.setRequestPayload(REQUEST_PAYLOAD.getBytes(StandardCharsets.UTF_8));
 
-        when(this.mockIndividualRequestDao.getRequestBySdtReference(sdtRequestRef)).thenReturn(individualRequest);
+        when(this.mockIndividualRequestDao.getRequestBySdtReference(TEST_1)).thenReturn(individualRequest);
 
-        mockGlobalParameterCache("MCOL_INDV_REQ_DELAY",
-                                 "TARGET_APP_TIMEOUT",
-                                 "TARGET_APP_RESP_TIMEOUT",
-                                 "12000");
+        mockGlobalParameterCache(TEN_MILLISECONDS, ONE_THOUSAND_MILLISECONDS, TWELVE_THOUSAND_MILLISECONDS);
 
         when(requestTypeXmlNodeValidator.isCMCRequestType(anyString(), anyString(), anyString(), anyBoolean())).thenReturn(true);
 
-
-        this.targetAppSubmissionService.processRequestToSubmit(sdtRequestRef, false);
+        this.targetAppSubmissionService.processRequestToSubmit(TEST_1, false);
 
         assertEquals(IIndividualRequest.IndividualRequestStatus.FORWARDED.getStatus(), individualRequest.getRequestStatus());
 
         verify(mockCmcConsumerGateway).individualRequest(any(IIndividualRequest.class), anyLong(), anyLong());
         verify(mockIndividualRequestDao, times(2)).persist(individualRequest);
-        verify(mockCacheable).getValue(IGlobalParameter.class, "TARGET_APP_RESP_TIMEOUT");
-        verify(mockCacheable).getValue(IGlobalParameter.class, "TARGET_APP_TIMEOUT");
-        verify(mockCacheable).getValue(IGlobalParameter.class, "MCOL_INDV_REQ_DELAY");
-        verify(mockIndividualRequestDao).getRequestBySdtReference(sdtRequestRef);
+        verify(mockCacheable).getValue(IGlobalParameter.class, TARGET_APP_RESP_TIMEOUT);
+        verify(mockCacheable).getValue(IGlobalParameter.class, TARGET_APP_TIMEOUT);
+        verify(mockCacheable).getValue(IGlobalParameter.class, MCOL_INDV_REQ_DELAY);
+        verify(mockIndividualRequestDao).getRequestBySdtReference(TEST_1);
         verify(requestTypeXmlNodeValidator, times(2)).isCMCRequestType(anyString(), anyString(), anyString(), anyBoolean());
     }
 
     @Test
     void processCCDReferenceRequestFailOnCaseOffLine() {
-        final String sdtRequestRef = "TEST_1";
         final IIndividualRequest individualRequest = new IndividualRequest();
 
-        individualRequest.setSdtRequestReference(sdtRequestRef);
-        individualRequest.setRequestStatus("Received");
-        setUpIndividualRequest(individualRequest);
-        individualRequest.setRequestType(JUDGMENT.getType());
-
-        when(this.mockIndividualRequestDao.getRequestBySdtReference(sdtRequestRef)).thenReturn(individualRequest);
-
-        individualRequest.setSdtRequestReference(sdtRequestRef);
+        individualRequest.setSdtRequestReference(TEST_1);
         individualRequest.setRequestStatus(RECEIVED);
         setUpIndividualRequest(individualRequest);
         individualRequest.setRequestType(JUDGMENT.getType());
-        individualRequest.setRequestPayload("Test Xml".getBytes(StandardCharsets.UTF_8));
 
-        when(this.mockIndividualRequestDao.getRequestBySdtReference(sdtRequestRef)).thenReturn(individualRequest);
+        when(this.mockIndividualRequestDao.getRequestBySdtReference(TEST_1)).thenReturn(individualRequest);
 
-        mockGlobalParameterCache("MCOL_INDV_REQ_DELAY",
-                                 "TARGET_APP_TIMEOUT",
-                                 "TARGET_APP_RESP_TIMEOUT",
-                                 "12000");
+        individualRequest.setSdtRequestReference(TEST_1);
+        individualRequest.setRequestStatus(RECEIVED);
+        setUpIndividualRequest(individualRequest);
+        individualRequest.setRequestType(JUDGMENT.getType());
+        individualRequest.setRequestPayload(REQUEST_PAYLOAD.getBytes(StandardCharsets.UTF_8));
+
+        when(this.mockIndividualRequestDao.getRequestBySdtReference(TEST_1)).thenReturn(individualRequest);
+
+        mockGlobalParameterCache(TEN_MILLISECONDS, ONE_THOUSAND_MILLISECONDS, TWELVE_THOUSAND_MILLISECONDS);
 
         when(requestTypeXmlNodeValidator.isCMCRequestType(anyString(), anyString(), anyString(), anyBoolean())).thenReturn(true);
 
-
-        this.targetAppSubmissionService.processRequestToSubmit(sdtRequestRef, false);
+        this.targetAppSubmissionService.processRequestToSubmit(TEST_1, false);
 
         assertEquals(IIndividualRequest.IndividualRequestStatus.FORWARDED.getStatus(), individualRequest.getRequestStatus());
 
         verify(mockCmcConsumerGateway).individualRequest(any(IIndividualRequest.class), anyLong(), anyLong());
         verify(mockIndividualRequestDao, times(2)).persist(individualRequest);
-        verify(mockCacheable).getValue(IGlobalParameter.class, "TARGET_APP_RESP_TIMEOUT");
-        verify(mockCacheable).getValue(IGlobalParameter.class, "TARGET_APP_TIMEOUT");
-        verify(mockCacheable).getValue(IGlobalParameter.class, "MCOL_INDV_REQ_DELAY");
-        verify(mockIndividualRequestDao).getRequestBySdtReference(sdtRequestRef);
+        verify(mockCacheable).getValue(IGlobalParameter.class, TARGET_APP_RESP_TIMEOUT);
+        verify(mockCacheable).getValue(IGlobalParameter.class, TARGET_APP_TIMEOUT);
+        verify(mockCacheable).getValue(IGlobalParameter.class, MCOL_INDV_REQ_DELAY);
+        verify(mockIndividualRequestDao).getRequestBySdtReference(TEST_1);
         verify(requestTypeXmlNodeValidator, times(2)).isCMCRequestType(anyString(), anyString(), anyString(), anyBoolean());
     }
 
-    private void mockGlobalParameterCache(String MCOL_INDV_REQ_DELAY, String TARGET_APP_TIMEOUT, String TARGET_APP_RESP_TIMEOUT, String value) {
+    private void mockGlobalParameterCache(String individualRequestDelay, String targetAppTimeout, String targetAppResponseTimeout) {
         final IGlobalParameter individualReqProcessingDelay = new GlobalParameter();
-        individualReqProcessingDelay.setValue("10");
+        individualReqProcessingDelay.setValue(individualRequestDelay);
         individualReqProcessingDelay.setName(MCOL_INDV_REQ_DELAY);
         when(this.mockCacheable.getValue(IGlobalParameter.class, MCOL_INDV_REQ_DELAY)).thenReturn(
             individualReqProcessingDelay);
 
         final IGlobalParameter connectionTimeOutParam = new GlobalParameter();
         connectionTimeOutParam.setName(TARGET_APP_TIMEOUT);
-        connectionTimeOutParam.setValue("1000");
+        connectionTimeOutParam.setValue(targetAppTimeout);
         when(this.mockCacheable.getValue(IGlobalParameter.class, TARGET_APP_TIMEOUT)).thenReturn(connectionTimeOutParam);
 
         final IGlobalParameter receiveTimeOutParam = new GlobalParameter();
         receiveTimeOutParam.setName(TARGET_APP_RESP_TIMEOUT);
-        receiveTimeOutParam.setValue(value);
+        receiveTimeOutParam.setValue(targetAppResponseTimeout);
         when(this.mockCacheable.getValue(IGlobalParameter.class,
                                          TARGET_APP_RESP_TIMEOUT
         )).thenReturn(receiveTimeOutParam);
@@ -942,24 +939,20 @@ class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestBase {
 
     @Test
     void processClaimRequestWhenBulkCustomerReadyForAlternateService() {
-        final String sdtRequestRef = "TEST_1";
         final IIndividualRequest individualRequest = new IndividualRequest();
-        individualRequest.setSdtRequestReference(sdtRequestRef);
-        individualRequest.setRequestStatus("Received");
+        individualRequest.setSdtRequestReference(TEST_1);
+        individualRequest.setRequestStatus(RECEIVED);
         setUpIndividualRequest(individualRequest);
         individualRequest.setRequestType(CLAIM.getType());
-        individualRequest.setRequestPayload("Test Xml".getBytes(StandardCharsets.UTF_8));
-        individualRequest.setRequestStatus("Forwarded");
+        individualRequest.setRequestPayload(REQUEST_PAYLOAD.getBytes(StandardCharsets.UTF_8));
+        individualRequest.setRequestStatus(FORWARDED);
         individualRequest.getBulkSubmission().getBulkCustomer().setReadyForAlternateService(true);
 
-        mockGlobalParameterCache("MCOL_INDV_REQ_DELAY",
-                                 "TARGET_APP_TIMEOUT",
-                                 "TARGET_APP_RESP_TIMEOUT",
-                                 "12000");
+        mockGlobalParameterCache(TEN_MILLISECONDS, ONE_THOUSAND_MILLISECONDS, TWELVE_THOUSAND_MILLISECONDS);
 
         final IErrorMessage errorMsg = expectErrorMessage(
-            "CUST_XML_ERR",
-            "SDT Client Data Error",
+            CUST_XML_ERR_CODE,
+            CUST_XML_ERR_DESCRIPTION,
             "Exception calling target application for SDT reference"
         );
 
@@ -969,19 +962,79 @@ class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestBase {
 
         individualRequest.setErrorLog(errorLog);
         individualRequest.setRequestStatus(IIndividualRequest.IndividualRequestStatus.REJECTED.getStatus());
-        when(this.mockIndividualRequestDao.getRequestBySdtReference(sdtRequestRef)).thenReturn(individualRequest);
+        when(this.mockIndividualRequestDao.getRequestBySdtReference(TEST_1)).thenReturn(individualRequest);
         doCallRealMethod().when(requestTypeXmlNodeValidator).isCMCClaimRequest(CLAIM.getType(), true);
 
-        this.targetAppSubmissionService.processRequestToSubmit(sdtRequestRef, false);
+        this.targetAppSubmissionService.processRequestToSubmit(TEST_1, false);
 
         verify(mockCmcConsumerGateway).individualRequest(any(IIndividualRequest.class), anyLong(), anyLong());
         verify(requestTypeXmlNodeValidator, times(2)).isCMCClaimRequest(CLAIM.getType(), true);
         verify(mockIndividualRequestDao, times(2)).persist(individualRequest);
-        verify(mockCacheable).getValue(IGlobalParameter.class, "TARGET_APP_RESP_TIMEOUT");
-        verify(mockCacheable).getValue(IGlobalParameter.class, "TARGET_APP_TIMEOUT");
-        verify(mockCacheable).getValue(IGlobalParameter.class, "MCOL_INDV_REQ_DELAY");
+        verify(mockCacheable).getValue(IGlobalParameter.class, TARGET_APP_RESP_TIMEOUT);
+        verify(mockCacheable).getValue(IGlobalParameter.class, TARGET_APP_TIMEOUT);
+        verify(mockCacheable).getValue(IGlobalParameter.class, MCOL_INDV_REQ_DELAY);
     }
 
+    @Test
+    void processRequestToSubmitNullRequestPayload() {
+
+        TargetApplication targetApplication = new TargetApplication();
+        targetApplication.setTargetApplicationCode(TARGET_APP_CODE_MCOL);
+
+        BulkCustomer bulkCustomer = new BulkCustomer();
+        bulkCustomer.setReadyForAlternateService(false);
+
+        BulkSubmission bulkSubmission = new BulkSubmission();
+        bulkSubmission.setTargetApplication(targetApplication);
+        bulkSubmission.setBulkCustomer(bulkCustomer);
+
+        IndividualRequest individualRequest = new IndividualRequest();
+        individualRequest.setRequestType(BREATHING_SPACE.getType());
+        individualRequest.setSdtRequestReference(TEST_1);
+        individualRequest.setRequestPayload(null);
+        individualRequest.setBulkSubmission(bulkSubmission);
+
+        GlobalParameter mcolIndvReqDelay = new GlobalParameter();
+        mcolIndvReqDelay.setValue(null);
+
+        SdtContext.getContext().setRawInXml(RESPONSE);
+
+        when(mockIndividualRequestDao.getRequestBySdtReference(TEST_1)).thenReturn(individualRequest);
+
+        when(mockCacheable.getValue(IGlobalParameter.class, MCOL_INDV_REQ_DELAY)).thenReturn(mcolIndvReqDelay);
+        when(mockCacheable.getValue(IGlobalParameter.class, TARGET_APP_TIMEOUT)).thenReturn(null);
+        when(mockCacheable.getValue(IGlobalParameter.class, TARGET_APP_RESP_TIMEOUT)).thenReturn(null);
+
+        when(requestTypeXmlNodeValidator.isCMCClaimRequest(BREATHING_SPACE.getType(), false))
+            .thenReturn(false);
+        when(requestTypeXmlNodeValidator.isCMCRequestType(BREATHING_SPACE.getType(), "", NODE_NAME_CLAIM_NUMBER, true))
+            .thenReturn(false);
+
+        when(mockIndividualRequestDao.queryAsCount(any(), any())).thenReturn(1L);
+
+        targetAppSubmissionService.processRequestToSubmit(TEST_1, false);
+
+        assertEquals(1, individualRequest.getForwardingAttempts(),
+                     "Individual request has unexpected number of forwarding attempts");
+
+        verify(mockIndividualRequestDao).getRequestBySdtReference(TEST_1);
+
+        verify(mockCacheable).getValue(IGlobalParameter.class, MCOL_INDV_REQ_DELAY);
+        verify(mockCacheable).getValue(IGlobalParameter.class, TARGET_APP_TIMEOUT);
+        verify(mockCacheable).getValue(IGlobalParameter.class, TARGET_APP_RESP_TIMEOUT);
+
+        verify(requestTypeXmlNodeValidator, times(2)).
+            isCMCClaimRequest(BREATHING_SPACE.getType(), false);
+        verify(requestTypeXmlNodeValidator).
+            isCMCRequestType(BREATHING_SPACE.getType(), "", NODE_NAME_CLAIM_NUMBER, true);
+        verify(requestTypeXmlNodeValidator).
+            isCMCRequestType(BREATHING_SPACE.getType(), "", NODE_NAME_CLAIM_NUMBER, false);
+
+        verify(mockIndividualRequestDao).queryAsCount(any(), any());
+
+        verify(mockIndividualRequestDao, times(2)).persist(individualRequest);
+        verify(mockConsumerGateway).individualRequest(individualRequest, 0, 0);
+    }
 
     private static boolean verifyLog(List<ILoggingEvent> logList, String message) {
         boolean verifyLog = false;
