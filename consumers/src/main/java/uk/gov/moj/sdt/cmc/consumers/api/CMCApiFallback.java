@@ -96,7 +96,6 @@ public class CMCApiFallback implements CMCApi {
                                                                judgmentWarrantRequest);
     }
 
-
     @Override
     public ClaimResponse createSDTClaim(String idamId,
                                         String sdtRequestId,
