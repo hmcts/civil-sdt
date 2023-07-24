@@ -263,7 +263,7 @@ allprojects {
     implementation group: 'org.apache.tomcat.embed', name: 'tomcat-embed-core', version: tomcatVersion
     implementation group: 'org.apache.tomcat.embed', name: 'tomcat-embed-el', version: tomcatVersion
     implementation group: 'org.apache.tomcat.embed', name: 'tomcat-embed-websocket', version: tomcatVersion
-    implementation group: 'org.flywaydb', name: 'flyway-core', version: '9.5.0'
+    implementation group: 'org.flywaydb', name: 'flyway-core', version: '9.21.0'
     implementation group: 'org.glassfish', name: 'jakarta.el', version: '4.0.1'
     implementation group: 'org.hibernate', name: 'hibernate-validator', version: '7.0.5.Final'
     implementation group: 'org.postgresql', name: 'postgresql', version: postgresqlVersion
