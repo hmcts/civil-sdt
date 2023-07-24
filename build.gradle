@@ -356,7 +356,7 @@ allprojects {
       exclude group: 'org.codehaus.groovy', module: 'groovy'
     }
     testImplementation group: 'org.testcontainers', name: 'postgresql', version: testcontainers
-    testImplementation(platform('org.junit:junit-bom:5.8.2'))
+    testImplementation(platform('org.junit:junit-bom:5.10.0'))
     /*
       Use actual implementation of xerces 2.12.2 instead of the one bundled with Java.  The version in openJDK contains
       a bug in XMLSchemaValidator where cvc-complex-type.4 errors are reported twice.  The bug causes some XSD validation
