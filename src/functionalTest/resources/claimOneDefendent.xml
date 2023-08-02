@@ -1,0 +1,58 @@
+<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:bul="http://ws.sdt.moj.gov.uk/2013/sdt/BulkRequestSchema" xmlns:cla="http://ws.sdt.moj.gov.uk/2013/mcol/ClaimSchema" xmlns:bas="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" xmlns:jud="http://ws.sdt.moj.gov.uk/2013/mcol/JudgmentSchema" xmlns:cla1="http://ws.sdt.moj.gov.uk/2013/mcol/ClaimStatusUpdateSchema" xmlns:war="http://ws.sdt.moj.gov.uk/2013/mcol/WarrantSchema">
+   <soap:Header/>
+   <soap:Body>
+      <bul:bulkRequest>
+         <bul:header>
+            <bul:sdtCustomerId>10000001</bul:sdtCustomerId>
+            <bul:targetApplicationId>mcol</bul:targetApplicationId>
+            <bul:requestCount>1</bul:requestCount>
+            <bul:customerReference>RANDOM_NUMBER</bul:customerReference>
+         </bul:header>
+         <bul:requests>
+            <!--1 to 2000 repetitions:-->
+            <bul:request requestType="mcolClaim" requestId="RANDOM_NUMBER">
+               <!--You have a CHOICE of the next 5 items at this level-->
+               <bul:mcolClaim>
+                  <!--Optional:-->
+                  <cla:claimantReference>60000</cla:claimantReference>
+                  <!--Optional:-->
+                  <cla:claimant>
+                     <cla:name>claimantForename claimantSurname</cla:name>
+                     <cla:address>
+                        <cla:line1>claimantAddress line 1</cla:line1>
+                        <cla:line2>claimantAddress line 2</cla:line2>
+                     </cla:address>
+                  </cla:claimant>
+                  <!--Optional:-->
+                  <cla:defendant1>
+                     <cla:name>defendant1Forename defendant1Surname</cla:name>
+                     <cla:address>
+                        <bas:line1>defendant1Address line1</bas:line1>
+                        <bas:line2>defendant1Address line2</bas:line2>
+                        <bas:postcode>RG42 2DL</bas:postcode>
+                     </cla:address>
+                  </cla:defendant1>
+                  <cla:sendParticularsSeparately>true</cla:sendParticularsSeparately>
+                  <cla:reserveRightToClaimInterest>true</cla:reserveRightToClaimInterest>
+                  <!--Optional:-->
+                  <cla:interest>
+               		<cla:dailyAmount>1000</cla:dailyAmount>
+               		<cla:owedDate>2013-08-15</cla:owedDate>
+               		<cla:claimDate>2013-08-16</cla:claimDate>
+               		<cla:claimAmountInterestBase>10</cla:claimAmountInterestBase>
+            	   </cla:interest>
+                  <cla:claimAmount>9999999</cla:claimAmount>
+                  <!--Optional:-->
+                  <cla:solicitorCost>10000</cla:solicitorCost>
+                  <!--1 to 24 repetitions:-->
+                  <cla:particulars>hello</cla:particulars>
+                  <cla:sotSignature>
+                     <bas:flag>true</bas:flag>
+                     <bas:name>John</bas:name>
+                  </cla:sotSignature>
+               </bul:mcolClaim>
+            </bul:request>
+         </bul:requests>
+      </bul:bulkRequest>
+   </soap:Body>
+</soap:Envelope>

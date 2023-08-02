@@ -1,0 +1,53 @@
+import io.restassured.RestAssured;
+import io.restassured.response.Response;
+import net.serenitybdd.junit.runners.SerenityRunner;
+//import net.serenitybdd.SerenityJUnit5Extension.runners.SerenityRunner;
+
+import net.thucydides.core.annotations.Step;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import java.io.File;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.CoreMatchers.containsString;
+
+@RunWith(SerenityRunner.class)
+public class ValidGetBulkFeedback{
+
+    @Step("Given the soap request body")
+    public File soapRequestBody() {
+        return new File(getClass().getClassLoader().getResource("getBulkFeedback.xml").getFile());
+    }
+
+    @Step("When we send the soap request and get the response")
+    public Response soapResponse(File file) {
+        Response response = RestAssured
+                .given()
+                .baseUri("http://civil-sdt-demo.service.core-compute-demo.internal")
+                .basePath("/producers/service/sdtapi")
+                .header("Content-Type", "application/soap+xml;charset=UTF-8")
+                //.header("Content-Length", "1356")
+                .body(file)
+                .post();
+        return response;
+    }
+
+    @Step("Then the status code should be 200")
+    public void checkStatusCode(Response response) {
+        response.then().statusCode(200);
+        response.prettyPrint();
+    }
+
+    // @Test
+    // public void getBulkFeedback() {
+    //     File file = soapRequestBody();
+    //     Response response = soapResponse(file);
+    //     checkStatusCode(response);
+    //     String xPathResult = response.xmlPath().get("html.head.title");
+    //     //String title = doc.getString("html.head.title");
+    //     //var result = Integer.parseInt(String.valueOf(xPathResult));
+    //     assertThat(xPathResult, containsString("502 Bad Gateway"));
+        
+    // }
+}

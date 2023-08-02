@@ -1,0 +1,42 @@
+<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:bul="http://ws.sdt.moj.gov.uk/2013/sdt/BulkRequestSchema" xmlns:cla="http://ws.sdt.moj.gov.uk/2013/mcol/ClaimSchema" xmlns:bas="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema" xmlns:jud="http://ws.sdt.moj.gov.uk/2013/mcol/JudgmentSchema" xmlns:cla1="http://ws.sdt.moj.gov.uk/2013/mcol/ClaimStatusUpdateSchema" xmlns:war="http://ws.sdt.moj.gov.uk/2013/mcol/WarrantSchema">
+   <soap:Header/>
+   <soap:Body>
+      <bul:bulkRequest>
+         <bul:header>
+            <bul:sdtCustomerId>CUSTOMER_ID</bul:sdtCustomerId>
+            <bul:targetApplicationId>mcol</bul:targetApplicationId>
+            <bul:requestCount>REQUEST_COUNT</bul:requestCount>
+            <bul:customerReference>RANDOM_NUMBER</bul:customerReference>
+         </bul:header>
+         <bul:requests>
+            <!--1 to 2000 repetitions:-->
+            <bul:request requestType="mcolWarrant" requestId="RANDOM_NUMBER">
+               <!--You have a CHOICE of the next 5 items at this level-->
+            <bul:mcolWarrant>
+               <war:claimNumber>9QZ00003</war:claimNumber>
+               <war:defendantId>1</war:defendantId>
+               <war:defendantAddress>
+                  <bas:line1>defendant1Address line1</bas:line1>
+                  <bas:line2>defendant1Address line1</bas:line2>
+                  <!--Optional:-->
+                  <bas:line3>defendant1Address line1</bas:line3>
+                  <!--Optional:-->
+                  <bas:line4>defendant1Address line1</bas:line4>
+                  <bas:postcode>RG42 2DL</bas:postcode>
+               </war:defendantAddress>
+               <war:balanceOfDebt>50000</war:balanceOfDebt>
+               <war:warrantAmount>10000</war:warrantAmount>
+               <!--Optional:-->
+               <war:solicitorCost>5</war:solicitorCost>
+               <!--Optional:-->
+               <war:additionalNotes>additional notes</war:additionalNotes>
+               <war:sotSignature>
+                  <bas:flag>true</bas:flag>
+                  <bas:name>sotSignature</bas:name>
+               </war:sotSignature>
+            </bul:mcolWarrant>
+            </bul:request>
+         </bul:requests>
+      </bul:bulkRequest>
+   </soap:Body>
+</soap:Envelope>
