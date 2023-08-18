@@ -14,6 +14,10 @@ java:
       secrets:
         - name: civil-sdt-service-s2s-secret
           alias: CIVIL_SDT_S2S_KEY
+        - name: civil-sdt-system-user-username
+          alias: IDAM_SDT_USERNAME
+        - name: civil-sdt-system-user-password
+          alias: IDAM_SDT_PASSWORD
         - name: civil-sdt-appinsights-connection-string
           alias: APPINSIGHTS_CONNECTION_STRING
         - name: civil-sdt-POSTGRES-USER
