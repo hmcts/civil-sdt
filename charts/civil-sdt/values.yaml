@@ -7,6 +7,8 @@ java:
     SDT_DB_PORT: 5432
     SDT_DB_NAME: civil_sdt
     CIVIL_SDT_QUEUE: civil-sdt-in-out-{{ .Values.global.environment }}
+    IDAM_API_URL: https://idam-api.{{ .Values.global.environment }}.platform.hmcts.net
+    IDAM_S2S_URL: http://rpe-service-auth-provider-{{ .Values.global.environment }}.service.core-compute-{{ .Values.global.environment }}.internal
   keyVaults:
     civil-sdt:
       secrets:
