@@ -96,6 +96,12 @@ idam:
     password: ${IDAM_SDT_PASSWORD:Pa55word11}
   api:
     url: ${IDAM_API_URL:http://localhost:5000}
+  client:
+    id: civil_sdt
+    secret: ${IDAM_SDT_CLIENT_SECRET:civil_sdt_secret}
+    scope: openid profile roles
+    # The redirect_uri property is not used by SDT.  Included as required by IDAM for token generation.
+    redirect_uri: http://civil-sdt/oauth2redirect
 civil:
   api:
     url: ${CIVIL_API_URL:http://localhost:5000}
