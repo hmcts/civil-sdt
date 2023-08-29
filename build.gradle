@@ -225,7 +225,7 @@ allprojects {
     implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.10'
     implementation group: 'ch.qos.logback', name: 'logback-core', version: '1.2.10'
     implementation group: 'com.azure', name: 'azure-core', version: '1.13.0'
-    implementation group: 'com.azure', name: 'azure-messaging-servicebus', version: '7.0.2'
+    implementation group: 'com.azure', name: 'azure-messaging-servicebus', version: '7.14.3'
     implementation group: 'com.fasterxml.jackson.module', name: 'jackson-module-jaxb-annotations', version: '2.10.3'
     implementation group: 'com.github.hmcts.java-logging', name: 'logging', version: '6.0.1'
     implementation 'com.google.guava:guava:32.0.1-jre'
