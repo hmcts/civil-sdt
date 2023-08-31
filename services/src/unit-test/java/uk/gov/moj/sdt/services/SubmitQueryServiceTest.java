@@ -1,4 +1,3 @@
-
 package uk.gov.moj.sdt.services;
 
 import ch.qos.logback.classic.Logger;
@@ -7,9 +6,14 @@ import ch.qos.logback.core.read.ListAppender;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.NullSource;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.slf4j.LoggerFactory;
+import uk.gov.moj.sdt.cmc.consumers.model.claimdefences.ClaimDefencesResult;
 import uk.gov.moj.sdt.cmc.consumers.util.ResponsesSummaryUtil;
 import uk.gov.moj.sdt.consumers.api.IConsumerGateway;
 import uk.gov.moj.sdt.consumers.exception.OutageException;
@@ -33,22 +37,30 @@ import uk.gov.moj.sdt.domain.api.IServiceType;
 import uk.gov.moj.sdt.domain.api.ISubmitQueryRequest;
 import uk.gov.moj.sdt.domain.api.ITargetApplication;
 import uk.gov.moj.sdt.domain.cache.api.ICacheable;
+import uk.gov.moj.sdt.response.SubmitQueryResponse;
 import uk.gov.moj.sdt.services.utils.GenericXmlParser;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 import uk.gov.moj.sdt.utils.SdtContext;
 
 import javax.xml.ws.WebServiceException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Stream;
 
 import static ch.qos.logback.classic.Level.DEBUG;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.params.provider.Arguments.arguments;
+import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -189,7 +201,6 @@ public class SubmitQueryServiceTest extends AbstractSdtUnitTestBase {
         verify(mockConsumerGateway).submitQuery(submitQueryRequest, 1000, 12000);
         verify(mockErrorMsgCacheable).getValue(IErrorMessage.class, TAR_APP_ERROR);
         assertNull(SdtContext.getContext().getRawOutXml(),RAW_OUTPUT_XML_SHOULD_BE_NULL);
-
     }
 
     /**
@@ -308,7 +319,6 @@ public class SubmitQueryServiceTest extends AbstractSdtUnitTestBase {
         assertNull(SdtContext.getContext().getRawOutXml(), RAW_OUTPUT_XML_SHOULD_BE_NULL);
         assertEquals("SDT Internal Error, please report to Tester", submitQueryRequest.getErrorLog()
                 .getErrorText());
-
     }
 
     /**
@@ -398,7 +408,6 @@ public class SubmitQueryServiceTest extends AbstractSdtUnitTestBase {
         verify(mockErrorMsgCacheable).getValue(IErrorMessage.class, TAR_APP_BUSY);
 
         assertNull(SdtContext.getContext().getRawOutXml(),RAW_OUTPUT_XML_SHOULD_BE_NULL);
-
     }
 
     /**
@@ -451,14 +460,178 @@ public class SubmitQueryServiceTest extends AbstractSdtUnitTestBase {
 
         logger.detachAndStopAllAppenders();
 
-
         verify(mockConsumerGateway).submitQuery(submitQueryRequest, 1000, 12000);
 
         verify(mockGlobalParamCache).getValue(IGlobalParameter.class, TARGET_APP_TIMEOUT);
         verify(mockGlobalParamCache).getValue(IGlobalParameter.class, TARGET_APP_RESP_TIMEOUT);
         verify(mockGlobalParamCache).getValue(IGlobalParameter.class, MCOL_MAX_CONCURRENT_QUERY_REQ);
         verify(mockConsumerGateway).submitQuery(submitQueryRequest, 1000, 12000);
+    }
 
+    @Test
+    void testSubmitQueryCmc() {
+        // Set up query request
+        ISubmitQueryRequest submitQueryRequest = new SubmitQueryRequest();
+
+        IBulkCustomer requestBulkCustomer = new BulkCustomer();
+        requestBulkCustomer.setSdtCustomerId(10L);
+        submitQueryRequest.setBulkCustomer(requestBulkCustomer);
+
+        ITargetApplication requestTargetApplication = new TargetApplication();
+        requestTargetApplication.setTargetApplicationCode("MCOL");
+        submitQueryRequest.setTargetApplication(requestTargetApplication);
+
+        // Set up bulk customer to be returned by mockBulkConsumerDao
+        ITargetApplication targetApplication = new TargetApplication();
+        targetApplication.setTargetApplicationCode("MCOL");
+
+        IBulkCustomerApplication bulkCustomerApplication = new BulkCustomerApplication();
+        bulkCustomerApplication.setTargetApplication(targetApplication);
+
+        Set<IBulkCustomerApplication> bulkCustomerApplications = new HashSet<>();
+        bulkCustomerApplications.add(bulkCustomerApplication);
+
+        IBulkCustomer bulkCustomer = new BulkCustomer();
+        bulkCustomer.setReadyForAlternateService(Boolean.TRUE);
+        bulkCustomer.setBulkCustomerApplications(bulkCustomerApplications);
+
+        when(mockBulkCustomerDao.getBulkCustomerBySdtId(10L)).thenReturn(bulkCustomer);
+
+        // Set up global parameters to be returned by mockGlobalParamCache
+        final IGlobalParameter maxQueryReq = new GlobalParameter();
+        maxQueryReq.setName(MCOL_MAX_CONCURRENT_QUERY_REQ);
+        maxQueryReq.setValue("5");
+        when(mockGlobalParamCache.getValue(IGlobalParameter.class, MCOL_MAX_CONCURRENT_QUERY_REQ))
+            .thenReturn(maxQueryReq);
+
+        final IGlobalParameter connectionTimeOutParam = new GlobalParameter();
+        connectionTimeOutParam.setName(TARGET_APP_TIMEOUT);
+        connectionTimeOutParam.setValue("1000");
+        when(mockGlobalParamCache.getValue(IGlobalParameter.class, TARGET_APP_TIMEOUT)).thenReturn(
+            connectionTimeOutParam);
+
+        final IGlobalParameter receiveTimeOutParam = new GlobalParameter();
+        receiveTimeOutParam.setName(TARGET_APP_RESP_TIMEOUT);
+        receiveTimeOutParam.setValue(TWELVE_THOUSAND);
+        when(mockGlobalParamCache.getValue(IGlobalParameter.class, TARGET_APP_RESP_TIMEOUT))
+            .thenReturn(receiveTimeOutParam);
+
+        // Set up mockConsumerGateway
+        SubmitQueryResponse mcolSubmitQueryResponse = new SubmitQueryResponse();
+
+        when(mockConsumerGateway.submitQuery(submitQueryRequest, 1000, 12000))
+            .thenReturn(mcolSubmitQueryResponse);
+
+        // Set up mockCmcConsumerGateway
+        ClaimDefencesResult cmcClaimDefencesResult = new ClaimDefencesResult("casemanRef",
+                                                                             "1",
+                                                                             LocalDate.now(),
+                                                                             LocalDateTime.now(),
+                                                                             "responseType",
+                                                                             "The defence");
+        List<ClaimDefencesResult> cmcClaimDefencesResults = new ArrayList<>();
+        cmcClaimDefencesResults.add(cmcClaimDefencesResult);
+        SubmitQueryResponse cmcSubmitQueryResponse = new SubmitQueryResponse();
+        cmcSubmitQueryResponse.setClaimDefencesResults(cmcClaimDefencesResults);
+
+        when(mockCmcConsumerGateway.submitQuery(submitQueryRequest, 1000, 12000))
+            .thenReturn(cmcSubmitQueryResponse);
+
+        SdtContext.getContext().setRawInXml(CRITERIA);
+
+        submitQueryService.submitQuery(submitQueryRequest);
+
+        verify(mockBulkCustomerDao).getBulkCustomerBySdtId(10L);
+        verify(mockGlobalParamCache).getValue(IGlobalParameter.class, MCOL_MAX_CONCURRENT_QUERY_REQ);
+        verify(mockGlobalParamCache).getValue(IGlobalParameter.class, TARGET_APP_TIMEOUT);
+        verify(mockGlobalParamCache).getValue(IGlobalParameter.class, TARGET_APP_RESP_TIMEOUT);
+        verify(mockConsumerGateway).submitQuery(submitQueryRequest, 1000, 12000);
+        verify(mockCmcConsumerGateway).submitQuery(submitQueryRequest, 1000, 12000);
+        verify(responsesSummaryUtil).getSummaryResults(mcolSubmitQueryResponse, cmcClaimDefencesResults);
+    }
+
+    @ParameterizedTest
+    @NullSource
+    @MethodSource("noCmcClaimDefences")
+    void testSubmitQueryCmcNoCmcClaimDefences(SubmitQueryResponse cmcSubmitQueryResponse) {
+        // Set up query request
+        ISubmitQueryRequest submitQueryRequest = new SubmitQueryRequest();
+
+        IBulkCustomer requestBulkCustomer = new BulkCustomer();
+        requestBulkCustomer.setSdtCustomerId(10L);
+        submitQueryRequest.setBulkCustomer(requestBulkCustomer);
+
+        ITargetApplication requestTargetApplication = new TargetApplication();
+        requestTargetApplication.setTargetApplicationCode("MCOL");
+        submitQueryRequest.setTargetApplication(requestTargetApplication);
+
+        // Set up bulk customer to be returned by mockBulkConsumerDao
+        ITargetApplication targetApplication = new TargetApplication();
+        targetApplication.setTargetApplicationCode("MCOL");
+
+        IBulkCustomerApplication bulkCustomerApplication = new BulkCustomerApplication();
+        bulkCustomerApplication.setTargetApplication(targetApplication);
+
+        Set<IBulkCustomerApplication> bulkCustomerApplications = new HashSet<>();
+        bulkCustomerApplications.add(bulkCustomerApplication);
+
+        IBulkCustomer bulkCustomer = new BulkCustomer();
+        bulkCustomer.setReadyForAlternateService(Boolean.TRUE);
+        bulkCustomer.setBulkCustomerApplications(bulkCustomerApplications);
+
+        when(mockBulkCustomerDao.getBulkCustomerBySdtId(10L)).thenReturn(bulkCustomer);
+
+        // Set up global parameters to be returned by mockGlobalParamCache
+        final IGlobalParameter maxQueryReq = new GlobalParameter();
+        maxQueryReq.setName(MCOL_MAX_CONCURRENT_QUERY_REQ);
+        maxQueryReq.setValue("5");
+        when(mockGlobalParamCache.getValue(IGlobalParameter.class, MCOL_MAX_CONCURRENT_QUERY_REQ))
+            .thenReturn(maxQueryReq);
+
+        final IGlobalParameter connectionTimeOutParam = new GlobalParameter();
+        connectionTimeOutParam.setName(TARGET_APP_TIMEOUT);
+        connectionTimeOutParam.setValue("1000");
+        when(mockGlobalParamCache.getValue(IGlobalParameter.class, TARGET_APP_TIMEOUT)).thenReturn(
+            connectionTimeOutParam);
+
+        final IGlobalParameter receiveTimeOutParam = new GlobalParameter();
+        receiveTimeOutParam.setName(TARGET_APP_RESP_TIMEOUT);
+        receiveTimeOutParam.setValue(TWELVE_THOUSAND);
+        when(mockGlobalParamCache.getValue(IGlobalParameter.class, TARGET_APP_RESP_TIMEOUT))
+            .thenReturn(receiveTimeOutParam);
+
+        // Set up mockConsumerGateway
+        SubmitQueryResponse mcolSubmitQueryResponse = new SubmitQueryResponse();
+
+        when(mockConsumerGateway.submitQuery(submitQueryRequest, 1000, 12000)).thenReturn(mcolSubmitQueryResponse);
+
+        // Set up mockCmcConsumerGateway
+        when(mockCmcConsumerGateway.submitQuery(submitQueryRequest, 1000, 12000)).thenReturn(cmcSubmitQueryResponse);
+
+        SdtContext.getContext().setRawInXml(CRITERIA);
+
+        submitQueryService.submitQuery(submitQueryRequest);
+
+        verify(mockBulkCustomerDao).getBulkCustomerBySdtId(10L);
+        verify(mockGlobalParamCache).getValue(IGlobalParameter.class, MCOL_MAX_CONCURRENT_QUERY_REQ);
+        verify(mockGlobalParamCache).getValue(IGlobalParameter.class, TARGET_APP_TIMEOUT);
+        verify(mockGlobalParamCache).getValue(IGlobalParameter.class, TARGET_APP_RESP_TIMEOUT);
+        verify(mockConsumerGateway).submitQuery(submitQueryRequest, 1000, 12000);
+        verify(mockCmcConsumerGateway).submitQuery(submitQueryRequest, 1000, 12000);
+        verify(responsesSummaryUtil, never()).getSummaryResults(any(), any());
+    }
+
+    static Stream<Arguments> noCmcClaimDefences() {
+        SubmitQueryResponse nullCmcClaimDefencesResponse = new SubmitQueryResponse();
+
+        SubmitQueryResponse noCmcClaimDefencesResponse = new SubmitQueryResponse();
+        List<ClaimDefencesResult> claimDefencesResults = new ArrayList<>();
+        noCmcClaimDefencesResponse.setClaimDefencesResults(claimDefencesResults);
+
+        return Stream.of(
+            arguments(nullCmcClaimDefencesResponse),
+            arguments(noCmcClaimDefencesResponse)
+        );
     }
 
     /**
@@ -511,7 +684,6 @@ public class SubmitQueryServiceTest extends AbstractSdtUnitTestBase {
 
         submitQueryRequest.setTargetApplication(inTargetApp);
         submitQueryRequest.setBulkCustomer(inBulkCustomer);
-
     }
 
     @Test
@@ -588,9 +760,9 @@ public class SubmitQueryServiceTest extends AbstractSdtUnitTestBase {
 
     /**
      * Method to search for message within the Log list
-     * @param logList
-     * @param message
-     * @return Boolean
+     * @param logList The list of log messages
+     * @param message The log message to check for
+     * @return boolean Whether the log message is found in the list of log messages or not
      */
     private static boolean verifyLog(List<ILoggingEvent> logList, String message) {
         boolean verifyLog = false;
@@ -602,5 +774,4 @@ public class SubmitQueryServiceTest extends AbstractSdtUnitTestBase {
         }
         return verifyLog;
     }
-
 }
