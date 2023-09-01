@@ -497,6 +497,72 @@ class SubmitQueryServiceTest extends AbstractSdtUnitTestBase {
         );
     }
 
+    @Test
+    void setBulkCustomerDaoTest() {
+        IBulkCustomerDao bulkCustomerDaoMock = mock(IBulkCustomerDao.class);
+        submitQueryService.setBulkCustomerDao(bulkCustomerDaoMock);
+
+        Object result = this.getAccessibleField(SubmitQueryService.class, "bulkCustomerDao",
+                                                IBulkCustomerDao.class, submitQueryService);
+
+        assertEquals(bulkCustomerDaoMock, result, "bulkCustomerDao should be correctly set");
+    }
+
+    @Test
+    void setErrorMessageCacheableTest() {
+        ICacheable errorMsgCacheableMock = mock(ICacheable.class);
+        submitQueryService.setErrorMessagesCache(errorMsgCacheableMock);
+
+        Object result = this.getAccessibleField(SubmitQueryService.class, "errorMessagesCache",
+                                                ICacheable.class, submitQueryService);
+
+        assertEquals(errorMsgCacheableMock, result, "ErrorMsgCacheable should be correctly set");
+    }
+
+    @Test
+    void setGlobalParametersCacheTest() {
+        ICacheable globalParametersCacheMock = mock(ICacheable.class);
+        submitQueryService.setGlobalParametersCache(globalParametersCacheMock);
+
+        Object result = this.getAccessibleField(SubmitQueryService.class, "globalParametersCache",
+                                                ICacheable.class, submitQueryService);
+
+        assertEquals(globalParametersCacheMock, result, "GlobalParameters should be correctly set");
+    }
+
+    @Test
+    void setQueryResponseXmlParserTest() {
+        GenericXmlParser genericResponseXmlParserMock = mock(GenericXmlParser.class);
+        submitQueryService.setQueryResponseXmlParser(genericResponseXmlParserMock);
+
+        Object result = this.getAccessibleField(SubmitQueryService.class, "queryResponseXmlParser",
+                                                GenericXmlParser.class, submitQueryService);
+
+        assertEquals(genericResponseXmlParserMock, result, "genericXmlParser should be correctly set");
+    }
+
+    @Test
+    void setQueryRequestXmlParserTest() {
+        GenericXmlParser genericRequestXmlParserMock = mock(GenericXmlParser.class);
+        submitQueryService.setQueryRequestXmlParser(genericRequestXmlParserMock);
+
+        Object result = this.getAccessibleField(SubmitQueryService.class, "queryRequestXmlParser",
+                                                GenericXmlParser.class, submitQueryService);
+
+        assertEquals(genericRequestXmlParserMock, result, "genericXmlParser should be correctly set");
+    }
+
+    @Test
+    void setRequestConsumerTest() {
+        IConsumerGateway consumerGatewayMock = mock(IConsumerGateway.class);
+        submitQueryService.setRequestConsumer(consumerGatewayMock);
+
+        Object result = this.getAccessibleField(SubmitQueryService.class, "requestConsumer",
+                                                IConsumerGateway.class, submitQueryService);
+
+        assertEquals(consumerGatewayMock, result, "consumerGateway should be correctly set");
+    }
+
     /**
      * Set up a valid submit query request object.
      *
@@ -573,78 +639,6 @@ class SubmitQueryServiceTest extends AbstractSdtUnitTestBase {
         bulkCustomer.setBulkCustomerApplications(bulkCustomerApplications);
 
         when(mockBulkCustomerDao.getBulkCustomerBySdtId(sdtCustomerId)).thenReturn(bulkCustomer);
-    }
-
-    @Test
-    void setBulkCustomerDaoTest(){
-
-        IBulkCustomerDao bulkCustomerDaoMock = mock(IBulkCustomerDao.class);
-        submitQueryService.setBulkCustomerDao(bulkCustomerDaoMock);
-
-        Object result = this.getAccessibleField(SubmitQueryService.class, "bulkCustomerDao",
-                                                IBulkCustomerDao.class, submitQueryService);
-
-        assertEquals(bulkCustomerDaoMock, result, "bulkCustomerDao should be correctly set");
-    }
-
-    @Test
-    void setErrorMessageCacheableTest(){
-
-        ICacheable errorMsgCacheableMock = mock(ICacheable.class);
-        submitQueryService.setErrorMessagesCache(errorMsgCacheableMock);
-
-        Object result = this.getAccessibleField(SubmitQueryService.class, "errorMessagesCache",
-                                                ICacheable.class, submitQueryService);
-
-        assertEquals(errorMsgCacheableMock, result, "ErrorMsgCacheable should be correctly set");
-    }
-
-    @Test
-    void setGlobalParametersCacheTest(){
-
-        ICacheable globalParametersCacheMock = mock(ICacheable.class);
-        submitQueryService.setGlobalParametersCache(globalParametersCacheMock);
-
-        Object result = this.getAccessibleField(SubmitQueryService.class, "globalParametersCache",
-                                                ICacheable.class, submitQueryService);
-
-        assertEquals(globalParametersCacheMock, result, "GlobalParameters should be correctly set");
-    }
-
-    @Test
-    void setQueryResponseXmlParserTest(){
-
-        GenericXmlParser genericResponseXmlParserMock = mock(GenericXmlParser.class);
-        submitQueryService.setQueryResponseXmlParser(genericResponseXmlParserMock);
-
-        Object result = this.getAccessibleField(SubmitQueryService.class, "queryResponseXmlParser",
-                                                GenericXmlParser.class, submitQueryService);
-
-        assertEquals(genericResponseXmlParserMock, result, "genericXmlParser should be correctly set");
-    }
-
-    @Test
-    void setQueryRequestXmlParserTest(){
-
-        GenericXmlParser genericRequestXmlParserMock = mock(GenericXmlParser.class);
-        submitQueryService.setQueryRequestXmlParser(genericRequestXmlParserMock);
-
-        Object result = this.getAccessibleField(SubmitQueryService.class, "queryRequestXmlParser",
-                                                GenericXmlParser.class, submitQueryService);
-
-        assertEquals(genericRequestXmlParserMock, result, "genericXmlParser should be correctly set");
-    }
-
-    @Test
-    void setRequestConsumerTest(){
-
-        IConsumerGateway consumerGatewayMock = mock(IConsumerGateway.class);
-        submitQueryService.setRequestConsumer(consumerGatewayMock);
-
-        Object result = this.getAccessibleField(SubmitQueryService.class, "requestConsumer",
-                                                IConsumerGateway.class, submitQueryService);
-
-        assertEquals(consumerGatewayMock, result, "consumerGateway should be correctly set");
     }
 
     /**
