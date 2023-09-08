@@ -323,7 +323,7 @@ allprojects {
     }
     testImplementation group: 'org.dbunit', name: 'dbunit', version: '2.7.3'
     testImplementation group: 'org.easymock', name: 'easymock', version: '5.0.1'
-    testImplementation group: 'org.exparity', name: 'hamcrest-date', version: '2.0.4'
+    testImplementation group: 'org.exparity', name: 'hamcrest-date', version: '2.0.8'
     testImplementation group: 'org.hamcrest', name: 'hamcrest-core', version: hamcrestVersion
     testImplementation group: 'org.hamcrest', name: 'hamcrest-junit', version: '2.0.0.0'
     testImplementation group: 'org.hamcrest', name: 'hamcrest-library', version: hamcrestVersion
