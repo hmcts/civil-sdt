@@ -163,7 +163,7 @@ ext {
   reformLogging= '5.1.9'
   restAssuredVersion = '4.3.0!!'
   springCloudVersion = '2021.0.6'
-  tomcatVersion = '9.0.75'
+  tomcatVersion = '9.0.80'
   cxfVersion = '3.5.5'
   jaxwsVersion = "2.3.1"
   activeMQVersion = '5.16.1'
