@@ -166,7 +166,7 @@ ext {
   tomcatVersion = '9.0.80'
   cxfVersion = '3.5.5'
   jaxwsVersion = "2.3.1"
-  activeMQVersion = '5.16.1'
+  activeMQVersion = '5.18.2'
   testcontainers = '1.17.5'
   sdtCommonVersion = '1.0.0-SDT-136.0.3'
   limits = [
