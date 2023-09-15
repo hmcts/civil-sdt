@@ -296,7 +296,7 @@ allprojects {
     */
     implementation group: 'xerces', name: 'xercesImpl', version: '2.12.2'
     implementation group: 'com.github.hmcts', name: 'idam-java-client', version: '3.0.1'
-    implementation group: 'com.github.hmcts', name: 'service-auth-provider-java-client', version: '4.0.3'
+    implementation group: 'com.github.hmcts', name: 'service-auth-provider-java-client', version: '4.1.2'
 
     testImplementation libraries.junit5
     testImplementation group: 'com.fasterxml.jackson.module', name: 'jackson-module-jaxb-annotations', version: '2.15.2'
