@@ -228,7 +228,7 @@ allprojects {
     implementation group: 'com.azure', name: 'azure-messaging-servicebus', version: '7.14.3'
     implementation group: 'com.fasterxml.jackson.module', name: 'jackson-module-jaxb-annotations', version: '2.15.2'
     implementation group: 'com.github.hmcts.java-logging', name: 'logging', version: '6.0.1'
-    implementation 'com.google.guava:guava:32.0.1-jre'
+    implementation 'com.google.guava:guava:32.1.2-jre'
     implementation(group: 'com.microsoft.azure', name: 'azure-servicebus-jms-spring-boot-starter', version: '2.3.5') {
       exclude group: 'org.simpleframework', module: 'simple-xml'
       exclude group: 'org.nanohttpd', module: 'nanohttpd'
