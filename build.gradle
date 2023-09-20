@@ -152,7 +152,7 @@ dependencyCheck {
 }
 
 ext {
-  lombokVersion = '1.18.28'
+  lombokVersion = '1.18.30'
   feignJackson = '11.6'
   groovyVersion = '3.0.13!!'
   hamcrestVersion = '1.3'
