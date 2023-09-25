@@ -330,8 +330,8 @@ allprojects {
     testImplementation group: 'org.jdom', name: 'jdom2', version: '2.0.6.1'
     testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: junitVersion
     testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-params', version: junitVersion
-    testImplementation group: 'org.mockito', name: 'mockito-inline', version: '3.11.1'
-    testImplementation group: 'org.mockito', name: 'mockito-inline', version: '3.11.1'
+    testImplementation group: 'org.mockito', name: 'mockito-inline', version: '3.12.4'
+    testImplementation group: 'org.mockito', name: 'mockito-inline', version: '3.12.4'
     testImplementation group: 'org.postgresql', name: 'postgresql', version: postgresqlVersion
     testImplementation group: 'org.powermock', name: 'powermock-api-mockito2', version: '2.0.9'
     testImplementation group: 'org.powermock', name: 'powermock-module-junit4', version: '2.0.9'
