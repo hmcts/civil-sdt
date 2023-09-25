@@ -267,8 +267,8 @@ allprojects {
     implementation group: 'org.hibernate', name: 'hibernate-validator', version: '7.0.5.Final'
     implementation group: 'org.postgresql', name: 'postgresql', version: postgresqlVersion
     implementation group: 'org.projectlombok', name: 'lombok', version: lombokVersion
-    implementation group: 'org.springdoc', name: 'springdoc-openapi-ui', version: '1.6.7'
-    implementation group: 'org.springdoc', name: 'springdoc-openapi-ui', version: '1.6.7'
+    implementation group: 'org.springdoc', name: 'springdoc-openapi-ui', version: '1.7.0'
+    implementation group: 'org.springdoc', name: 'springdoc-openapi-ui', version: '1.7.0'
     implementation group: 'org.springframework', name: 'spring-jms'
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-activemq'
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-actuator'
