@@ -14,7 +14,7 @@ plugins {
   id 'com.github.spacialcircumstances.gradle-cucumber-reporting' version '0.1.25'
   id 'org.sonarqube' version '3.4.0.2513'
   id 'uk.gov.hmcts.java' version '0.12.45'
-  id "info.solidsoft.pitest" version '1.5.1' apply(false)
+  id "info.solidsoft.pitest" version '1.9.11' apply(false)
   id "org.jetbrains.gradle.plugin.idea-ext" version "0.7"
 }
 
@@ -205,7 +205,7 @@ dependencyManagement {
     dependencySet(group: 'commons-fileupload', version: '1.5') {
       entry 'commons-fileupload'
     }
-    dependencySet(group: 'org.apache.tomcat.embed', version: '9.0.80') {
+    dependencySet(group: 'org.apache.tomcat.embed', version: tomcatVersion) {
       entry 'tomcat-embed-core'
       entry 'tomcat-embed-el'
       entry 'tomcat-embed-websocket'
@@ -267,7 +267,6 @@ allprojects {
     implementation group: 'org.hibernate', name: 'hibernate-validator', version: '7.0.5.Final'
     implementation group: 'org.postgresql', name: 'postgresql', version: postgresqlVersion
     implementation group: 'org.projectlombok', name: 'lombok', version: lombokVersion
-    implementation group: 'org.springdoc', name: 'springdoc-openapi-ui', version: '1.7.0'
     implementation group: 'org.springdoc', name: 'springdoc-openapi-ui', version: '1.7.0'
     implementation group: 'org.springframework', name: 'spring-jms'
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-activemq'
@@ -378,9 +377,6 @@ allprojects {
         if (details.requested.group == 'com.github.ben-manes.caffeine' && details.requested.name == 'caffeine') {
           details.useVersion '2.8.5'
         }
-        if(details.requested.group == 'org.springframework') {
-          details.useVersion '5.3.27' // CVE-2023-20861
-        }
         if (details.requested.group == 'com.fasterxml.woodstox' && details.requested.name == 'woodstox-core') {
           details.useVersion '6.4.0' // CVE-2022-40152
         }
@@ -411,7 +407,7 @@ subprojects { subproject ->
       dependencySet(group: 'commons-fileupload', version: '1.5') {
         entry 'commons-fileupload'
       }
-      dependencySet(group: 'org.apache.tomcat.embed', version: '9.0.80') {
+      dependencySet(group: 'org.apache.tomcat.embed', version: tomcatVersion) {
         entry 'tomcat-embed-core'
         entry 'tomcat-embed-el'
         entry 'tomcat-embed-websocket'
@@ -455,13 +451,6 @@ subprojects { subproject ->
   configurations.configureEach {
     collect { configuration ->
       configuration.exclude group: 'org.apache.logging.log4j', module: 'log4j-to-slf4j'
-    }
-    resolutionStrategy {
-      eachDependency { details ->
-        if(details.requested.group == 'org.springframework') {
-          details.useVersion '5.3.27' // CVE-2023-20861
-        }
-      }
     }
     exclude group: 'org.springframework.security', module: 'spring-security-rsa'
   }
