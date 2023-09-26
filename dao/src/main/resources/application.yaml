@@ -14,6 +14,7 @@ spring:
     password: ${SDT_DB_PASSWORD:test}
   jpa:
     database: postgresql
+    open-in-view: false
   flyway:
     ignore-missing-migrations: 'true'
     baseline-version: '0001'
