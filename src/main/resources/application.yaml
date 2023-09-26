@@ -42,6 +42,7 @@ spring:
       maxLifetime: ${SDT_DB_MAX_LIFTIME:7200000}
       connectionTimeout: 60000
   jpa:
+    open-in-view: false
     database: postgresql
     properties:
       hibernate:
