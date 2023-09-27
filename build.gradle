@@ -15,7 +15,7 @@ plugins {
   id 'org.sonarqube' version '3.4.0.2513'
   id 'uk.gov.hmcts.java' version '0.12.45'
   id "info.solidsoft.pitest" version '1.9.11' apply(false)
-  id "org.jetbrains.gradle.plugin.idea-ext" version "0.7"
+  id "org.jetbrains.gradle.plugin.idea-ext" version "0.10"
 }
 
 group = 'uk.gov.hmcts.civil.sdt'
