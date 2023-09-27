@@ -14,7 +14,7 @@ plugins {
   id 'com.github.spacialcircumstances.gradle-cucumber-reporting' version '0.1.25'
   id 'org.sonarqube' version '3.4.0.2513'
   id 'uk.gov.hmcts.java' version '0.12.45'
-  id "info.solidsoft.pitest" version '1.5.1' apply(false)
+  id "info.solidsoft.pitest" version '1.9.11' apply(false)
   id "org.jetbrains.gradle.plugin.idea-ext" version "0.7"
 }
 
