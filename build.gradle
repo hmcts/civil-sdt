@@ -162,7 +162,7 @@ ext {
   postgresqlVersion = '42.6.0'
   reformLogging= '5.1.9'
   restAssuredVersion = '4.3.0!!'
-  springCloudVersion = '2021.0.8'
+  springCloudVersion = '2022.0.4'
   tomcatVersion = '9.0.80'
   cxfVersion = '3.6.2'
   jaxwsVersion = "2.3.1"
