@@ -30,22 +30,25 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.services.messaging;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jms.listener.DefaultMessageListenerContainer;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.transaction.annotation.Transactional;
 import uk.gov.moj.sdt.services.config.ServicesTestConfig;
-import uk.gov.moj.sdt.services.messaging.api.IMessageWriter;
 import uk.gov.moj.sdt.services.messaging.api.ISdtMessage;
 import uk.gov.moj.sdt.test.utils.AbstractIntegrationTest;
 import uk.gov.moj.sdt.test.utils.TestConfig;
 
 import java.io.IOException;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * IntegrationTest class for testing the MessageReader implementation.
@@ -53,21 +56,35 @@ import java.io.IOException;
  * @author Manoj Kulkarni
  */
 @ActiveProfiles("integ")
-@RunWith(SpringRunner.class)
-@SpringBootTest(classes = {TestConfig.class, ServicesTestConfig.class })
+@ExtendWith(SpringExtension.class)
+@SpringBootTest(classes = {TestConfig.class, ServicesTestConfig.class})
 @Sql(scripts = {"classpath:uk/gov/moj/sdt/services/sql/RefData.sql", "classpath:uk/gov/moj/sdt/services/sql/IndividualRequestMdbIntTest.sql"})
+@Transactional
 public class IndividualRequestMdbIntTest extends AbstractIntegrationTest {
+
+    @Autowired
+    @Qualifier("MessageWriter")
+    private MessageWriter messageWriter;
+
+    @Autowired
+    @Qualifier("messageListenerContainer")
+    private DefaultMessageListenerContainer mcolsContainer;
+
+    @Autowired
+    @Qualifier("messageListenerContainerMCol")
+    private DefaultMessageListenerContainer mcolContainer;
+
     /**
      * Setup the test.
      */
-    @Before
+    @BeforeEach
     public void setUp() {
         // Write a Message to the MDB
         final ISdtMessage sdtMessage = new SdtMessage();
         sdtMessage.setSdtRequestReference("SDT_REQ_TEST_1");
         sdtMessage.setMessageSentTimestamp(System.currentTimeMillis());
         sdtMessage.setEnqueueLoggingId(1);
-        final IMessageWriter messageWriter = (IMessageWriter) this.applicationContext.getBean("MessageWriter");
+
         messageWriter.queueMessage(sdtMessage, "MCOLS", false);
     }
 
@@ -80,7 +97,8 @@ public class IndividualRequestMdbIntTest extends AbstractIntegrationTest {
     @Test
     public void testReadMessage() throws InterruptedException, IOException {
         Thread.sleep(5000);
-        Assert.assertTrue("Submission read successfully.", true);
+        assertTrue(true, "Submission read successfully.");
+        // TODO: Does this test actually do anything?
     }
 
     /**
@@ -88,18 +106,7 @@ public class IndividualRequestMdbIntTest extends AbstractIntegrationTest {
      */
     @Test
     public void testMultipleMdbSetup() {
-        final DefaultMessageListenerContainer mcolsContainer =
-                (DefaultMessageListenerContainer) this.applicationContext.getBean("messageListenerContainer");
-
-        if (mcolsContainer.isActive()) {
-            Assert.assertTrue(true);
-        }
-
-        final DefaultMessageListenerContainer mcolContainer =
-                (DefaultMessageListenerContainer) this.applicationContext.getBean("messageListenerContainerMCol");
-
-        if (mcolContainer.isActive()) {
-            Assert.assertTrue(true);
-        }
+        assertTrue(mcolsContainer.isActive(), "mcolsContainer should be active");
+        assertTrue(mcolContainer.isActive(), "mcolContainer should be active");
     }
 }

@@ -2,11 +2,14 @@ package uk.gov.moj.sdt.services.utils;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import uk.gov.moj.sdt.dao.api.IBulkCustomerDao;
 import uk.gov.moj.sdt.dao.api.IBulkSubmissionDao;
 import uk.gov.moj.sdt.dao.api.IIndividualRequestDao;
@@ -31,7 +34,8 @@ import static org.junit.jupiter.api.Assertions.fail;
  * @author Mark Dathorne
  */
 @ActiveProfiles("integ")
-@SpringBootTest(classes = { TestConfig.class, DaoTestConfig.class})
+@ExtendWith(SpringExtension.class)
+@SpringBootTest(classes = {TestConfig.class, DaoTestConfig.class})
 @Sql(scripts = {
         "classpath:uk/gov/moj/sdt/services/sql/drop_and_recreate_empty_public_schema.sql",
         "classpath:uk/gov/moj/sdt/services/sql/initialise_test_database.sql",
@@ -39,17 +43,23 @@ import static org.junit.jupiter.api.Assertions.fail;
 })
 class ExecuteScriptServiceTest extends AbstractIntegrationTest {
 
+    @Autowired
     private ExecuteScriptService executeScriptService;
 
     /**
      * Bulk Submission DAO.
      */
+    @Autowired
     private IBulkSubmissionDao bulkSubmissionDao;
 
     /**
      * Individual Request DAO.
      */
+    @Autowired
     private IIndividualRequestDao individualRequestDao;
+
+    @Autowired
+    private IBulkCustomerDao bulkCustomerDao;
 
     /**
      * Bulk Customer to use for the test.
@@ -68,10 +78,6 @@ class ExecuteScriptServiceTest extends AbstractIntegrationTest {
 
     @BeforeEach
     public void setup() {
-        bulkSubmissionDao = this.applicationContext.getBean(IBulkSubmissionDao.class);
-        individualRequestDao = this.applicationContext.getBean(IIndividualRequestDao.class);
-        executeScriptService = this.applicationContext.getBean(ExecuteScriptService.class);
-        IBulkCustomerDao bulkCustomerDao = this.applicationContext.getBean(IBulkCustomerDao.class);
         bulkCustomer = bulkCustomerDao.fetch(BulkCustomer.class, 10711L);
         dataRetentionPeriod = 90;
         sdtBulkReference = "MCOL-10012013010101-100099999";

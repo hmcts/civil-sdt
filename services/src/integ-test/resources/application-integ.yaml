@@ -49,4 +49,13 @@ sdt:
     commitInterval: ${PURGE_COMMIT_INTERVAL:1000}
   retry-send:
     cron: ${RETRY_SEND_CRON:0 0 * * * ?}
-
+idam:
+  s2s-auth:
+    microservice: civil_sdt
+    totp_secret: ${CIVIL_SDT_S2S_KEY:AAAAAAAAAAAAAAAA}
+    url: ${IDAM_S2S_URL:http://localhost:4502}
+  sdt:
+    username: ${IDAM_SDT_USERNAME:master.sdt@gmail.com}
+    password: ${IDAM_SDT_PASSWORD:Pa55word11}
+  api:
+    url: ${IDAM_API_URL:http://localhost:5000}

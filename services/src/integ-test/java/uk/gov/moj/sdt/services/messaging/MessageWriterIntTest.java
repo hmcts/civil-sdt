@@ -34,6 +34,8 @@ import com.google.common.collect.Lists;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.test.context.ActiveProfiles;
@@ -65,6 +67,20 @@ import static org.junit.Assert.assertTrue;
 @SpringBootTest(classes = {TestConfig.class, ServicesTestConfig.class })
 public class MessageWriterIntTest extends AbstractIntegrationTest {
 
+    @Autowired
+    @Qualifier("MessageWriter")
+    private MessageWriter messageWriter;
+
+    @Autowired
+    @Qualifier("IMessageWriterBad")
+    private MessageWriter messageWriterBad;
+
+    @Autowired
+    private JmsTemplate jmsTemplate;
+
+    @Autowired
+    private QueueConfig queueConfig;
+
     /**
      * Test method to test the sending of message.
      *
@@ -73,9 +89,6 @@ public class MessageWriterIntTest extends AbstractIntegrationTest {
      */
     @Test
     public void testQueueMessage() throws JMSException, InterruptedException {
-        // Get message writer from Spring.
-        final MessageWriter messageWriter = (MessageWriter) this.applicationContext.getBean("MessageWriter");
-
         final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
 
         // Send the first message.
@@ -103,22 +116,17 @@ public class MessageWriterIntTest extends AbstractIntegrationTest {
      */
     @Test
     public void testAzureServiceBusDown() throws JMSException {
-        // Get message writer from Spring.
-        final MessageWriter messageWriter = (MessageWriter) this.applicationContext.getBean("IMessageWriterBad");
-
         // Send the message.
         final ISdtMessage message = new SdtMessage();
         message.setSdtRequestReference("Test message");
 
-        messageWriter.queueMessage(message, "TEST1", false);
+        messageWriterBad.queueMessage(message, "TEST1", false);
         Assert.assertTrue("Test completed", true);
 
         readMessageFromQueue(1);
     }
 
     public List<ISdtMessage> readMessageFromQueue(int countOfMessages) {
-        final JmsTemplate jmsTemplate = this.applicationContext.getBean(JmsTemplate.class);
-        final QueueConfig queueConfig = applicationContext.getBean(QueueConfig.class);
         List<ISdtMessage> listMessages = new ArrayList<>();
         jmsTemplate.browse(queueConfig.getTargetAppQueue().get("TEST1"), (session, browser) -> {
             Enumeration<Message> messages = browser.getEnumeration();

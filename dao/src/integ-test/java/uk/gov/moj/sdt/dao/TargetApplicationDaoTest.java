@@ -30,7 +30,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
  * @author Mark Dathorne
  */
 @ActiveProfiles("integ")
-@SpringBootTest(classes = { TestConfig.class, DaoTestConfig.class})
+@SpringBootTest(classes = {TestConfig.class, DaoTestConfig.class})
 @ExtendWith(SpringExtension.class)
 @Sql(scripts = {"classpath:uk/gov/moj/sdt/dao/sql/TargetApplicationDaoTest.sql"})
 @Transactional

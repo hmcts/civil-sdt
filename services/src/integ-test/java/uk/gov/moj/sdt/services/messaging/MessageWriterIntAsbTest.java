@@ -35,6 +35,8 @@ import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.test.context.ActiveProfiles;
@@ -66,6 +68,20 @@ import static org.junit.Assert.assertTrue;
 @Ignore("Preiew environments don't support Azure Service bus queues")
 public class MessageWriterIntAsbTest extends AbstractIntegrationTest {
 
+    @Autowired
+    @Qualifier("MessageWriter")
+    private MessageWriter messageWriter;
+
+    @Autowired
+    @Qualifier("IMessageWriterBad")
+    private MessageWriter messageWriterBad;
+
+    @Autowired
+    private JmsTemplate jmsTemplate;
+
+    @Autowired
+    private QueueConfig queueConfig;
+
     /**
      * Test method to test the sending of message.
      *
@@ -74,9 +90,6 @@ public class MessageWriterIntAsbTest extends AbstractIntegrationTest {
      */
     @Test
     public void testQueueMessage() throws JMSException, InterruptedException {
-        // Get message writer from Spring.
-        final MessageWriter messageWriter = (MessageWriter) this.applicationContext.getBean("MessageWriter");
-
         final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
 
         // Send the first message.
@@ -94,7 +107,6 @@ public class MessageWriterIntAsbTest extends AbstractIntegrationTest {
         messageWriter.queueMessage(message2, "TEST1", false);
 
         readMessageFromQueue(Lists.newArrayList(strMessage1, strMessage2));
-
     }
 
     /**
@@ -104,24 +116,19 @@ public class MessageWriterIntAsbTest extends AbstractIntegrationTest {
      */
     @Test
     public void testAzureServiceBusDown() throws JMSException {
-        // Get message writer from Spring.
-        final MessageWriter messageWriter = (MessageWriter) this.applicationContext.getBean("IMessageWriterBad");
-
         // Send the message.
         final ISdtMessage message = new SdtMessage();
         final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
         String requestReference =  "Test message" + dateFormat.format(new java.util.Date(System.currentTimeMillis()));
         message.setSdtRequestReference(requestReference);
 
-        messageWriter.queueMessage(message, "TEST1", false);
+        messageWriterBad.queueMessage(message, "TEST1", false);
         Assert.assertTrue("Test completed", true);
 
         readMessageFromQueue(Lists.newArrayList(requestReference));
     }
 
     public List<ISdtMessage> readMessageFromQueue() {
-        final JmsTemplate jmsTemplate = this.applicationContext.getBean(JmsTemplate.class);
-        final QueueConfig queueConfig = applicationContext.getBean(QueueConfig.class);
         List<ISdtMessage> listMessages = new ArrayList<>();
         jmsTemplate.browse(queueConfig.getTargetAppQueue().get("TEST1"), (session, browser) -> {
             Enumeration<Message> messages = browser.getEnumeration();

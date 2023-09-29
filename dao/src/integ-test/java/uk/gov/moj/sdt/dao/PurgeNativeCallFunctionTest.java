@@ -2,11 +2,14 @@ package uk.gov.moj.sdt.dao;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 import uk.gov.moj.sdt.dao.api.IBulkSubmissionDao;
 import uk.gov.moj.sdt.dao.api.IIndividualRequestDao;
@@ -30,7 +33,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @author Mark Dathorne
  */
 @ActiveProfiles("integ")
-@SpringBootTest(classes = { TestConfig.class, DaoTestConfig.class})
+@ExtendWith(SpringExtension.class)
+@SpringBootTest(classes = {TestConfig.class, DaoTestConfig.class})
 @Sql(scripts = {"classpath:db/migration/V0002__purge.sql",
         "classpath:uk/gov/moj/sdt/dao/sql/PurgeDaoTest.sql"})
 @Transactional
@@ -40,28 +44,29 @@ class PurgeNativeCallFunctionTest extends AbstractIntegrationTest {
      */
     private static final Logger LOGGER = LoggerFactory.getLogger(PurgeNativeCallFunctionTest.class);
 
+    @Autowired
     private PurgeNativeCallFunction purgeNativeCallFunction;
 
+    @Autowired
     private PurgeJobAuditDao purgeJobAuditDao;
+
+    @Autowired
     private PurgeJobAuditMessageDao purgeJobAuditMessageDao;
+
+    @Autowired
     private ErrorLogDao errorLogDao;
+
+    @Autowired
     private GlobalParametersDao globalParametersDao;
+
+    @Autowired
     private ServiceRequestDao serviceRequestDao;
+
+    @Autowired
     private IBulkSubmissionDao bulkSubmissionDao;
+
+    @Autowired
     private IIndividualRequestDao individualRequestDao;
-
-    @BeforeEach
-    public void setup() {
-        purgeNativeCallFunction = this.applicationContext.getBean(PurgeNativeCallFunction.class);
-
-        purgeJobAuditDao = (PurgeJobAuditDao) this.applicationContext.getBean("PurgeJobAuditDao");
-        purgeJobAuditMessageDao = (PurgeJobAuditMessageDao) this.applicationContext.getBean("PurgeJobAuditMessageDao");
-        errorLogDao = (ErrorLogDao) this.applicationContext.getBean("ErrorLogDao");
-        globalParametersDao = (GlobalParametersDao) this.applicationContext.getBean("GlobalParametersDao");
-        serviceRequestDao = (ServiceRequestDao) this.applicationContext.getBean("ServiceRequestDao");
-        bulkSubmissionDao = (IBulkSubmissionDao) this.applicationContext.getBean("BulkSubmissionDao");
-        individualRequestDao = (IIndividualRequestDao) this.applicationContext.getBean("IndividualRequestDao");
-    }
 
     /**
      * Tests {@link GenericDao} fetch.

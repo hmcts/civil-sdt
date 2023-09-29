@@ -32,11 +32,14 @@ package uk.gov.moj.sdt.dao;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import uk.gov.moj.sdt.dao.api.IBulkCustomerDao;
 import uk.gov.moj.sdt.dao.api.IBulkSubmissionDao;
 import uk.gov.moj.sdt.dao.api.ITargetApplicationDao;
@@ -63,7 +66,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
  * @author Manoj Kulkarni
  */
 @ActiveProfiles("integ")
-@SpringBootTest(classes = { TestConfig.class, DaoTestConfig.class})
+@ExtendWith(SpringExtension.class)
+@SpringBootTest(classes = {TestConfig.class, DaoTestConfig.class})
 @Sql(scripts = {"classpath:uk/gov/moj/sdt/dao/sql/BulkSubmissionDaoTest.sql"})
 class BulkSubmissionDaoTest extends AbstractIntegrationTest {
     /**
@@ -74,7 +78,14 @@ class BulkSubmissionDaoTest extends AbstractIntegrationTest {
     /**
      * Bulk Submission DAO.
      */
+    @Autowired
     private IBulkSubmissionDao bulkSubmissionDao;
+
+    @Autowired
+    private IBulkCustomerDao bulkCustomerDao;
+
+    @Autowired
+    private ITargetApplicationDao targetApplicationDao;
 
     /**
      * Bulk Customer to use for the test.
@@ -100,9 +111,6 @@ class BulkSubmissionDaoTest extends AbstractIntegrationTest {
          */
     @BeforeEach
     public void setUp() {
-        bulkSubmissionDao = this.applicationContext.getBean(IBulkSubmissionDao.class);
-        IBulkCustomerDao bulkCustomerDao = this.applicationContext.getBean(IBulkCustomerDao.class);
-        ITargetApplicationDao targetApplicationDao = this.applicationContext.getBean(ITargetApplicationDao.class);
         bulkCustomer = bulkCustomerDao.fetch(BulkCustomer.class, 10711);
         targetApplication = targetApplicationDao.fetch(TargetApplication.class, 10713L);
         dataRetentionPeriod = 90;

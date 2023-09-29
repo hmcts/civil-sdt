@@ -30,11 +30,11 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.services;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
@@ -64,7 +64,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * Implementation of the integration test for BulkSubmissionService.
@@ -85,15 +85,8 @@ public class SubmitQueryServiceIntTest extends AbstractIntegrationTest {
     /**
      * Test subject.
      */
+    @Autowired
     private SubmitQueryService submitQueryService;
-
-    /**
-     * Setup the test.
-     */
-    @BeforeEach
-    public void setUp() {
-        submitQueryService = (SubmitQueryService) this.applicationContext.getBean("SubmitQueryService");
-    }
 
     /**
      * This method tests for persistence of a single submission.
@@ -119,13 +112,13 @@ public class SubmitQueryServiceIntTest extends AbstractIntegrationTest {
             accessibleSubmitQueryService.invoke(submitQueryService, submitQuery);
         } catch (final IllegalAccessException e) {
             LOGGER.debug(e.getMessage());
-            assertTrue(false, "IllegalAccessException please debug test");
+            fail("IllegalAccessException please debug test");
         } catch (final IllegalArgumentException e) {
             LOGGER.debug(e.getMessage());
-            assertTrue(false, "IllegalArgumentException please debug test");
+           fail("IllegalArgumentException please debug test");
         } catch (final InvocationTargetException e) {
             LOGGER.debug(e.getMessage());
-            assertTrue(false, "InvocationTargetException please debug test");
+            fail("InvocationTargetException please debug test");
         }
         // submitQueryService.updateRequestSoapError(submitQuery);
 
