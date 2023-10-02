@@ -19,6 +19,7 @@ module "postgresql" {
   ]
   pgsql_version        = "11"
   product              = var.product
+  backup_retention_days= "${var.database_backup_retention_days}"
 }
 
 # Create secret for database user
