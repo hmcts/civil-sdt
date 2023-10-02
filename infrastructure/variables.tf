@@ -48,3 +48,8 @@ variable "jenkins_AAD_objectId" {
 }
 
 variable "aks_subscription_id" {}
+
+variable "component-V15" {
+  type = string
+  default="postgres-db-v15"
+}
