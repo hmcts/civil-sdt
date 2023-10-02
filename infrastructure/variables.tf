@@ -54,8 +54,3 @@ variable "database_backup_retention_days" {
   description = "Backup retention period in days for the PGSql instance. Valid values are between 7 & 35 days"
 }
 
-
-variable "component-V15" {
-  type = string
-  default="postgres-db-v15"
-}
