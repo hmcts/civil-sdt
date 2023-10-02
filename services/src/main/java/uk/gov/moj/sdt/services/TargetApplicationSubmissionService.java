@@ -350,13 +350,6 @@ public class TargetApplicationSubmissionService extends AbstractSdtService imple
 
         // now persist the request.
         this.getIndividualRequestDao().persist(individualRequest);
-
-        // Create a new message for DLQ.
-        final ISdtMessage messageObj = new SdtMessage();
-        messageObj.setSdtRequestReference(individualRequest.getSdtRequestReference());
-
-        final String targetAppCode =
-                individualRequest.getBulkSubmission().getTargetApplication().getTargetApplicationCode();
     }
 
     /**
