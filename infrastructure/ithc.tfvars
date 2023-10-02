@@ -1,1 +1,1 @@
-database_backup_retention_days=90
+database_backup_retention_days=7
