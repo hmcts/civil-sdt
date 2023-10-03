@@ -167,7 +167,7 @@ ext {
   cxfVersion = '3.6.2'
   jaxwsVersion = "2.3.1"
   activeMQVersion = '5.18.2'
-  testcontainers = '1.19.0'
+  testcontainers = '1.19.1'
   sdtCommonVersion = '1.1.0'
   limits = [
     'instruction': 99,
