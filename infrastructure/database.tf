@@ -17,8 +17,8 @@ module "postgresql" {
       name = "civil_sdt"
     }
   ]
-  pgsql_version        = "11"
-  product              = var.product
+  pgsql_version = "11"
+  product       = var.product
 }
 
 # Create secret for database user
