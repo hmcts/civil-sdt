@@ -167,7 +167,7 @@ ext {
   cxfVersion = '3.6.2'
   jaxwsVersion = "2.3.1"
   activeMQVersion = '5.18.2'
-  testcontainers = '1.19.0'
+  testcontainers = '1.19.1'
   sdtCommonVersion = '1.1.0-SDT-149.0.1'
   limits = [
     'instruction': 99,
@@ -304,7 +304,7 @@ allprojects {
     testImplementation group: 'com.github.npathai', name: 'hamcrest-optional', version: '2.0.0'
     testImplementation group: 'com.github.tomakehurst', name: 'wiremock-jre8', version: '2.35.1'
     testImplementation group: 'commons-lang', name: 'commons-lang', version: '2.6'
-    testImplementation group: 'info.solidsoft.gradle.pitest', name: 'gradle-pitest-plugin', version: '1.9.11'
+    testImplementation group: 'info.solidsoft.gradle.pitest', name: 'gradle-pitest-plugin', version: '1.15.0'
     testImplementation group: 'io.github.openfeign', name: 'feign-jackson', version: feignJackson
     testImplementation group: 'io.github.openfeign.form', name: 'feign-form', version: '3.8.0'
     testImplementation("io.rest-assured:json-path:${restAssuredVersion}") {
