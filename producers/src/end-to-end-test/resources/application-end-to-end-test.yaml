@@ -6,6 +6,7 @@ spring:
     password: ${SDT_DB_PASSWORD:test}
     javax.persistence.schema-generation.database.action: drop-and-create
   jpa:
+    open-in-view: false
     database: postgresql
   flyway:
     enabled: false

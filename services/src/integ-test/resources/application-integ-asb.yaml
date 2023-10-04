@@ -17,6 +17,7 @@ spring:
     username: ${SDT_DB_USERNAME:postgres}
     password: ${SDT_DB_PASSWORD:test}
   jpa:
+    open-in-view: false
     show-sql: true
     database: postgresql
     hibernate:
