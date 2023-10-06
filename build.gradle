@@ -14,7 +14,7 @@ plugins {
   id 'com.github.spacialcircumstances.gradle-cucumber-reporting' version '0.1.25'
   id 'org.sonarqube' version '3.5.0.2730'
   id 'uk.gov.hmcts.java' version '0.12.45'
-  id "info.solidsoft.pitest" version '1.9.11' apply(false)
+  id "info.solidsoft.pitest" version '1.15.0' apply(false)
   id "org.jetbrains.gradle.plugin.idea-ext" version "0.10"
 }
 
@@ -167,7 +167,7 @@ ext {
   cxfVersion = '3.6.2'
   jaxwsVersion = "2.3.1"
   activeMQVersion = '5.18.2'
-  testcontainers = '1.19.0'
+  testcontainers = '1.19.1'
   sdtCommonVersion = '1.1.0-SDT-173.0.1'
   limits = [
     'instruction': 99,
@@ -237,7 +237,7 @@ allprojects {
     implementation group: 'com.vladmihalcea', name: 'hibernate-types-52', version: '2.21.1'
     implementation group: 'com.zaxxer', name: 'HikariCP', version: '4.0.3'
     implementation group: 'commons-collections', name: 'commons-collections', version: '3.2.2'
-    implementation group: 'commons-io', name: 'commons-io', version: '2.13.0'
+    implementation group: 'commons-io', name: 'commons-io', version: '2.14.0'
     implementation(group: 'io.rest-assured', name: 'rest-assured') {
       exclude group: 'com.github.tomakehurst', module: 'wiremock-standalone'
       exclude group: 'commons-beanutils', module: 'commons-beanutils'
@@ -304,7 +304,7 @@ allprojects {
     testImplementation group: 'com.github.npathai', name: 'hamcrest-optional', version: '2.0.0'
     testImplementation group: 'com.github.tomakehurst', name: 'wiremock-jre8', version: '2.35.1'
     testImplementation group: 'commons-lang', name: 'commons-lang', version: '2.6'
-    testImplementation group: 'info.solidsoft.gradle.pitest', name: 'gradle-pitest-plugin', version: '1.9.11'
+    testImplementation group: 'info.solidsoft.gradle.pitest', name: 'gradle-pitest-plugin', version: '1.15.0'
     testImplementation group: 'io.github.openfeign', name: 'feign-jackson', version: feignJackson
     testImplementation group: 'io.github.openfeign.form', name: 'feign-form', version: '3.8.0'
     testImplementation("io.rest-assured:json-path:${restAssuredVersion}") {
