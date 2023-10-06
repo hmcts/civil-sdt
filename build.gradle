@@ -205,7 +205,7 @@ dependencyManagement {
     dependencySet(group: 'commons-fileupload', version: '1.5') {
       entry 'commons-fileupload'
     }
-    dependencySet(group: 'org.apache.tomcat.embed', version: '9.0.80') {
+    dependencySet(group: 'org.apache.tomcat.embed', version: tomcatVersion) {
       entry 'tomcat-embed-core'
       entry 'tomcat-embed-el'
       entry 'tomcat-embed-websocket'
@@ -268,7 +268,6 @@ allprojects {
     implementation group: 'org.postgresql', name: 'postgresql', version: postgresqlVersion
     implementation group: 'org.projectlombok', name: 'lombok', version: lombokVersion
     implementation group: 'org.springdoc', name: 'springdoc-openapi-ui', version: '1.7.0'
-    implementation group: 'org.springdoc', name: 'springdoc-openapi-ui', version: '1.7.0'
     implementation group: 'org.springframework', name: 'spring-jms'
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-activemq'
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-actuator'
@@ -321,8 +320,6 @@ allprojects {
       exclude group: 'org.codehaus.groovy', module: 'groovy-json'
       exclude group: 'org.codehaus.groovy', module: 'groovy'
     }
-    testImplementation group: 'org.dbunit', name: 'dbunit', version: '2.7.3'
-    testImplementation group: 'org.easymock', name: 'easymock', version: '5.2.0'
     testImplementation group: 'org.exparity', name: 'hamcrest-date', version: '2.0.8'
     testImplementation group: 'org.hamcrest', name: 'hamcrest-core', version: hamcrestVersion
     testImplementation group: 'org.hamcrest', name: 'hamcrest-junit', version: '2.0.0.0'
@@ -378,9 +375,6 @@ allprojects {
         if (details.requested.group == 'com.github.ben-manes.caffeine' && details.requested.name == 'caffeine') {
           details.useVersion '2.8.5'
         }
-        if(details.requested.group == 'org.springframework') {
-          details.useVersion '5.3.27' // CVE-2023-20861
-        }
         if (details.requested.group == 'com.fasterxml.woodstox' && details.requested.name == 'woodstox-core') {
           details.useVersion '6.4.0' // CVE-2022-40152
         }
@@ -411,7 +405,7 @@ subprojects { subproject ->
       dependencySet(group: 'commons-fileupload', version: '1.5') {
         entry 'commons-fileupload'
       }
-      dependencySet(group: 'org.apache.tomcat.embed', version: '9.0.80') {
+      dependencySet(group: 'org.apache.tomcat.embed', version: tomcatVersion) {
         entry 'tomcat-embed-core'
         entry 'tomcat-embed-el'
         entry 'tomcat-embed-websocket'
@@ -455,13 +449,6 @@ subprojects { subproject ->
   configurations.configureEach {
     collect { configuration ->
       configuration.exclude group: 'org.apache.logging.log4j', module: 'log4j-to-slf4j'
-    }
-    resolutionStrategy {
-      eachDependency { details ->
-        if(details.requested.group == 'org.springframework') {
-          details.useVersion '5.3.27' // CVE-2023-20861
-        }
-      }
     }
     exclude group: 'org.springframework.security', module: 'spring-security-rsa'
   }
