@@ -1,3 +1,11 @@
+TRUNCATE TABLE global_parameters CASCADE;
+TRUNCATE TABLE target_applications CASCADE;
+TRUNCATE TABLE bulk_customers CASCADE;
+TRUNCATE TABLE service_requests CASCADE;
+TRUNCATE TABLE bulk_submissions CASCADE;
+TRUNCATE TABLE individual_requests CASCADE;
+TRUNCATE TABLE error_logs CASCADE;
+
 INSERT INTO global_parameters (
   global_parameter_id,parameter_name,parameter_value,parameter_description, version_number)
   VALUES ( 1,'DATA_RETENTION_PERIOD',90,'Duration in days, to retain data in the tables subject to a prescribed purge', 0);
@@ -34,6 +42,9 @@ INSERT INTO bulk_submissions(
 INSERT INTO bulk_submissions(
   bulk_submission_id, bulk_customer_id, target_application_id, service_request_id, sdt_bulk_reference, customer_reference, created_date, number_of_requests, bulk_submission_status, completed_date, updated_date, error_code, error_text, version_number, bulk_payload)
   VALUES (17, 1, 4, 9, 'BR107', 'CR108', (now() - INTERVAL '23 day'), 1, 'BSSTATUS1', now(), now(), 'EC107', 'This is error 7', 1, 'BLK PAYLOAD 4');
+INSERT INTO bulk_submissions(
+bulk_submission_id, bulk_customer_id, target_application_id, service_request_id, sdt_bulk_reference, customer_reference, created_date, number_of_requests, bulk_submission_status, completed_date, updated_date, error_code, error_text, version_number, bulk_payload)
+VALUES (18, 1, 4, 9, 'BR107', 'CR108', (now() - INTERVAL '23 day'), 1, 'BSSTATUS1', now(), now(), 'EC107', 'This is error 7', 1, 'BLK PAYLOAD 4');
 
 INSERT INTO individual_requests(
   individual_request_id, bulk_submission_id, customer_request_ref, request_status, sdt_bulk_reference, line_number, sdt_request_reference, created_date, updated_date, completed_date, forwarding_attempts, dead_letter, internal_system_error, request_type, version_number, individual_payload, target_application_response)
@@ -60,6 +71,9 @@ INSERT INTO individual_requests(
 INSERT INTO individual_requests(
   individual_request_id, bulk_submission_id, customer_request_ref, request_status, sdt_bulk_reference, line_number, sdt_request_reference, created_date, updated_date, completed_date, forwarding_attempts, dead_letter, internal_system_error, request_type, version_number, individual_payload, target_application_response)
   VALUES (111, 17, 'CR104', 'COLD', 'BR105', 1, 'RR204', now(), now(), now(), 3, 'N', 'Error this is indeed', 'ReqType1', 1, 'IndPL_1', 'TAppResp6');
+INSERT INTO individual_requests(
+individual_request_id, bulk_submission_id, customer_request_ref, request_status, sdt_bulk_reference, line_number, sdt_request_reference, created_date, updated_date, completed_date, forwarding_attempts, dead_letter, internal_system_error, request_type, version_number, individual_payload, target_application_response)
+VALUES (112, 13, 'CR104', 'COLD', 'BR105', 1, 'RR204', now(), now(), now(), 3, 'N', 'Error this is indeed', 'ReqType1', 1, 'IndPL_1', 'TAppResp6');
 
 INSERT INTO error_logs(
   error_log_id, individual_request_id, error_code, created_date, updated_date, version_number, error_text)
@@ -78,7 +92,7 @@ INSERT INTO error_logs(
   VALUES (1005, 109, 'CODE3', (now() - INTERVAL '90 day'), now(), 1, 'Error number 2');
 INSERT INTO error_logs(
   error_log_id, individual_request_id, error_code, created_date, updated_date, version_number, error_text)
-  VALUES (1006, 109, 'CODE4', (now() - INTERVAL '20 day'), now(), 1, 'Error number 3');
+  VALUES (1006, 112, 'CODE4', (now() - INTERVAL '20 day'), now(), 1, 'Error number 3');
 
 INSERT INTO error_logs(
   error_log_id, individual_request_id, error_code, created_date, updated_date, version_number, error_text)
