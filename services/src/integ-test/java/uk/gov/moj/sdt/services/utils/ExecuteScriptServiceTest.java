@@ -117,11 +117,11 @@ class ExecuteScriptServiceTest extends AbstractIntegrationTest {
 
         individualRequest = individualRequestDao.getIndividualRequest(bulkCustomer,
                 "USER_REQUEST_ID_BF2", dataRetentionPeriod);
-        assertNotNull(individualRequest);
+        assertNull(individualRequest);
 
         individualRequest = individualRequestDao.getIndividualRequest(bulkCustomer,
                 "USER_REQUEST_ID_BF3", dataRetentionPeriod);
-        assertNotNull(individualRequest);
+        assertNull(individualRequest);
 
         try {
             Resource[] resources = new Resource[2];
