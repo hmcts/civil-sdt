@@ -39,13 +39,12 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
-import uk.gov.moj.sdt.dao.api.IGenericDao;
+import uk.gov.moj.sdt.dao.GlobalParametersDao;
 import uk.gov.moj.sdt.domain.api.IGlobalParameter;
 import uk.gov.moj.sdt.domain.cache.api.ICacheable;
 import uk.gov.moj.sdt.services.config.ServicesTestConfig;
 import uk.gov.moj.sdt.test.utils.AbstractIntegrationTest;
 import uk.gov.moj.sdt.test.utils.TestConfig;
-import uk.gov.moj.sdt.utils.SpringApplicationContext;
 import uk.gov.moj.sdt.utils.mbeans.api.ISdtManagementMBean;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -69,6 +68,13 @@ public class GlobalParametersCacheIntTest extends AbstractIntegrationTest {
     @Autowired
     @Qualifier("GlobalParametersCache")
     private ICacheable globalParameterCache;
+
+    @Autowired
+    @Qualifier("SdtManagementMBean")
+    private ISdtManagementMBean sdtManagementMBean;
+
+    @Autowired
+    private GlobalParametersDao globalParametersDao;
 
     /**
      * Test getValue method where parameter is found.
@@ -118,13 +124,11 @@ public class GlobalParametersCacheIntTest extends AbstractIntegrationTest {
                      "Wrong global parameter value retrieved for " + IGlobalParameter.ParameterKey.DATA_RETENTION_PERIOD.name());
 
         // Do uncache operation.
-        final ISdtManagementMBean sdtManagementMBean = (ISdtManagementMBean) SpringApplicationContext.getBean("SdtManagementMBean");
         sdtManagementMBean.uncache();
 
         // Change the value in the database.
-        final IGenericDao genericDao = (IGenericDao) SpringApplicationContext.getBean("GlobalParametersDao");
         globalParameter.setValue("91");
-        genericDao.persist(globalParameter);
+        globalParametersDao.persist(globalParameter);
 
         // Try to retrieve the bean again with new value.
         globalParameter = null;
