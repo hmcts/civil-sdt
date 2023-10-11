@@ -20,12 +20,16 @@ import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.test.utils.AbstractIntegrationTest;
 import uk.gov.moj.sdt.test.utils.ExecuteScriptService;
 import uk.gov.moj.sdt.test.utils.TestConfig;
+import uk.gov.moj.sdt.validators.exception.CustomerReferenceNotUniqueException;
 
 import java.util.Arrays;
+
+import javax.persistence.NoResultException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.fail;
 
 /**
@@ -85,15 +89,14 @@ class ExecuteScriptServiceTest extends AbstractIntegrationTest {
 
     @Test
     void testExecuteScript() {
-        IBulkSubmission bulkSubmission = bulkSubmissionDao.getBulkSubmissionBySdtRef(bulkCustomer, sdtBulkReference, dataRetentionPeriod);
-        assertNull(bulkSubmission);
+        assertThrows(NoResultException.class, () -> bulkSubmissionDao.getBulkSubmissionBySdtRef(bulkCustomer, sdtBulkReference, dataRetentionPeriod));
 
         try {
             Resource[] resources = new Resource[1];
             resources[0] = new ClassPathResource("uk/gov/moj/sdt/services/sql/executeScriptTest2.sql");
             Arrays.stream(resources).forEach(e -> executeScriptService.executeScript(e));
 
-            bulkSubmission = bulkSubmissionDao.getBulkSubmissionBySdtRef(bulkCustomer, sdtBulkReference,
+            IBulkSubmission bulkSubmission = bulkSubmissionDao.getBulkSubmissionBySdtRef(bulkCustomer, sdtBulkReference,
                     dataRetentionPeriod);
             assertNotNull(bulkSubmission);
             assertEquals(14, bulkSubmission.getId());
@@ -106,10 +109,8 @@ class ExecuteScriptServiceTest extends AbstractIntegrationTest {
     @Test
     void testRunScript() {
         // check the records do not exist yet
-        IBulkSubmission bulkSubmission = bulkSubmissionDao.getBulkSubmissionBySdtRef(bulkCustomer, sdtBulkReference,
-                dataRetentionPeriod);
-        assertNull(bulkSubmission);
-
+        assertThrows(NoResultException.class, () -> bulkSubmissionDao.getBulkSubmissionBySdtRef(bulkCustomer, sdtBulkReference,
+                                                                                               dataRetentionPeriod));
         IIndividualRequest individualRequest = individualRequestDao.getIndividualRequest(bulkCustomer,
                 "USER_REQUEST_ID_BF1", dataRetentionPeriod);
         assertNull(individualRequest);
@@ -129,7 +130,7 @@ class ExecuteScriptServiceTest extends AbstractIntegrationTest {
             Arrays.stream(resources).forEach(e -> executeScriptService.runScript(e));
 
             // now check the records DO exist
-            bulkSubmission = bulkSubmissionDao.getBulkSubmission(bulkCustomer, "REF1",
+            IBulkSubmission bulkSubmission = bulkSubmissionDao.getBulkSubmission(bulkCustomer, "REF1",
                     dataRetentionPeriod);
             assertNotNull(bulkSubmission);
             assertEquals(14, bulkSubmission.getId());
