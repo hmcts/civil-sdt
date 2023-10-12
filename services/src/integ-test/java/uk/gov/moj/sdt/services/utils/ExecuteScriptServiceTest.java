@@ -89,15 +89,18 @@ class ExecuteScriptServiceTest extends AbstractIntegrationTest {
 
     @Test
     void testExecuteScript() {
-        assertThrows(NoResultException.class, () -> bulkSubmissionDao.getBulkSubmissionBySdtRef(bulkCustomer, sdtBulkReference, dataRetentionPeriod));
+        assertThrows(NoResultException.class, () -> bulkSubmissionDao.getBulkSubmissionBySdtRef(bulkCustomer,
+                                                                                                sdtBulkReference,
+                                                                                                dataRetentionPeriod));
 
         try {
             Resource[] resources = new Resource[1];
             resources[0] = new ClassPathResource("uk/gov/moj/sdt/services/sql/executeScriptTest2.sql");
             Arrays.stream(resources).forEach(e -> executeScriptService.executeScript(e));
 
-            IBulkSubmission bulkSubmission = bulkSubmissionDao.getBulkSubmissionBySdtRef(bulkCustomer, sdtBulkReference,
-                    dataRetentionPeriod);
+            IBulkSubmission bulkSubmission = bulkSubmissionDao.getBulkSubmissionBySdtRef(bulkCustomer,
+                                                                                         sdtBulkReference,
+                                                                                         dataRetentionPeriod);
             assertNotNull(bulkSubmission);
             assertEquals(14, bulkSubmission.getId());
 
@@ -109,8 +112,9 @@ class ExecuteScriptServiceTest extends AbstractIntegrationTest {
     @Test
     void testRunScript() {
         // check the records do not exist yet
-        assertThrows(NoResultException.class, () -> bulkSubmissionDao.getBulkSubmissionBySdtRef(bulkCustomer, sdtBulkReference,
-                                                                                               dataRetentionPeriod));
+        assertThrows(NoResultException.class, () -> bulkSubmissionDao.getBulkSubmissionBySdtRef(bulkCustomer,
+                                                                                                sdtBulkReference,
+                                                                                                dataRetentionPeriod));
         IIndividualRequest individualRequest = individualRequestDao.getIndividualRequest(bulkCustomer,
                 "USER_REQUEST_ID_BF1", dataRetentionPeriod);
         assertNull(individualRequest);

@@ -606,7 +606,6 @@ subprojects { subproject ->
   check.dependsOn integration
   integration.mustRunAfter test
   jacocoTestReport.mustRunAfter test
-//  check.dependsOn jacocoTestReport
 }
 // end::subprojects[]
 
