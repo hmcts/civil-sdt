@@ -33,22 +33,27 @@ package uk.gov.moj.sdt.services.messaging;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.jms.listener.DefaultMessageListenerContainer;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
+import uk.gov.moj.sdt.services.api.ITargetApplicationSubmissionService;
 import uk.gov.moj.sdt.services.config.ServicesTestConfig;
-import uk.gov.moj.sdt.services.messaging.api.ISdtMessage;
 import uk.gov.moj.sdt.test.utils.AbstractIntegrationTest;
 import uk.gov.moj.sdt.test.utils.TestConfig;
 
-import java.io.IOException;
+import javax.jms.JMSException;
+import javax.jms.ObjectMessage;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 /**
  * IntegrationTest class for testing the MessageReader implementation.
@@ -74,16 +79,21 @@ public class IndividualRequestMdbIntTest extends AbstractIntegrationTest {
     @Qualifier("messageListenerContainerMCol")
     private DefaultMessageListenerContainer mcolContainer;
 
+    @MockBean
+    private ITargetApplicationSubmissionService targetApplicationSubmissionService;
+
+    private IndividualRequestMdb individualRequestMdb;
+
+    private SdtMessage sdtMessage;
+
     /**
      * Setup the test.
      */
     @BeforeEach
     public void setUp() {
+        individualRequestMdb = new IndividualRequestMdb(targetApplicationSubmissionService);
         // Write a Message to the MDB
-        final ISdtMessage sdtMessage = new SdtMessage();
-        sdtMessage.setSdtRequestReference("SDT_REQ_TEST_1");
-        sdtMessage.setMessageSentTimestamp(System.currentTimeMillis());
-        sdtMessage.setEnqueueLoggingId(1);
+        sdtMessage = createSdtMessage();
 
         messageWriter.queueMessage(sdtMessage, "MCOLS", false);
     }
@@ -92,13 +102,15 @@ public class IndividualRequestMdbIntTest extends AbstractIntegrationTest {
      * This method tests the read message.
      *
      * @throws InterruptedException if the thread call is interrupted
-     * @throws IOException          if there is any problem when reading the file
+     * @throws JMSException         if there is any problem when reading the file
      */
     @Test
-    public void testReadMessage() throws InterruptedException, IOException {
+    public void testReadMessage() throws InterruptedException, JMSException {
         Thread.sleep(5000);
+        ObjectMessage objectMessage = mock(ObjectMessage.class);
+        when(objectMessage.getObject()).thenReturn(sdtMessage);
+        individualRequestMdb.readMessage(objectMessage);
         assertTrue(true, "Submission read successfully.");
-        // TODO: Does this test actually do anything?
     }
 
     /**
@@ -108,5 +120,13 @@ public class IndividualRequestMdbIntTest extends AbstractIntegrationTest {
     public void testMultipleMdbSetup() {
         assertTrue(mcolsContainer.isActive(), "mcolsContainer should be active");
         assertTrue(mcolContainer.isActive(), "mcolContainer should be active");
+    }
+
+    private SdtMessage createSdtMessage() {
+        final SdtMessage sdtMessage = new SdtMessage();
+        sdtMessage.setSdtRequestReference("SDT_REQ_TEST_1");
+        sdtMessage.setMessageSentTimestamp(System.currentTimeMillis());
+        sdtMessage.setEnqueueLoggingId(1);
+        return sdtMessage;
     }
 }

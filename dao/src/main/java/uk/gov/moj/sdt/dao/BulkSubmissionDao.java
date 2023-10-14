@@ -12,6 +12,7 @@ import uk.gov.moj.sdt.domain.api.IBulkCustomer;
 import uk.gov.moj.sdt.domain.api.IBulkSubmission;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -68,7 +69,11 @@ public class BulkSubmissionDao extends GenericDao<BulkSubmission> implements IBu
         TypedQuery<BulkSubmission> typedQuery = getEntityManager().createQuery(criteriaQuery.select(root)
                 .where(sdtCustomerPredicate, customerReferencePredicate, sdtDatePredicate));
 
-        return typedQuery.getSingleResult();
+        try {
+            return typedQuery.getSingleResult();
+        } catch (NoResultException ne) {
+            return null;
+        }
     }
 
     @Override
@@ -91,6 +96,10 @@ public class BulkSubmissionDao extends GenericDao<BulkSubmission> implements IBu
         TypedQuery<BulkSubmission> typedQuery = getEntityManager().createQuery(criteriaQuery.select(root)
                 .where(sdtCustomerPredicate, sdtBulkRefPredicate, sdtDatePredicate));
 
-        return typedQuery.getSingleResult();
+        try {
+            return typedQuery.getSingleResult();
+        } catch (NoResultException ne) {
+            return null;
+        }
     }
 }
