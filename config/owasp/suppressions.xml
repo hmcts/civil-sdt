@@ -24,11 +24,15 @@
   <suppress>
     <notes>Temporary Suppressions
       CVE-2023-4586
+      CVE-2023-36414
+      CVE-2023-36415
       CVE-2023-36479
       CVE-2023-40167
       CVE-2023-41900
     </notes>
     <cve>CVE-2023-4586</cve>
+    <cve>CVE-2023-36414</cve>
+    <cve>CVE-2023-36415</cve>
     <cve>CVE-2023-36479</cve>
     <cve>CVE-2023-40167</cve>
     <cve>CVE-2023-41900</cve>
