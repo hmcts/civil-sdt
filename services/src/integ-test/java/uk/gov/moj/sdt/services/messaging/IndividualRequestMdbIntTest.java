@@ -40,7 +40,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.jms.listener.DefaultMessageListenerContainer;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 import uk.gov.moj.sdt.services.api.ITargetApplicationSubmissionService;
@@ -93,7 +92,7 @@ public class IndividualRequestMdbIntTest extends AbstractIntegrationTest {
      * This method tests the read message.
      *
      * @throws InterruptedException if the thread call is interrupted
-     * @throws JMSException         if there is any problem when reading the file
+     * @throws JMSException         if there is any problem when reading object from ObjectMessage
      */
     @Test
     public void testReadMessage() throws InterruptedException, JMSException {
