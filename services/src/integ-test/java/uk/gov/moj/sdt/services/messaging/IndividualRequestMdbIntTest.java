@@ -91,11 +91,12 @@ public class IndividualRequestMdbIntTest extends AbstractIntegrationTest {
      * Setup the test.
      */
     @BeforeEach
-    public void setUp() {
+    public void setUp() throws JMSException {
         individualRequestMdb = new IndividualRequestMdb(targetApplicationSubmissionService);
         // Write a Message to the MDB
         sdtMessage = createSdtMessage();
-
+        ObjectMessage objectMessage = mock(ObjectMessage.class);
+        when(objectMessage.getObject()).thenReturn(sdtMessage);
         messageWriter.queueMessage(sdtMessage, "MCOLS", false);
     }
 
@@ -106,11 +107,8 @@ public class IndividualRequestMdbIntTest extends AbstractIntegrationTest {
      * @throws JMSException         if there is any problem when reading the file
      */
     @Test
-    public void testReadMessage() throws InterruptedException, JMSException {
+    public void testReadMessage() throws InterruptedException {
         Thread.sleep(5000);
-        ObjectMessage objectMessage = mock(ObjectMessage.class);
-        when(objectMessage.getObject()).thenReturn(sdtMessage);
-        individualRequestMdb.readMessage(objectMessage);
         verify(targetApplicationSubmissionService).processRequestToSubmit("SDT_REQ_TEST_1", null);
         assertTrue(true, "Submission read successfully.");
     }
