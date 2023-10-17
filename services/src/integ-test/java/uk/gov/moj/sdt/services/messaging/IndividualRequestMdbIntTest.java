@@ -40,6 +40,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.jms.listener.DefaultMessageListenerContainer;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 import uk.gov.moj.sdt.services.api.ITargetApplicationSubmissionService;
@@ -48,9 +49,12 @@ import uk.gov.moj.sdt.test.utils.AbstractIntegrationTest;
 import uk.gov.moj.sdt.test.utils.TestConfig;
 
 import javax.jms.JMSException;
+import javax.jms.ObjectMessage;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * IntegrationTest class for testing the MessageReader implementation.
@@ -63,10 +67,6 @@ import static org.mockito.Mockito.verify;
 @Sql(scripts = {"classpath:uk/gov/moj/sdt/services/sql/RefData.sql", "classpath:uk/gov/moj/sdt/services/sql/IndividualRequestMdbIntTest.sql"})
 @Transactional
 public class IndividualRequestMdbIntTest extends AbstractIntegrationTest {
-
-    @Autowired
-    @Qualifier("MessageWriter")
-    private MessageWriter messageWriter;
 
     @Autowired
     @Qualifier("messageListenerContainer")
@@ -96,11 +96,12 @@ public class IndividualRequestMdbIntTest extends AbstractIntegrationTest {
      * @throws JMSException         if there is any problem when reading the file
      */
     @Test
-    public void testReadMessage() throws InterruptedException {
+    public void testReadMessage() throws InterruptedException, JMSException {
         // Write a Message to the MDB
         SdtMessage sdtMessage = createSdtMessage();
-        messageWriter.queueMessage(sdtMessage, "MCOLS", false);
-        Thread.sleep(5000);
+        ObjectMessage objectMessage = mock(ObjectMessage.class);
+        when(objectMessage.getObject()).thenReturn(sdtMessage);
+        individualRequestMdb.readMessage(objectMessage);
         verify(targetApplicationSubmissionService).processRequestToSubmit("SDT_REQ_TEST_1", null);
         assertTrue(true, "Submission read successfully.");
     }
