@@ -33,7 +33,6 @@ package uk.gov.moj.sdt.services.messaging;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -49,12 +48,9 @@ import uk.gov.moj.sdt.test.utils.AbstractIntegrationTest;
 import uk.gov.moj.sdt.test.utils.TestConfig;
 
 import javax.jms.JMSException;
-import javax.jms.ObjectMessage;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 /**
  * IntegrationTest class for testing the MessageReader implementation.
@@ -85,19 +81,12 @@ public class IndividualRequestMdbIntTest extends AbstractIntegrationTest {
 
     private IndividualRequestMdb individualRequestMdb;
 
-    private SdtMessage sdtMessage;
-
     /**
      * Setup the test.
      */
     @BeforeEach
-    public void setUp() throws JMSException {
+    public void setUp() {
         individualRequestMdb = new IndividualRequestMdb(targetApplicationSubmissionService);
-        // Write a Message to the MDB
-        sdtMessage = createSdtMessage();
-        ObjectMessage objectMessage = mock(ObjectMessage.class);
-        when(objectMessage.getObject()).thenReturn(sdtMessage);
-        messageWriter.queueMessage(sdtMessage, "MCOLS", false);
     }
 
     /**
@@ -108,6 +97,9 @@ public class IndividualRequestMdbIntTest extends AbstractIntegrationTest {
      */
     @Test
     public void testReadMessage() throws InterruptedException {
+        // Write a Message to the MDB
+        SdtMessage sdtMessage = createSdtMessage();
+        messageWriter.queueMessage(sdtMessage, "MCOLS", false);
         Thread.sleep(5000);
         verify(targetApplicationSubmissionService).processRequestToSubmit("SDT_REQ_TEST_1", null);
         assertTrue(true, "Submission read successfully.");
