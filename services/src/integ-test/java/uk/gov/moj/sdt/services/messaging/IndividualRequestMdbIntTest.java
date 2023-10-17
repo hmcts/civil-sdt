@@ -53,6 +53,7 @@ import javax.jms.ObjectMessage;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
@@ -110,6 +111,7 @@ public class IndividualRequestMdbIntTest extends AbstractIntegrationTest {
         ObjectMessage objectMessage = mock(ObjectMessage.class);
         when(objectMessage.getObject()).thenReturn(sdtMessage);
         individualRequestMdb.readMessage(objectMessage);
+        verify(targetApplicationSubmissionService).processRequestToSubmit("SDT_REQ_TEST_1", null);
         assertTrue(true, "Submission read successfully.");
     }
 
