@@ -20,16 +20,12 @@ import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.test.utils.AbstractIntegrationTest;
 import uk.gov.moj.sdt.test.utils.ExecuteScriptService;
 import uk.gov.moj.sdt.test.utils.TestConfig;
-import uk.gov.moj.sdt.validators.exception.CustomerReferenceNotUniqueException;
 
 import java.util.Arrays;
-
-import javax.persistence.NoResultException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.fail;
 
 /**

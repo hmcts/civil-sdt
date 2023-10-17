@@ -59,6 +59,7 @@ import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
@@ -178,7 +179,7 @@ class BulkSubmissionDaoTest extends AbstractIntegrationTest {
     @Test
     void testGetBulkSubmissionBySdtBulkRefNotFound() {
         final String sbr = "NO_SUCH_ID";
-        assertThrows(NoResultException.class, () -> bulkSubmissionDao.getBulkSubmissionBySdtRef(bulkCustomer, sbr, dataRetentionPeriod));
+        assertNull(bulkSubmissionDao.getBulkSubmissionBySdtRef(bulkCustomer, sbr, dataRetentionPeriod));
     }
 
     /**
@@ -222,7 +223,7 @@ class BulkSubmissionDaoTest extends AbstractIntegrationTest {
         createBulkSubmission(customerReference,
                              LocalDateTime.now().minusDays(dataRetentionPeriod + 1L),
                              sdtBulkReference);
-        assertThrows(NoResultException.class, () -> bulkSubmissionDao.getBulkSubmission(bulkCustomer, customerReference, dataRetentionPeriod));
+        assertNull(bulkSubmissionDao.getBulkSubmission(bulkCustomer, customerReference, dataRetentionPeriod));
     }
 
     /**
