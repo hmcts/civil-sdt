@@ -1,6 +1,6 @@
 #!groovy
 
-@Library("Infrastructure")
+@Library("Infrastructure@tech-stack-try-catch")
 
 def type = "java"
 def product = "civil"
