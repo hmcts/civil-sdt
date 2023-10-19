@@ -53,7 +53,7 @@ public class MessagingUtilityTest extends AbstractSdtUnitTestBase {
         Runnable runnable = runnableCaptor.getValue();
         runnable.run();
 
-        verify(messageWriter).queueMessage(any(SdtMessage.class), eq("targetAppCode"), eq(false));
+        verify(messageWriter).queueMessage(any(SdtMessage.class), eq("targetAppCode"));
     }
 
     @Test

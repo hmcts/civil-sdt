@@ -452,7 +452,7 @@ class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestBase {
         verify(mockErrorMsgCacheable).getValue(IErrorMessage.class, REQ_NOT_ACK);
         verify(mockCacheable).getValue(IGlobalParameter.class, TARGET_APP_TIMEOUT);
         verify(mockCacheable).getValue(IGlobalParameter.class, TARGET_APP_RESP_TIMEOUT);
-        verify(mockMessageWriter).queueMessage(any(ISdtMessage.class),any(String.class), eq(false));
+        verify(mockMessageWriter).queueMessage(any(ISdtMessage.class),any(String.class));
         verify(mockIndividualRequestDao).getRequestBySdtReference(TEST_1);
 
     }
@@ -518,7 +518,6 @@ class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestBase {
         verify(mockCacheable).getValue(IGlobalParameter.class, TARGET_APP_RESP_TIMEOUT);
         verify(mockCacheable).getValue(IGlobalParameter.class, MCOL_INDV_REQ_DELAY);
         verify(mockIndividualRequestDao).getRequestBySdtReference(TEST_1);
-        verify(mockMessageWriter).queueMessage(any(ISdtMessage.class), any(String.class), eq(true));
     }
 
     /**
@@ -571,7 +570,6 @@ class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestBase {
         verify(mockCacheable).getValue(IGlobalParameter.class, TARGET_APP_RESP_TIMEOUT);
         verify(mockCacheable).getValue(IGlobalParameter.class, MCOL_INDV_REQ_DELAY);
         verify(mockIndividualRequestDao).getRequestBySdtReference(TEST_1);
-        verify(mockMessageWriter).queueMessage(any(ISdtMessage.class), any(String.class), eq(true));
     }
 
     /**

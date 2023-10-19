@@ -91,7 +91,7 @@ public class MessagingUtility implements IMessagingUtility {
 
         messageObj.setSdtRequestReference(individualRequest.getSdtRequestReference());
 
-        getMessageWriter().queueMessage(messageObj, targetAppCode, false);
+        getMessageWriter().queueMessage(messageObj, targetAppCode);
     }
 
     /**

@@ -350,16 +350,6 @@ public class TargetApplicationSubmissionService extends AbstractSdtService imple
 
         // now persist the request.
         this.getIndividualRequestDao().persist(individualRequest);
-
-        // Create a new message for DLQ.
-        final ISdtMessage messageObj = new SdtMessage();
-        messageObj.setSdtRequestReference(individualRequest.getSdtRequestReference());
-
-        final String targetAppCode =
-                individualRequest.getBulkSubmission().getTargetApplication().getTargetApplicationCode();
-
-        // Write to dead letter queue.
-        this.getMessageWriter().queueMessage(messageObj, targetAppCode, true);
     }
 
     /**
@@ -477,7 +467,7 @@ public class TargetApplicationSubmissionService extends AbstractSdtService imple
             final String targetAppCode =
                 individualRequest.getBulkSubmission().getTargetApplication().getTargetApplicationCode();
 
-            this.getMessageWriter().queueMessage(messageObj, targetAppCode, false);
+            this.getMessageWriter().queueMessage(messageObj, targetAppCode);
         } else {
             LOGGER.error("Maximum forwarding attempts exceeded for request {}",
                     individualRequest.getSdtRequestReference());

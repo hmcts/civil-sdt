@@ -68,7 +68,7 @@ public class IndividualRequestMdbIntTest extends AbstractIntegrationTest {
         sdtMessage.setMessageSentTimestamp(System.currentTimeMillis());
         sdtMessage.setEnqueueLoggingId(1);
         final IMessageWriter messageWriter = (IMessageWriter) this.applicationContext.getBean("MessageWriter");
-        messageWriter.queueMessage(sdtMessage, "MCOLS", false);
+        messageWriter.queueMessage(sdtMessage, "MCOLS");
     }
 
     /**

@@ -29,6 +29,7 @@
       CVE-2023-36479
       CVE-2023-40167
       CVE-2023-41900
+      CVE-2023-44487
     </notes>
     <cve>CVE-2023-4586</cve>
     <cve>CVE-2023-36414</cve>
@@ -36,6 +37,7 @@
     <cve>CVE-2023-36479</cve>
     <cve>CVE-2023-40167</cve>
     <cve>CVE-2023-41900</cve>
+    <cve>CVE-2023-44487</cve>
   </suppress>
   <!--End of temporary suppression section -->
 

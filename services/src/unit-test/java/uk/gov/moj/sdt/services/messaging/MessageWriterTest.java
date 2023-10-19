@@ -52,8 +52,6 @@ class MessageWriterTest extends AbstractSdtUnitTestBase {
 
     private static final String UNIT_TEST = "UNITTEST";
 
-    private static final String DLQ_SUFFIX = "/$deadletterqueue";
-
     private static final String NOT_EXPECTED_TO_FAIL = "Not Expected to fail";
 
     private static final String ILLEGAL_STATE_EXCEPTION_MESSAGE =
@@ -87,7 +85,7 @@ class MessageWriterTest extends AbstractSdtUnitTestBase {
     @MethodSource("invalidTargetAppCodes")
     void testQueueMessageInvalidArgumentException(String targetAppCode, String exceptionMessage) {
         try {
-            messageWriter.queueMessage(sdtMessage, targetAppCode, false);
+            messageWriter.queueMessage(sdtMessage, targetAppCode);
             fail("Should have thrown an Illegal Argument exception as the target app code is invalid");
         } catch (final IllegalArgumentException e) {
             // Expected exception thrown, continue with test
@@ -112,24 +110,9 @@ class MessageWriterTest extends AbstractSdtUnitTestBase {
     void testQueueMessage() {
         // Send the message.
         try {
-            messageWriter.queueMessage(sdtMessage, UNIT_TEST, false);
+            messageWriter.queueMessage(sdtMessage, UNIT_TEST);
             assertNotEquals(0L, sdtMessage.getMessageSentTimestamp());
             verify(mockJmsTemplate).convertAndSend(UNIT_TEST_QUEUE, sdtMessage);
-        } catch (final IllegalArgumentException e) {
-            fail(NOT_EXPECTED_TO_FAIL);
-        }
-    }
-
-    /**
-     * Test for a valid queue message on the MessageWriter for dead letter.
-     */
-    @Test
-    void testQueueMessageForDeadLetter() {
-        // Send the message.
-        try {
-            messageWriter.queueMessage(sdtMessage, UNIT_TEST, true);
-            assertNotEquals(0L, sdtMessage.getMessageSentTimestamp());
-            verify(mockJmsTemplate).convertAndSend(UNIT_TEST_QUEUE + DLQ_SUFFIX, sdtMessage);
         } catch (final IllegalArgumentException e) {
             fail(NOT_EXPECTED_TO_FAIL);
         }
@@ -147,7 +130,7 @@ class MessageWriterTest extends AbstractSdtUnitTestBase {
         listAppender.start();
         messageWriterLogger.addAppender(listAppender);
 
-        messageWriter.queueMessage(sdtMessage, UNIT_TEST, false);
+        messageWriter.queueMessage(sdtMessage, UNIT_TEST);
 
         List<ILoggingEvent> logsList = listAppender.list;
         ILoggingEvent lastLogEntry = logsList.get(logsList.size() - 1);
@@ -179,7 +162,7 @@ class MessageWriterTest extends AbstractSdtUnitTestBase {
         CachingConnectionFactory mockCachingConnectionFactory = mock(CachingConnectionFactory.class);
         when(mockJmsTemplate.getConnectionFactory()).thenReturn(mockCachingConnectionFactory);
 
-        messageWriter.queueMessage(sdtMessage, UNIT_TEST, false);
+        messageWriter.queueMessage(sdtMessage, UNIT_TEST);
 
         verify(mockJmsTemplate).getConnectionFactory();
         verify(mockCachingConnectionFactory).resetConnection();
@@ -199,7 +182,7 @@ class MessageWriterTest extends AbstractSdtUnitTestBase {
         when(mockJmsTemplate.getConnectionFactory()).thenReturn(null);
 
         try {
-            messageWriter.queueMessage(sdtMessage, UNIT_TEST, false);
+            messageWriter.queueMessage(sdtMessage, UNIT_TEST);
             fail("IllegalStateException (java.lang) should be thrown");
         }
         catch (IllegalStateException e) {
@@ -234,7 +217,7 @@ class MessageWriterTest extends AbstractSdtUnitTestBase {
         listAppender.start();
         messageWriterLogger.addAppender(listAppender);
 
-        messageWriter.queueMessage(sdtMessage, UNIT_TEST, false);
+        messageWriter.queueMessage(sdtMessage, UNIT_TEST);
 
         List<ILoggingEvent> logsList = listAppender.list;
         ILoggingEvent lastLogEntry = logsList.get(logsList.size() - 1);
@@ -273,7 +256,7 @@ class MessageWriterTest extends AbstractSdtUnitTestBase {
         when(mockJmsTemplate.getConnectionFactory()).thenReturn(mockCachingConnectionFactory);
 
         try {
-            messageWriter.queueMessage(sdtMessage, UNIT_TEST, false);
+            messageWriter.queueMessage(sdtMessage, UNIT_TEST);
             fail("InvalidClientIDException should be thrown");
         } catch (org.springframework.jms.InvalidClientIDException e) {
             // Expected exception thrown, continue with test
@@ -297,7 +280,7 @@ class MessageWriterTest extends AbstractSdtUnitTestBase {
             when(mockJmsTemplate).convertAndSend(UNIT_TEST_QUEUE, sdtMessage);
 
         try {
-            messageWriter.queueMessage(sdtMessage, UNIT_TEST, false);
+            messageWriter.queueMessage(sdtMessage, UNIT_TEST);
             fail("IllegalStateException (org.springframework.jms) should be thrown");
         }
         catch(org.springframework.jms.IllegalStateException e) {
