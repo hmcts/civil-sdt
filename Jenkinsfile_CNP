@@ -5,8 +5,11 @@
 def type = "java"
 def product = "civil"
 def component = "sdt"
+def branchesToSync = ['ithc', 'perftest']
+
 
 withPipeline(type, product, component) {
+  syncBranchesWithMaster(branchesToSync)
   enableAksStagingDeployment()
   disableLegacyDeployment()
   nonServiceApp()
