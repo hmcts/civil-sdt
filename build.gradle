@@ -224,7 +224,7 @@ allprojects {
     annotationProcessor group: 'org.projectlombok', name: 'lombok', version: lombokVersion
     implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.10'
     implementation group: 'ch.qos.logback', name: 'logback-core', version: '1.2.10'
-    implementation group: 'com.azure', name: 'azure-core', version: '1.44.0'
+    implementation group: 'com.azure', name: 'azure-core', version: '1.44.1'
     implementation group: 'com.azure', name: 'azure-messaging-servicebus', version: '7.14.4'
     implementation group: 'com.fasterxml.jackson.module', name: 'jackson-module-jaxb-annotations', version: '2.15.3'
     implementation group: 'com.github.hmcts.java-logging', name: 'logging', version: '6.0.1'
