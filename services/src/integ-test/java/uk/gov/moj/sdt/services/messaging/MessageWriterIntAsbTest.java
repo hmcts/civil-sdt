@@ -97,14 +97,14 @@ public class MessageWriterIntAsbTest extends AbstractIntegrationTest {
         final String strMessage1 =
                 "TestMessage1" + dateFormat.format(new java.util.Date(System.currentTimeMillis()));
         message1.setSdtRequestReference(strMessage1);
-        messageWriter.queueMessage(message1, "TEST1", false);
+        messageWriter.queueMessage(message1, "TEST1");
 
         // Send the second message.
         final ISdtMessage message2 = new SdtMessage();
         final String strMessage2 =
                 "TestMessage2" + dateFormat.format(new java.util.Date(System.currentTimeMillis()));
         message2.setSdtRequestReference(strMessage2);
-        messageWriter.queueMessage(message2, "TEST1", false);
+        messageWriter.queueMessage(message2, "TEST1");
 
         readMessageFromQueue(Lists.newArrayList(strMessage1, strMessage2));
     }
@@ -122,7 +122,7 @@ public class MessageWriterIntAsbTest extends AbstractIntegrationTest {
         String requestReference =  "Test message" + dateFormat.format(new java.util.Date(System.currentTimeMillis()));
         message.setSdtRequestReference(requestReference);
 
-        messageWriterBad.queueMessage(message, "TEST1", false);
+        messageWriterBad.queueMessage(message, "TEST1");
         Assert.assertTrue("Test completed", true);
 
         readMessageFromQueue(Lists.newArrayList(requestReference));

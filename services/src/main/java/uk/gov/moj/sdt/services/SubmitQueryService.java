@@ -163,25 +163,31 @@ public class SubmitQueryService implements ISubmitQueryService {
 
             this.updateCompletedRequest();
         } catch (final TimeoutException e) {
-            LOGGER.error("Timeout exception for SDT Bulk Customer [" +
-                    submitQueryRequest.getBulkCustomer().getSdtCustomerId() + "] ", e.getMessage());
+            LOGGER.error("Timeout exception for SDT Bulk Customer [{}] {}",
+                         submitQueryRequest.getBulkCustomer().getSdtCustomerId(),
+                         e.getMessage());
 
             // Update the request for timeout error.
             this.updateRequestTimeOut(submitQueryRequest);
-
         } catch (final OutageException e) {
-            LOGGER.error("Outage exception for SDT Bulk Customer [" +
-                    submitQueryRequest.getBulkCustomer().getSdtCustomerId() + "] ", e.getMessage());
+            LOGGER.error("Outage exception for SDT Bulk Customer [{}] {}",
+                         submitQueryRequest.getBulkCustomer().getSdtCustomerId(),
+                         e.getMessage());
+
             // Update the request for outage.
             this.updateRequestOutage(submitQueryRequest);
         } catch (final SoapFaultException e) {
-            LOGGER.error("Soap exception for SDT Bulk Customer [" +
-                    submitQueryRequest.getBulkCustomer().getSdtCustomerId() + "] ", e.getMessage());
+            LOGGER.error("Soap exception for SDT Bulk Customer [{}] {}",
+                         submitQueryRequest.getBulkCustomer().getSdtCustomerId(),
+                         e.getMessage());
+
             // Update the request with the soap fault reason
             this.updateRequestSoapError(submitQueryRequest);
         } catch (final WebServiceException e) {
-            LOGGER.error("WebService exception for SDT Bulk Customer [" +
-                    submitQueryRequest.getBulkCustomer().getSdtCustomerId() + "]", e.getMessage());
+            LOGGER.error("WebService exception for SDT Bulk Customer [{}] {}",
+                         submitQueryRequest.getBulkCustomer().getSdtCustomerId(),
+                         e.getMessage());
+
             // Update the request with reason
             this.updateRequestSoapError(submitQueryRequest);
         } finally {
@@ -201,13 +207,11 @@ public class SubmitQueryService implements ISubmitQueryService {
      * @param submitQueryRequest submit query request.
      */
     private void updateRequestTimeOut(final ISubmitQueryRequest submitQueryRequest) {
-        // Get the Error message to indicate that call to target application has
-        // timed out
+        // Get the Error message to indicate that call to target application has timed out
         buildTargetAppError(submitQueryRequest);
 
         // Clear out xml to prevent enrichment
         SdtContext.getContext().setRawOutXml(null);
-
     }
 
     /**
@@ -216,8 +220,7 @@ public class SubmitQueryService implements ISubmitQueryService {
      * @param submitQueryRequest submit query request.
      */
     private void updateRequestOutage(final ISubmitQueryRequest submitQueryRequest) {
-        // Get the Error message to indicate that there has been no response
-        // from the server.
+        // Get the Error message to indicate that there has been no response from the server.
         buildTargetAppError(submitQueryRequest);
 
         // Clear out xml to prevent enrichment
@@ -231,8 +234,7 @@ public class SubmitQueryService implements ISubmitQueryService {
      */
     private void buildTargetAppError(final ISubmitQueryRequest submitQueryRequest) {
         // NOTE: At the moment, functionality is common for Timeout and Outage,
-        // but two methods to separate
-        // implementation.
+        // but two methods to separate implementation.
         final IErrorMessage errorMessageParam =
                 this.getErrorMessagesCache().getValue(IErrorMessage.class,
                         IErrorMessage.ErrorCode.TAR_APP_ERROR.name());
@@ -284,8 +286,7 @@ public class SubmitQueryService implements ISubmitQueryService {
     private void updateCompletedRequest() {
         final String targetAppResponse = queryResponseXmlParser.parse();
 
-        // Setup raw XML from target application for addition to raw out stream
-        // in interceptor.
+        // Setup raw XML from target application for addition to raw out stream in interceptor.
         SdtContext.getContext().setRawOutXml(targetAppResponse);
 
         LOGGER.debug("rawOutXml {}", SdtContext.getContext().getRawOutXml());
@@ -388,8 +389,7 @@ public class SubmitQueryService implements ISubmitQueryService {
 
     /**
      * Extract criteria xml from raw xml that would have been saved by inbound
-     * interceptor. Write extracted fragment to threadlocal for outbound
-     * interceptor.
+     * interceptor. Write extracted fragment to threadlocal for outbound interceptor.
      */
     private void extractAndWriteCriteria() {
 
@@ -400,7 +400,6 @@ public class SubmitQueryService implements ISubmitQueryService {
         // Setup criteria XML so that it can be picked up by the outbound
         // interceptor and injected into the outbound XML.
         SdtContext.getContext().setRawOutXml(criteriaXml);
-
     }
 
     /**
@@ -431,22 +430,27 @@ public class SubmitQueryService implements ISubmitQueryService {
 
         LOGGER.debug("Send submit query request to target application");
 
-        SubmitQueryResponse mcolSubmitQueryResponse = requestConsumer.submitQuery(submitQueryRequest, connectionTimeOut, requestTimeOut);
-        SubmitQueryResponse cmcSubmitQueryResponse = cmcRequestConsumer.submitQuery(submitQueryRequest, connectionTimeOut, requestTimeOut);
+        SubmitQueryResponse mcolSubmitQueryResponse =
+            requestConsumer.submitQuery(submitQueryRequest, connectionTimeOut, requestTimeOut);
 
-        // adjust results count
-        String summaryResultsXML = "";
-        if (null != cmcSubmitQueryResponse && null != cmcSubmitQueryResponse.getClaimDefencesResults()
-                && !cmcSubmitQueryResponse.getClaimDefencesResults().isEmpty()) {
-            submitQueryRequest.setResultCount(submitQueryRequest.getResultCount()
-                    + cmcSubmitQueryResponse.getClaimDefencesResults().size());
+        if (Boolean.TRUE.equals(submitQueryRequest.getBulkCustomer().getReadyForAlternateService())) {
+            SubmitQueryResponse cmcSubmitQueryResponse =
+                cmcRequestConsumer.submitQuery(submitQueryRequest, connectionTimeOut, requestTimeOut);
 
-            summaryResultsXML = responsesSummaryUtil.getSummaryResults(mcolSubmitQueryResponse,
-                    cmcSubmitQueryResponse.getClaimDefencesResults());
+            // adjust results count
+            String summaryResultsXML = "";
+            if (null != cmcSubmitQueryResponse && null != cmcSubmitQueryResponse.getClaimDefencesResults() &&
+                !cmcSubmitQueryResponse.getClaimDefencesResults().isEmpty()) {
+                submitQueryRequest.setResultCount(submitQueryRequest.getResultCount()
+                                                      + cmcSubmitQueryResponse.getClaimDefencesResults().size());
+                summaryResultsXML =
+                    responsesSummaryUtil.getSummaryResults(mcolSubmitQueryResponse,
+                                                           cmcSubmitQueryResponse.getClaimDefencesResults());
+
+                // Set summary results XML to be picked up later
+                SdtContext.getContext().setClaimDefencesSummaryResultsXml(summaryResultsXML);
+            }
         }
-
-        // Set summary results XML to be picked up later
-        SdtContext.getContext().setClaimDefencesSummaryResultsXml(summaryResultsXML);
     }
 
     /**
