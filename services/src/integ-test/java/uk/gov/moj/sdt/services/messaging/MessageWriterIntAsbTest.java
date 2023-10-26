@@ -31,31 +31,29 @@
 package uk.gov.moj.sdt.services.messaging;
 
 import com.google.common.collect.Lists;
-import org.junit.Assert;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import uk.gov.moj.sdt.services.config.ServicesTestConfig;
 import uk.gov.moj.sdt.services.messaging.api.ISdtMessage;
 import uk.gov.moj.sdt.test.utils.AbstractIntegrationTest;
 import uk.gov.moj.sdt.test.utils.TestConfig;
 
+import javax.jms.Message;
+import javax.jms.ObjectMessage;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.stream.Collectors;
-import javax.jms.JMSException;
-import javax.jms.Message;
-import javax.jms.ObjectMessage;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * IntegrationTest class for testing the MessageWriter implementation.
@@ -63,10 +61,12 @@ import static org.junit.Assert.assertTrue;
  * @author Manoj Kulkarni
  */
 @ActiveProfiles("integ-asb")
-@RunWith(SpringRunner.class)
-@SpringBootTest(classes = {TestConfig.class, ServicesTestConfig.class })
-@Ignore("Preiew environments don't support Azure Service bus queues")
-public class MessageWriterIntAsbTest extends AbstractIntegrationTest {
+@ExtendWith(SpringExtension.class)
+@SpringBootTest(classes = {TestConfig.class, ServicesTestConfig.class})
+@Disabled("Preview environments don't support Azure Service bus queues")
+class MessageWriterIntAsbTest extends AbstractIntegrationTest {
+
+    private static final String TARGET_APP_CODE = "TEST1";
 
     @Autowired
     @Qualifier("MessageWriter")
@@ -84,12 +84,9 @@ public class MessageWriterIntAsbTest extends AbstractIntegrationTest {
 
     /**
      * Test method to test the sending of message.
-     *
-     * @throws JMSException         exception
-     * @throws InterruptedException exception
      */
     @Test
-    public void testQueueMessage() throws JMSException, InterruptedException {
+    void testQueueMessage() {
         final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
 
         // Send the first message.
@@ -97,40 +94,38 @@ public class MessageWriterIntAsbTest extends AbstractIntegrationTest {
         final String strMessage1 =
                 "TestMessage1" + dateFormat.format(new java.util.Date(System.currentTimeMillis()));
         message1.setSdtRequestReference(strMessage1);
-        messageWriter.queueMessage(message1, "TEST1");
+        messageWriter.queueMessage(message1, TARGET_APP_CODE);
 
         // Send the second message.
         final ISdtMessage message2 = new SdtMessage();
         final String strMessage2 =
                 "TestMessage2" + dateFormat.format(new java.util.Date(System.currentTimeMillis()));
         message2.setSdtRequestReference(strMessage2);
-        messageWriter.queueMessage(message2, "TEST1");
+        messageWriter.queueMessage(message2, TARGET_APP_CODE);
 
         readMessageFromQueue(Lists.newArrayList(strMessage1, strMessage2));
     }
 
     /**
      * Test method to test failure behaviour when Azure Service Bus not running.
-     *
-     * @throws JMSException exception
      */
     @Test
-    public void testAzureServiceBusDown() throws JMSException {
+    void testAzureServiceBusDown() {
         // Send the message.
         final ISdtMessage message = new SdtMessage();
         final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
         String requestReference =  "Test message" + dateFormat.format(new java.util.Date(System.currentTimeMillis()));
         message.setSdtRequestReference(requestReference);
 
-        messageWriterBad.queueMessage(message, "TEST1");
-        Assert.assertTrue("Test completed", true);
+        messageWriterBad.queueMessage(message, TARGET_APP_CODE);
+        assertTrue(true, "Test completed");
 
         readMessageFromQueue(Lists.newArrayList(requestReference));
     }
 
-    public List<ISdtMessage> readMessageFromQueue() {
+    private List<ISdtMessage> readMessageFromQueue() {
         List<ISdtMessage> listMessages = new ArrayList<>();
-        jmsTemplate.browse(queueConfig.getTargetAppQueue().get("TEST1"), (session, browser) -> {
+        jmsTemplate.browse(queueConfig.getTargetAppQueue().get(TARGET_APP_CODE), (session, browser) -> {
             Enumeration<Message> messages = browser.getEnumeration();
             while (messages.hasMoreElements()) {
                 Message message = messages.nextElement();
@@ -143,10 +138,10 @@ public class MessageWriterIntAsbTest extends AbstractIntegrationTest {
         return listMessages;
     }
 
-    public void readMessageFromQueue(List<String> messagesToValidate) {
+    private void readMessageFromQueue(List<String> messagesToValidate) {
         List<ISdtMessage> listMessages = readMessageFromQueue();
 
-        assertTrue(listMessages.stream().map(iSdtMessage -> iSdtMessage.getSdtRequestReference()).collect(Collectors.toSet())
+        assertTrue(listMessages.stream().map(ISdtMessage::getSdtRequestReference).collect(Collectors.toSet())
                        .containsAll(messagesToValidate));
     }
 }
