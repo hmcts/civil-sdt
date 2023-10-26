@@ -167,7 +167,7 @@ ext {
   jaxwsVersion = "2.3.1"
   activeMQVersion = '5.18.2'
   testcontainers = '1.19.1'
-  sdtCommonVersion = '1.1.0-SDT-173.0.1'
+  sdtCommonVersion = '1.1.0-SDT-173.0.2'
   limits = [
     'instruction': 99,
     'branch'     : 99,
