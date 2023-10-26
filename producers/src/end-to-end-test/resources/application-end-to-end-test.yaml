@@ -40,6 +40,8 @@ sdt:
   purge:
     cron: ${PURGE_SCHEDULE_CRON:0 10 5 * * ?}
     commitInterval: ${PURGE_COMMIT_INTERVAL:1000}
+  requeue:
+    cron: ${REQUEUE_SCHEDULE_CRON:0 20 0 * * ?}
 #-------------------------------
 
 # port number of the tc server

@@ -169,18 +169,17 @@ public class IndividualRequestDao extends GenericDao<IndividualRequest> implemen
         final LocalDateTime now = LocalDateTime.now();
         final LocalDateTime latestTime = now.minusMinutes(minimumAgeInMinutes);
         List<IndividualRequest> queryList = this.queryAsList(IndividualRequest.class, () -> {
-            Predicate[] sdtCustomerPredicate =   createIndividualRequestPredicate(false, latestTime);
+            Predicate[] sdtCustomerPredicate =   createIndividualRequestPredicate(latestTime);
             return criteriaQuery.select(root).where(sdtCustomerPredicate);
         });
         return new ArrayList<>(queryList);
     }
 
-    private Predicate[] createIndividualRequestPredicate(boolean deadLetter, LocalDateTime latestTime) {
+    private Predicate[] createIndividualRequestPredicate(LocalDateTime latestTime) {
         Predicate[] predicates = new Predicate[3];
         predicates[0] = criteriaBuilder.or(criteriaBuilder.equal(root.get(REQUEST_STATUS), RECEIVED.getStatus()),
                                            criteriaBuilder.equal(root.get(REQUEST_STATUS), FORWARDED.getStatus()));
-        predicates[1] = criteriaBuilder.equal(root.get(DEAD_LETTER), deadLetter);
-        predicates[2] = criteriaBuilder.or(criteriaBuilder.lessThan(root.get(UPDATED_DATE), latestTime), criteriaBuilder.isNull(root.get(UPDATED_DATE)));
+        predicates[1] = criteriaBuilder.or(criteriaBuilder.lessThan(root.get(UPDATED_DATE), latestTime), criteriaBuilder.isNull(root.get(UPDATED_DATE)));
         return predicates;
     }
 
