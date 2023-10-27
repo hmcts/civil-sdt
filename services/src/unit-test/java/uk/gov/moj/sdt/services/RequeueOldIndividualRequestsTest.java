@@ -13,6 +13,8 @@ import static org.mockito.Mockito.verify;
 @ExtendWith(MockitoExtension.class)
 public class RequeueOldIndividualRequestsTest extends AbstractSdtUnitTestBase {
 
+    private static final int MINIMUM_AGE = 15;
+
     private RequeueOldIndividualRequests requeueOldIndividualRequests;
 
     @Mock
@@ -22,12 +24,13 @@ public class RequeueOldIndividualRequestsTest extends AbstractSdtUnitTestBase {
     @Override
     public void setUp() {
         requeueOldIndividualRequests = new RequeueOldIndividualRequests(sdtManagementMBean);
+        requeueOldIndividualRequests.setMinimumAge(MINIMUM_AGE);
     }
 
     @Test
     void shouldInvokeRequeueOldIndividualRequests() {
         requeueOldIndividualRequests.requeueOldIndividualRequests();
-        verify(sdtManagementMBean).requeueOldIndividualRequests(15);
+        verify(sdtManagementMBean).requeueOldIndividualRequests(MINIMUM_AGE);
     }
 
 }

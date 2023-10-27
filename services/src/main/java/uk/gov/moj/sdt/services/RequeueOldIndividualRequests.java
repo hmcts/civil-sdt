@@ -31,4 +31,8 @@ public class RequeueOldIndividualRequests {
         LOGGER.debug("COMPLETED: the Scheduled Job to requeue old individual requests");
     }
 
+    public void setMinimumAge(int minimumAge) {
+        this.minimumAge = minimumAge;
+    }
+
 }
