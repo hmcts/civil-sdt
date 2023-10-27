@@ -15,7 +15,7 @@ public class RequeueOldIndividualRequests {
 
     private SdtManagementMBean sdtManagementMBean;
 
-    @Value("${sdt.requeue.minimumAge}")
+    @Value("${sdt.requeue.minimumAge:15}")
     private int minimumAge;
 
     @Autowired
