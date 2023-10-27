@@ -50,5 +50,6 @@ sdt:
   retry-send:
     cron: ${RETRY_SEND_CRON:0 0 * * * ?}
   requeue:
-    cron: ${REQUEUE_SCHEDULE_CRON:0 20 0 * * ?}
+    cron: ${REQUEUE_SCHEDULE_CRON:0 */20 * * * ?}
+    minimumAge: ${MINIMUM_AGE:15}
 
