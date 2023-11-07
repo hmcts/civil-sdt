@@ -165,7 +165,6 @@ ext {
   tomcatVersion = '9.0.82'
   cxfVersion = '3.6.2'
   jaxwsVersion = "2.3.1"
-  activeMQVersion = '5.18.3'
   testcontainers = '1.19.1'
   sdtCommonVersion = '1.1.0-SDT-149.0.1'
   limits = [
@@ -194,6 +193,7 @@ ext['guava.version'] = '30.0-jre'
 ext['apache.poi.version'] = '4.1.0'
 ext['snakeyaml.version'] = '1.33'
 ext['hibernate-validator.version'] = '6.0.20.Final'
+ext['activemq.version'] = '5.18.3'
 
 dependencyManagement {
   imports {
@@ -249,8 +249,6 @@ allprojects {
     implementation group: 'javax.inject', name: 'javax.inject', version: '1'
     implementation group: 'javax.jws', name: 'javax.jws-api', version: '1.1'
     implementation group: 'net.minidev', name: 'json-smart', version: '2.5.0'
-    implementation group: 'org.apache.activemq', name: 'activemq-broker', version: activeMQVersion
-    implementation group: 'org.apache.activemq', name: 'activemq-client', version: activeMQVersion
     implementation group: 'org.apache.commons', name: 'commons-compress', version: '1.24.0'
     implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.13.0'
     implementation group: 'org.apache.cxf', name: 'cxf-rt-features-logging', version: cxfVersion
@@ -269,12 +267,10 @@ allprojects {
     implementation group: 'org.postgresql', name: 'postgresql', version: postgresqlVersion
     implementation group: 'org.springdoc', name: 'springdoc-openapi-ui', version: '1.7.0'
     implementation group: 'org.springframework', name: 'spring-jms'
-    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-activemq'
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-actuator'
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-aop'
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-cache'
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa'
-    implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign', version: '4.0.4'
     implementation(group: 'org.springframework.boot', name: 'spring-boot-starter-jdbc') {
       exclude group: 'org.apache.tomcat', module: 'tomcat-jdbc'
     }
@@ -329,6 +325,7 @@ allprojects {
     testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-params', version: junitVersion
     testImplementation group: 'org.mockito', name: 'mockito-inline', version: '3.12.4'
     testImplementation group: 'org.postgresql', name: 'postgresql', version: postgresqlVersion
+    testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-activemq'
     testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', {
       exclude group: 'junit', module: 'junit'
       exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'

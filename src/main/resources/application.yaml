@@ -59,9 +59,6 @@ spring:
     baseline-version: '0001'
     out-of-order: 'true'
     baseline-on-migrate: 'true'
-  activemq:
-    packages:
-      trusted: uk.gov.moj.sdt.services.messaging
 
 sdt:
   tx-timeout:
