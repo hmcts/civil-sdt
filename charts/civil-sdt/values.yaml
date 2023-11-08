@@ -30,5 +30,7 @@ java:
           alias: SDT_DB_HOST
         - name: civil-sdt-servicebus-connection-string
           alias: CIVIL_SDT_SERVICEBUS_CONNECTION_STRING
+        - name: civil-sdt-servicebus-pricing-tier
+          alias: CIVIL_SDT_SERVICEBUS_PRICING_TIER
 servicebus:
   enabled: false

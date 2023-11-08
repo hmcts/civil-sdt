@@ -18,6 +18,7 @@ spring:
   jms:
     servicebus:
       connection-string: ${CIVIL_SDT_SERVICEBUS_CONNECTION_STRING:Endpoint=sb://destination1.servicebus.windows.net;SharedAccessKeyName=[KEYNAME];SharedAccessKey=[KEY]}
+      pricing-tier: ${CIVIL_SDT_SERVICEBUS_PRICING_TIER:Standard}
       internal:
         targetAppQueue:
           MCOL: ${CIVIL_SDT_QUEUE}
@@ -58,9 +59,6 @@ spring:
     baseline-version: '0001'
     out-of-order: 'true'
     baseline-on-migrate: 'true'
-  activemq:
-    packages:
-      trusted: uk.gov.moj.sdt.services.messaging
 
 sdt:
   tx-timeout:
