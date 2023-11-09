@@ -132,7 +132,7 @@ public class IndividualRequestDao extends GenericDao<IndividualRequest> implemen
 
         // Should only return one or none at all
         if (individualRequests == null || individualRequests.length == 0) {
-            LOGGER.error("Individual Request from DB is null for reference {}.", sdtReferenceId);
+            LOGGER.debug("Individual Request from DB is null for reference {}.", sdtReferenceId);
             return null;
         }
 
@@ -140,7 +140,7 @@ public class IndividualRequestDao extends GenericDao<IndividualRequest> implemen
             throw new IllegalStateException("Multiple Individual Requests found for the Sdt Request Reference " +
                     sdtReferenceId);
         }
-        LOGGER.error("Individual Request from DB is {} for reference {}.", individualRequests[0], sdtReferenceId);
+        LOGGER.debug("Individual Request from DB is {} for reference {}.", individualRequests[0], sdtReferenceId);
 
         return (IIndividualRequest) individualRequests[0];
     }
