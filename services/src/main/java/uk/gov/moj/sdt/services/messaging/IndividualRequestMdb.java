@@ -77,6 +77,7 @@ public class IndividualRequestMdb implements IMessageDrivenBean {
     @Override
     @Transactional(propagation = Propagation.REQUIRED)
     public void readMessage(final Message message) {
+        LOGGER.debug("Received message {}, is object message ",  message, message instanceof ObjectMessage);
         // All expected messages are object messages written by the message writer.
         if (message instanceof ObjectMessage) {
             final ObjectMessage objectMessage = (ObjectMessage) message;
@@ -95,7 +96,7 @@ public class IndividualRequestMdb implements IMessageDrivenBean {
                 SdtMetricsMBean.getMetrics().decrementRequestQueueLength();
 
             } catch (final JMSException e) {
-                LOGGER.error(e.getMessage());
+                LOGGER.error("Error reading message from object message {}", e.getMessage());
                 throw new RuntimeException(e);
             }
 
