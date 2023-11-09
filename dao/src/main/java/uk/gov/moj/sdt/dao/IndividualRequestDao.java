@@ -77,6 +77,7 @@ public class IndividualRequestDao extends GenericDao<IndividualRequest> implemen
 
     private final Root<IndividualRequest> root;
 
+    private IndividualRequestRepository crudRepository;
     private final CriteriaBuilder criteriaBuilder;
 
     private final CriteriaQuery<IndividualRequest> criteriaQuery;
@@ -84,6 +85,7 @@ public class IndividualRequestDao extends GenericDao<IndividualRequest> implemen
     @Autowired
     public IndividualRequestDao(final IndividualRequestRepository crudRepository, EntityManager entityManager) {
         super(crudRepository, entityManager);
+        this.crudRepository = crudRepository;
         criteriaBuilder = entityManager.getCriteriaBuilder();
         criteriaQuery = criteriaBuilder.createQuery(IndividualRequest.class);
         root = criteriaQuery.from(IndividualRequest.class);
@@ -125,24 +127,17 @@ public class IndividualRequestDao extends GenericDao<IndividualRequest> implemen
         }
 
         // Call the generic dao to do this query.
-        final IDomainObject[] individualRequests = this.query(IndividualRequest.class, () -> {
-            Predicate[] sdtCustomerPredicate = createSdtRequestReferencePredicate(sdtReferenceId);
-            return criteriaQuery.select(root).where(sdtCustomerPredicate);
-        });
+        final IDomainObject individualRequest = crudRepository.findBySdtRequestReference(sdtReferenceId);
 
         // Should only return one or none at all
-        if (individualRequests == null || individualRequests.length == 0) {
+        if (individualRequest == null) {
             LOGGER.debug("Individual Request from DB is null for reference {}.", sdtReferenceId);
             return null;
         }
 
-        if (individualRequests.length > 1) {
-            throw new IllegalStateException("Multiple Individual Requests found for the Sdt Request Reference " +
-                    sdtReferenceId);
-        }
-        LOGGER.debug("Individual Request from DB is {} for reference {}.", individualRequests[0], sdtReferenceId);
+        LOGGER.debug("Individual Request from DB is {} for reference {}.", individualRequest, sdtReferenceId);
 
-        return (IIndividualRequest) individualRequests[0];
+        return (IIndividualRequest) individualRequest;
     }
 
     @Override
