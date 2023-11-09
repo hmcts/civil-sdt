@@ -39,7 +39,6 @@ import uk.gov.moj.sdt.dao.api.IIndividualRequestDao;
 import uk.gov.moj.sdt.dao.repository.IndividualRequestRepository;
 import uk.gov.moj.sdt.domain.IndividualRequest;
 import uk.gov.moj.sdt.domain.api.IBulkCustomer;
-import uk.gov.moj.sdt.domain.api.IDomainObject;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 
 import java.time.LocalDateTime;
@@ -127,7 +126,7 @@ public class IndividualRequestDao extends GenericDao<IndividualRequest> implemen
         }
 
         // Call the generic dao to do this query.
-        final IDomainObject individualRequest = crudRepository.findBySdtRequestReference(sdtReferenceId);
+        final IIndividualRequest individualRequest = crudRepository.findBySdtRequestReference(sdtReferenceId);
 
         // Should only return one or none at all
         if (individualRequest == null) {
@@ -137,7 +136,7 @@ public class IndividualRequestDao extends GenericDao<IndividualRequest> implemen
 
         LOGGER.debug("Individual Request from DB is {} for reference {}.", individualRequest, sdtReferenceId);
 
-        return (IIndividualRequest) individualRequest;
+        return individualRequest;
     }
 
     @Override
@@ -178,12 +177,6 @@ public class IndividualRequestDao extends GenericDao<IndividualRequest> implemen
                                            criteriaBuilder.equal(root.get(REQUEST_STATUS), FORWARDED.getStatus()));
         predicates[1] = criteriaBuilder.equal(root.get(DEAD_LETTER), deadLetter);
         predicates[2] = criteriaBuilder.or(criteriaBuilder.lessThan(root.get(UPDATED_DATE), latestTime), criteriaBuilder.isNull(root.get(UPDATED_DATE)));
-        return predicates;
-    }
-
-    private Predicate[] createSdtRequestReferencePredicate(String sdtRequestReference) {
-        Predicate[] predicates = new Predicate[1];
-        predicates[0] = criteriaBuilder.equal(root.get(SDT_REQUEST_REFERENCE), sdtRequestReference);
         return predicates;
     }
 
