@@ -167,7 +167,7 @@ public class TargetApplicationSubmissionService extends AbstractSdtService imple
                 this.reQueueRequest(individualRequest, true);
             }
         } else {
-            LOGGER.error("SDT Reference {} read from message queue not found in database for individual request.",
+            LOGGER.debug("SDT Reference {} read from message queue not found in database for individual request.",
                     sdtRequestReference);
         }
     }
