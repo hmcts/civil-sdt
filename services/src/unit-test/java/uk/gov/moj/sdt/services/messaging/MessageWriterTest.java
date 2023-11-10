@@ -19,6 +19,7 @@ import org.springframework.jms.UncategorizedJmsException;
 import org.springframework.jms.connection.CachingConnectionFactory;
 import org.springframework.jms.core.JmsTemplate;
 import uk.gov.moj.sdt.dao.api.IIndividualRequestDao;
+import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.services.messaging.api.ISdtMessage;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 
@@ -79,6 +80,8 @@ class MessageWriterTest extends AbstractSdtUnitTestBase {
         Map<String, String> targetAppQueueMap = new HashMap<>();
         targetAppQueueMap.put(UNIT_TEST, UNIT_TEST_QUEUE);
         queueConfig.setTargetAppQueue(targetAppQueueMap);
+        IIndividualRequest individualRequest = mock(IIndividualRequest.class);
+        when(individualRequestDao.getRequestBySdtReference(anyString())).thenReturn(individualRequest);
         messageWriter = new MessageWriter(mockJmsTemplate, queueConfig, individualRequestDao);
 
         sdtMessage = new SdtMessage();
