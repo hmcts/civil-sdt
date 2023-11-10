@@ -44,6 +44,9 @@ import uk.gov.moj.sdt.services.messaging.api.ISdtMessage;
 import uk.gov.moj.sdt.services.utils.api.IMessagingUtility;
 import uk.gov.moj.sdt.utils.transaction.synchronizer.api.IMessageSynchronizer;
 
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import javax.jms.ObjectMessage;
 
 /**
@@ -69,6 +72,8 @@ public class MessagingUtility implements IMessagingUtility {
      */
     private IMessageSynchronizer messageSynchronizer;
 
+    private ExecutorService executor = Executors.newFixedThreadPool(20);
+
     @Autowired
     public MessagingUtility(@Qualifier("MessageWriter")
                                 IMessageWriter messageWriter,
@@ -80,8 +85,7 @@ public class MessagingUtility implements IMessagingUtility {
 
     @Override
     public void enqueueRequest(final IIndividualRequest individualRequest) {
-        this.getMessageSynchronizer().execute(new Runnable() {
-
+        executor.execute(new Runnable() {
             @Override
             public void run() {
                 queueRequest(individualRequest);

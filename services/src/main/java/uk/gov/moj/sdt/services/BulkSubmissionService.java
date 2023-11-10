@@ -179,7 +179,10 @@ public class BulkSubmissionService implements IBulkSubmissionService {
         LOGGER.debug("Enqueue {} requests", individualRequests.size());
 
         for (final IIndividualRequest iRequest : individualRequests) {
-            if (iRequest.isEnqueueable()) {
+            boolean isEnqueueable = iRequest.isEnqueueable();
+            LOGGER.debug("Enqueue IndividualRequestReference {} and BulkReference {} isEnqueueable {} ",
+                         iRequest.getSdtRequestReference(), iRequest.getSdtBulkReference(), isEnqueueable);
+            if (isEnqueueable) {
                 this.getMessagingUtility().enqueueRequest(iRequest);
             }
         }
