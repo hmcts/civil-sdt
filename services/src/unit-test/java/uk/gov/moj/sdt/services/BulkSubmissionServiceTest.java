@@ -12,6 +12,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.slf4j.LoggerFactory;
 import uk.gov.moj.sdt.dao.BulkCustomerDao;
 import uk.gov.moj.sdt.dao.GenericDao;
+import uk.gov.moj.sdt.dao.ServiceRequestDao;
 import uk.gov.moj.sdt.dao.TargetApplicationDao;
 import uk.gov.moj.sdt.dao.api.IBulkCustomerDao;
 import uk.gov.moj.sdt.dao.api.IGenericDao;
@@ -121,6 +122,13 @@ class BulkSubmissionServiceTest extends AbstractSdtUnitTestBase {
     private IGenericDao mockGenericDao;
 
     /**
+     * Generic dao.
+     */
+    @Mock
+    private ServiceRequestDao serviceRequestDao;
+
+
+    /**
      * Bulk Submission Service for testing.
      */
     private BulkSubmissionService bulkSubmissionService;
@@ -142,6 +150,7 @@ class BulkSubmissionServiceTest extends AbstractSdtUnitTestBase {
         IndividualRequestsXmlParser individualRequestsXmlParser = new IndividualRequestsXmlParser();
 
         bulkSubmissionService = new BulkSubmissionService(mockGenericDao,
+                                                          serviceRequestDao,
                                                           mockBulkCustomerDao,
                                                           mockTargetApplicationDao,
                                                           individualRequestsXmlParser,
@@ -164,7 +173,7 @@ class BulkSubmissionServiceTest extends AbstractSdtUnitTestBase {
 
         // Mock the serviceRequest fetch
         final IServiceRequest serviceRequest = new ServiceRequest();
-        when(mockGenericDao.fetch(IServiceRequest.class, 1)).thenReturn(serviceRequest);
+        when(serviceRequestDao.fetch(IServiceRequest.class, 1)).thenReturn(serviceRequest);
 
         // Activate Mock Generic Dao
         final IBulkSubmission bulkSubmission = this.createBulkSubmission();
@@ -189,7 +198,7 @@ class BulkSubmissionServiceTest extends AbstractSdtUnitTestBase {
         // Verify the Mock
         verify(mockGenericDao).persist(bulkSubmission);
         verify(mockBulkCustomerDao).getBulkCustomerBySdtId(10);
-        verify(mockGenericDao).fetch(IServiceRequest.class, 1);
+        verify(serviceRequestDao).fetch(IServiceRequest.class, 1);
         verify(mockConcurrencyMap).get(key);
     }
 
@@ -210,7 +219,7 @@ class BulkSubmissionServiceTest extends AbstractSdtUnitTestBase {
 
         // Mock the serviceRequest fetch
         final IServiceRequest serviceRequest = new ServiceRequest();
-        when(mockGenericDao.fetch(IServiceRequest.class, 1)).thenReturn(serviceRequest);
+        when(serviceRequestDao.fetch(IServiceRequest.class, 1)).thenReturn(serviceRequest);
 
         // Activate Mock Generic Dao
         final IBulkSubmission bulkSubmission = this.createBulkSubmission();
@@ -246,7 +255,7 @@ class BulkSubmissionServiceTest extends AbstractSdtUnitTestBase {
         verify(mockTargetApplicationDao).getTargetApplicationByCode(anyString());
         verify(mockConcurrencyMap).get(key);
         verify(mockBulkCustomerDao).getBulkCustomerBySdtId(10);
-        verify(mockGenericDao).fetch(IServiceRequest.class, 1);
+        verify(serviceRequestDao).fetch(IServiceRequest.class, 1);
     }
 
    @Test
@@ -261,7 +270,7 @@ class BulkSubmissionServiceTest extends AbstractSdtUnitTestBase {
 
         // Mock the serviceRequest fetch
         final IServiceRequest serviceRequest = new ServiceRequest();
-        when(mockGenericDao.fetch(IServiceRequest.class, 1)).thenReturn(serviceRequest);
+        when(serviceRequestDao.fetch(IServiceRequest.class, 1)).thenReturn(serviceRequest);
 
         // Activate Mock Generic Dao
         final IBulkSubmission bulkSubmission = this.createBulkSubmission();
@@ -293,7 +302,7 @@ class BulkSubmissionServiceTest extends AbstractSdtUnitTestBase {
         verify(mockTargetApplicationDao).getTargetApplicationByCode(anyString());
         verify(mockConcurrencyMap).get(key);
         verify(mockBulkCustomerDao).getBulkCustomerBySdtId(10);
-        verify(mockGenericDao).fetch(IServiceRequest.class, 1);
+        verify(serviceRequestDao).fetch(IServiceRequest.class, 1);
         verify(individualRequestMock).isEnqueueable();
         verify(individualRequestMock).getRequestStatus();
     }
@@ -318,7 +327,7 @@ class BulkSubmissionServiceTest extends AbstractSdtUnitTestBase {
 
         // Mock the serviceRequest fetch
         final IServiceRequest serviceRequest = new ServiceRequest();
-        when(mockGenericDao.fetch(IServiceRequest.class, 1)).thenReturn(serviceRequest);
+        when(serviceRequestDao.fetch(IServiceRequest.class, 1)).thenReturn(serviceRequest);
 
         when(mockBulkCustomerDao.getBulkCustomerBySdtId(10)).thenReturn(bulkSubmission.getBulkCustomer());
 
@@ -342,7 +351,7 @@ class BulkSubmissionServiceTest extends AbstractSdtUnitTestBase {
         verify(mockGenericDao).persist(bulkSubmission);
         verify(mockConcurrencyMap).get(key);
         verify(mockBulkCustomerDao).getBulkCustomerBySdtId(10);
-        verify(mockGenericDao).fetch(IServiceRequest.class, 1);
+        verify(serviceRequestDao).fetch(IServiceRequest.class, 1);
     }
 
     /**
@@ -366,7 +375,7 @@ class BulkSubmissionServiceTest extends AbstractSdtUnitTestBase {
 
         // Mock the serviceRequest fetch
         final IServiceRequest serviceRequest = new ServiceRequest();
-        when(mockGenericDao.fetch(IServiceRequest.class, 1)).thenReturn(serviceRequest);
+        when(serviceRequestDao.fetch(IServiceRequest.class, 1)).thenReturn(serviceRequest);
 
         when(mockBulkCustomerDao.getBulkCustomerBySdtId(10)).thenReturn(bulkSubmission.getBulkCustomer());
 
