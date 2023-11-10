@@ -80,8 +80,6 @@ class MessageWriterTest extends AbstractSdtUnitTestBase {
         Map<String, String> targetAppQueueMap = new HashMap<>();
         targetAppQueueMap.put(UNIT_TEST, UNIT_TEST_QUEUE);
         queueConfig.setTargetAppQueue(targetAppQueueMap);
-        IIndividualRequest individualRequest = mock(IIndividualRequest.class);
-        when(individualRequestDao.getRequestBySdtReference(anyString())).thenReturn(individualRequest);
         messageWriter = new MessageWriter(mockJmsTemplate, queueConfig, individualRequestDao);
 
         sdtMessage = new SdtMessage();
@@ -119,11 +117,14 @@ class MessageWriterTest extends AbstractSdtUnitTestBase {
     void testQueueMessage() {
         // Send the message.
         try {
+            IIndividualRequest individualRequest = mock(IIndividualRequest.class);
+            when(individualRequestDao.getRequestBySdtReference(anyString())).thenReturn(individualRequest);
             messageWriter.queueMessage(sdtMessage, UNIT_TEST);
             assertNotEquals(0L, sdtMessage.getMessageSentTimestamp());
             verify(mockJmsTemplate).convertAndSend(UNIT_TEST_QUEUE, sdtMessage);
             verify(individualRequestDao).getRequestBySdtReference(any(String.class));
-            verify(individualRequestDao).persist(any(IIndividualRequestDao.class));
+            verify(individualRequest).setRequestStatus(IIndividualRequest.IndividualRequestStatus.QUEUED.getStatus());
+            verify(individualRequestDao).persist(any(IIndividualRequest.class));
         } catch (final IllegalArgumentException e) {
             fail(NOT_EXPECTED_TO_FAIL);
         }
@@ -135,6 +136,8 @@ class MessageWriterTest extends AbstractSdtUnitTestBase {
 
         doThrow(uncategorizedJmsException).
             when(mockJmsTemplate).convertAndSend(UNIT_TEST_QUEUE, sdtMessage);
+        IIndividualRequest individualRequest = mock(IIndividualRequest.class);
+        when(individualRequestDao.getRequestBySdtReference(anyString())).thenReturn(individualRequest);
 
         Logger messageWriterLogger = (Logger) LoggerFactory.getLogger(MessageWriter.class);
         ListAppender<ILoggingEvent> listAppender = new ListAppender<>();
@@ -155,11 +158,14 @@ class MessageWriterTest extends AbstractSdtUnitTestBase {
 
         verify(mockJmsTemplate).convertAndSend(UNIT_TEST_QUEUE, sdtMessage);
         verify(individualRequestDao).getRequestBySdtReference(any(String.class));
-        verify(individualRequestDao).persist(any(IIndividualRequestDao.class));
+        verify(individualRequest).setRequestStatus(IIndividualRequest.IndividualRequestStatus.FAILED_QUEUE.getStatus());
+        verify(individualRequestDao).persist(any(IIndividualRequest.class));
     }
 
     @Test
     void testResetConnectionAndQueueMessage() {
+        IIndividualRequest individualRequest = mock(IIndividualRequest.class);
+        when(individualRequestDao.getRequestBySdtReference(anyString())).thenReturn(individualRequest);
         // Using two exception classes with the same name so need to qualify declarations
         javax.jms.IllegalStateException javaxIllegalStateException =
             new javax.jms.IllegalStateException(ILLEGAL_STATE_EXCEPTION_MESSAGE);
@@ -181,7 +187,8 @@ class MessageWriterTest extends AbstractSdtUnitTestBase {
         verify(mockCachingConnectionFactory).resetConnection();
         verify(mockJmsTemplate, times(2)).convertAndSend(UNIT_TEST_QUEUE, sdtMessage);
         verify(individualRequestDao).getRequestBySdtReference(any(String.class));
-        verify(individualRequestDao).persist(any(IIndividualRequestDao.class));
+        verify(individualRequest).setRequestStatus(IIndividualRequest.IndividualRequestStatus.QUEUED.getStatus());
+        verify(individualRequestDao).persist(any(IIndividualRequest.class));
     }
 
     @Test
@@ -207,12 +214,12 @@ class MessageWriterTest extends AbstractSdtUnitTestBase {
 
         verify(mockJmsTemplate).getConnectionFactory();
         verify(mockJmsTemplate).convertAndSend(UNIT_TEST_QUEUE, sdtMessage);
-        verify(individualRequestDao).getRequestBySdtReference(any(String.class));
-        verify(individualRequestDao).persist(any(IIndividualRequestDao.class));
     }
 
     @Test
     void testResetConnectionAndQueueMessageUncategorizedJmsException() {
+        IIndividualRequest individualRequest = mock(IIndividualRequest.class);
+        when(individualRequestDao.getRequestBySdtReference(anyString())).thenReturn(individualRequest);
         javax.jms.IllegalStateException javaxIllegalStateException =
             new javax.jms.IllegalStateException(ILLEGAL_STATE_EXCEPTION_MESSAGE);
         org.springframework.jms.IllegalStateException springIllegalStateException =
@@ -250,7 +257,8 @@ class MessageWriterTest extends AbstractSdtUnitTestBase {
         verify(mockCachingConnectionFactory).resetConnection();
         verify(mockJmsTemplate, times(2)).convertAndSend(UNIT_TEST_QUEUE, sdtMessage);
         verify(individualRequestDao).getRequestBySdtReference(any(String.class));
-        verify(individualRequestDao).persist(any(IIndividualRequestDao.class));
+        verify(individualRequest).setRequestStatus(IIndividualRequest.IndividualRequestStatus.FAILED_QUEUE.getStatus());
+        verify(individualRequestDao).persist(any(IIndividualRequest.class));
     }
 
     @Test
@@ -284,8 +292,6 @@ class MessageWriterTest extends AbstractSdtUnitTestBase {
         verify(mockJmsTemplate).getConnectionFactory();
         verify(mockCachingConnectionFactory).resetConnection();
         verify(mockJmsTemplate, times(2)).convertAndSend(UNIT_TEST_QUEUE, sdtMessage);
-        verify(individualRequestDao).getRequestBySdtReference(any(String.class));
-        verify(individualRequestDao).persist(any(IIndividualRequestDao.class));
     }
 
     @ParameterizedTest
@@ -309,8 +315,6 @@ class MessageWriterTest extends AbstractSdtUnitTestBase {
         }
 
         verify(mockJmsTemplate).convertAndSend(UNIT_TEST_QUEUE, sdtMessage);
-        verify(individualRequestDao).getRequestBySdtReference(any(String.class));
-        verify(individualRequestDao).persist(any(IIndividualRequestDao.class));
     }
 
     @Test
