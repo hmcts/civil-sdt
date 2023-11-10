@@ -43,6 +43,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
+import uk.gov.moj.sdt.dao.api.IBulkSubmissionDao;
 import uk.gov.moj.sdt.dao.api.IIndividualRequestDao;
 import uk.gov.moj.sdt.domain.IndividualRequest;
 import uk.gov.moj.sdt.domain.api.IBulkSubmission;
@@ -71,6 +72,8 @@ public abstract class AbstractSdtService {
      */
     private IIndividualRequestDao individualRequestDao;
 
+    private IBulkSubmissionDao bulkSubmissionDao;
+
     /**
      * Parser for individual response.
      */
@@ -78,12 +81,12 @@ public abstract class AbstractSdtService {
 
     private RequestTypeXmlNodeValidator requestTypeXmlNodeValidator;
 
-    protected AbstractSdtService(@Qualifier("IndividualRequestDao")
-                                      IIndividualRequestDao individualRequestDao,
-                              @Qualifier("IndividualResponseXmlParser")
-                                  GenericXmlParser individualResponseXmlParser,
+    protected AbstractSdtService(IIndividualRequestDao individualRequestDao,
+                                 IBulkSubmissionDao bulkSubmissionDao,
+                                 GenericXmlParser individualResponseXmlParser,
                                  RequestTypeXmlNodeValidator requestTypeXmlNodeValidator) {
         this.individualRequestDao = individualRequestDao;
+        this.bulkSubmissionDao = bulkSubmissionDao;
         this.individualResponseXmlParser = individualResponseXmlParser;
         this.requestTypeXmlNodeValidator = requestTypeXmlNodeValidator;
     }
@@ -143,7 +146,7 @@ public abstract class AbstractSdtService {
 
             bulkSubmission.markAsCompleted();
 
-            this.getIndividualRequestDao().persist(bulkSubmission);
+            bulkSubmissionDao.persist(bulkSubmission);
         }
     }
 

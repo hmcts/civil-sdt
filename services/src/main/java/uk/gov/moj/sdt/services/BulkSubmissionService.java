@@ -109,7 +109,7 @@ public class BulkSubmissionService implements IBulkSubmissionService {
     private BulkSubmissionValidator bulkSubmissionValidator;
 
     @Autowired
-    public BulkSubmissionService(@Qualifier("ServiceRequestDao")
+    public BulkSubmissionService(@Qualifier("BulkSubmissionDao")
                                      IGenericDao genericDao,
                                  @Qualifier("BulkCustomerDao")
                                      IBulkCustomerDao bulkCustomerDao,
