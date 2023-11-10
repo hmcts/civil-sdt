@@ -16,6 +16,7 @@ import uk.gov.moj.sdt.consumers.api.IConsumerGateway;
 import uk.gov.moj.sdt.consumers.exception.OutageException;
 import uk.gov.moj.sdt.consumers.exception.SoapFaultException;
 import uk.gov.moj.sdt.consumers.exception.TimeoutException;
+import uk.gov.moj.sdt.dao.api.IBulkSubmissionDao;
 import uk.gov.moj.sdt.dao.api.IIndividualRequestDao;
 import uk.gov.moj.sdt.domain.ErrorLog;
 import uk.gov.moj.sdt.domain.api.IErrorLog;
@@ -97,6 +98,8 @@ public class TargetApplicationSubmissionService extends AbstractSdtService imple
     @Autowired
     public TargetApplicationSubmissionService(@Qualifier("IndividualRequestDao")
                                                   IIndividualRequestDao individualRequestDao,
+                                              @Qualifier("BulkSubmissionDao")
+                                                  IBulkSubmissionDao bulkSubmissionDao,
                                               @Qualifier("IndividualResponseXmlParser")
                                                   GenericXmlParser individualResponseXmlParser,
                                               @Qualifier("ConsumerGateway")
@@ -106,7 +109,7 @@ public class TargetApplicationSubmissionService extends AbstractSdtService imple
                                               @Qualifier("MessageWriter")
                                                   IMessageWriter messageWriter,
                                               RequestTypeXmlNodeValidator requestTypeXmlNodeValidator) {
-        super(individualRequestDao, individualResponseXmlParser, requestTypeXmlNodeValidator);
+        super(individualRequestDao, bulkSubmissionDao, individualResponseXmlParser, requestTypeXmlNodeValidator);
         this.individualRequestDao = individualRequestDao;
         this.requestConsumer = requestConsumer;
         this.cmcRequestConsumer = cmcRequestConsumer;
