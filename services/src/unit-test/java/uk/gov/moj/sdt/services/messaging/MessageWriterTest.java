@@ -18,6 +18,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.jms.UncategorizedJmsException;
 import org.springframework.jms.connection.CachingConnectionFactory;
 import org.springframework.jms.core.JmsTemplate;
+import uk.gov.moj.sdt.dao.api.IIndividualRequestDao;
 import uk.gov.moj.sdt.services.messaging.api.ISdtMessage;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 
@@ -63,6 +64,9 @@ class MessageWriterTest extends AbstractSdtUnitTestBase {
     @Mock
     private JmsTemplate mockJmsTemplate;
 
+    @Mock
+    private IIndividualRequestDao individualRequestDao;
+
     private ISdtMessage sdtMessage;
 
     /**
@@ -75,7 +79,7 @@ class MessageWriterTest extends AbstractSdtUnitTestBase {
         Map<String, String> targetAppQueueMap = new HashMap<>();
         targetAppQueueMap.put(UNIT_TEST, UNIT_TEST_QUEUE);
         queueConfig.setTargetAppQueue(targetAppQueueMap);
-        messageWriter = new MessageWriter(mockJmsTemplate, queueConfig);
+        messageWriter = new MessageWriter(mockJmsTemplate, queueConfig, individualRequestDao);
 
         sdtMessage = new SdtMessage();
         sdtMessage.setSdtRequestReference("Test");
@@ -93,6 +97,8 @@ class MessageWriterTest extends AbstractSdtUnitTestBase {
         }
 
         verify(mockJmsTemplate, never()).convertAndSend(anyString(), any(ISdtMessage.class));
+        verify(individualRequestDao, never()).getRequestBySdtReference(any(String.class));
+        verify(individualRequestDao, never()).persist(any(IIndividualRequestDao.class));
     }
 
     static Stream<Arguments> invalidTargetAppCodes() {
@@ -113,6 +119,8 @@ class MessageWriterTest extends AbstractSdtUnitTestBase {
             messageWriter.queueMessage(sdtMessage, UNIT_TEST);
             assertNotEquals(0L, sdtMessage.getMessageSentTimestamp());
             verify(mockJmsTemplate).convertAndSend(UNIT_TEST_QUEUE, sdtMessage);
+            verify(individualRequestDao).getRequestBySdtReference(any(String.class));
+            verify(individualRequestDao).persist(any(IIndividualRequestDao.class));
         } catch (final IllegalArgumentException e) {
             fail(NOT_EXPECTED_TO_FAIL);
         }
@@ -143,6 +151,8 @@ class MessageWriterTest extends AbstractSdtUnitTestBase {
         messageWriterLogger.detachAndStopAllAppenders();
 
         verify(mockJmsTemplate).convertAndSend(UNIT_TEST_QUEUE, sdtMessage);
+        verify(individualRequestDao).getRequestBySdtReference(any(String.class));
+        verify(individualRequestDao).persist(any(IIndividualRequestDao.class));
     }
 
     @Test
@@ -167,6 +177,8 @@ class MessageWriterTest extends AbstractSdtUnitTestBase {
         verify(mockJmsTemplate).getConnectionFactory();
         verify(mockCachingConnectionFactory).resetConnection();
         verify(mockJmsTemplate, times(2)).convertAndSend(UNIT_TEST_QUEUE, sdtMessage);
+        verify(individualRequestDao).getRequestBySdtReference(any(String.class));
+        verify(individualRequestDao).persist(any(IIndividualRequestDao.class));
     }
 
     @Test
@@ -192,6 +204,8 @@ class MessageWriterTest extends AbstractSdtUnitTestBase {
 
         verify(mockJmsTemplate).getConnectionFactory();
         verify(mockJmsTemplate).convertAndSend(UNIT_TEST_QUEUE, sdtMessage);
+        verify(individualRequestDao).getRequestBySdtReference(any(String.class));
+        verify(individualRequestDao).persist(any(IIndividualRequestDao.class));
     }
 
     @Test
@@ -232,6 +246,8 @@ class MessageWriterTest extends AbstractSdtUnitTestBase {
         verify(mockJmsTemplate).getConnectionFactory();
         verify(mockCachingConnectionFactory).resetConnection();
         verify(mockJmsTemplate, times(2)).convertAndSend(UNIT_TEST_QUEUE, sdtMessage);
+        verify(individualRequestDao).getRequestBySdtReference(any(String.class));
+        verify(individualRequestDao).persist(any(IIndividualRequestDao.class));
     }
 
     @Test
@@ -265,6 +281,8 @@ class MessageWriterTest extends AbstractSdtUnitTestBase {
         verify(mockJmsTemplate).getConnectionFactory();
         verify(mockCachingConnectionFactory).resetConnection();
         verify(mockJmsTemplate, times(2)).convertAndSend(UNIT_TEST_QUEUE, sdtMessage);
+        verify(individualRequestDao).getRequestBySdtReference(any(String.class));
+        verify(individualRequestDao).persist(any(IIndividualRequestDao.class));
     }
 
     @ParameterizedTest
@@ -288,6 +306,8 @@ class MessageWriterTest extends AbstractSdtUnitTestBase {
         }
 
         verify(mockJmsTemplate).convertAndSend(UNIT_TEST_QUEUE, sdtMessage);
+        verify(individualRequestDao).getRequestBySdtReference(any(String.class));
+        verify(individualRequestDao).persist(any(IIndividualRequestDao.class));
     }
 
     @Test
