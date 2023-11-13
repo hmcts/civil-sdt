@@ -72,8 +72,6 @@ public class MessageWriter implements IMessageWriter {
 
     private final QueueConfig queueConfig;
 
-    private IIndividualRequestDao individualRequestDao;
-
     /**
      * Creates a message sender with the JmsTemplate.
      *
@@ -81,11 +79,9 @@ public class MessageWriter implements IMessageWriter {
      */
     @Autowired
     public MessageWriter(final JmsTemplate jmsTemplate,
-                         QueueConfig queueConfig,
-                         IIndividualRequestDao individualRequestDao) {
+                         QueueConfig queueConfig) {
         this.jmsTemplate = jmsTemplate;
         this.queueConfig = queueConfig;
-        this.individualRequestDao = individualRequestDao;
     }
 
     @Override
