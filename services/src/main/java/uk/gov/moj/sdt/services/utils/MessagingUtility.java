@@ -30,17 +30,16 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.services.utils;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.services.messaging.SdtMessage;
 import uk.gov.moj.sdt.services.messaging.api.IMessageWriter;
 import uk.gov.moj.sdt.services.messaging.api.ISdtMessage;
 import uk.gov.moj.sdt.services.utils.api.IMessagingUtility;
-import uk.gov.moj.sdt.utils.transaction.synchronizer.api.IMessageSynchronizer;
 
 /**
  * Implementation of the IMessagingUtility interface providing methods
@@ -48,64 +47,37 @@ import uk.gov.moj.sdt.utils.transaction.synchronizer.api.IMessageSynchronizer;
  *
  * @author Manoj Kulkarni
  */
-@Transactional(propagation = Propagation.SUPPORTS)
 @Component("MessagingUtility")
 public class MessagingUtility implements IMessagingUtility {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(MessagingUtility.class);
 
     /**
      * Message writer for queueing messages to the messaging server.
      */
     private IMessageWriter messageWriter;
 
-    /**
-     * Message synchroniser for synchronising the messages in the JMS with
-     * the hibernate transactions.
-     */
-    private IMessageSynchronizer messageSynchronizer;
-
     @Autowired
     public MessagingUtility(@Qualifier("MessageWriter")
-                                IMessageWriter messageWriter,
-                            @Qualifier("MessageSynchronizer")
-                                IMessageSynchronizer messageSynchronizer) {
+                                IMessageWriter messageWriter) {
         this.messageWriter = messageWriter;
-        this.messageSynchronizer = messageSynchronizer;
     }
 
     @Override
     public void enqueueRequest(final IIndividualRequest individualRequest) {
-        this.getMessageSynchronizer().execute(new Runnable() {
-
-            @Override
-            public void run() {
-                queueRequest(individualRequest);
-            }
-
-        });
+        queueRequest(individualRequest);
     }
 
     private void queueRequest(IIndividualRequest individualRequest) {
         final String targetAppCode =
                 individualRequest.getBulkSubmission().getTargetApplication().getTargetApplicationCode();
+
         final ISdtMessage messageObj = new SdtMessage();
 
         messageObj.setSdtRequestReference(individualRequest.getSdtRequestReference());
-
+        LOGGER.debug("Queuing Request {} to target app code {}",  messageObj, targetAppCode);
         getMessageWriter().queueMessage(messageObj, targetAppCode);
-    }
-
-    /**
-     * @return the message synchroniser
-     */
-    public IMessageSynchronizer getMessageSynchronizer() {
-        return messageSynchronizer;
-    }
-
-    /**
-     * @param messageSynchronizer the message synchronizer for synchronising the messages read.
-     */
-    public void setMessageSynchronizer(final IMessageSynchronizer messageSynchronizer) {
-        this.messageSynchronizer = messageSynchronizer;
+        LOGGER.debug("Queue Request Successful {} to target app code {}",  messageObj, targetAppCode);
     }
 
     /**

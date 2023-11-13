@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import uk.gov.moj.sdt.consumers.api.IConsumerGateway;
 import uk.gov.moj.sdt.consumers.exception.SoapFaultException;
 import uk.gov.moj.sdt.consumers.exception.TimeoutException;
+import uk.gov.moj.sdt.dao.api.IBulkSubmissionDao;
 import uk.gov.moj.sdt.dao.api.IIndividualRequestDao;
 import uk.gov.moj.sdt.domain.BulkCustomer;
 import uk.gov.moj.sdt.domain.BulkSubmission;
@@ -137,6 +138,12 @@ class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestBase {
     private IIndividualRequestDao mockIndividualRequestDao;
 
     /**
+     * Mocked Bulk submission Dao object.
+     */
+    @Mock
+    private IBulkSubmissionDao mockBulkSubmissionDao;
+
+    /**
      * Mocked consumer gateway object.
      */
     @Mock
@@ -177,6 +184,7 @@ class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestBase {
         genericParser.setEnclosingTag("targetAppDetail");
 
         targetAppSubmissionService = new TargetApplicationSubmissionService(mockIndividualRequestDao,
+                                                                            mockBulkSubmissionDao,
                                                                             genericParser,
                                                                             mockConsumerGateway,
                                                                             mockCmcConsumerGateway,
@@ -615,7 +623,7 @@ class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestBase {
         assertTrue(verifyLog(logList,DELAY_REQUEST_PROCESSING));
 
         logger.detachAndStopAllAppenders();
-        verify(mockIndividualRequestDao).persist(bulkSubmission);
+        verify(mockBulkSubmissionDao).persist(bulkSubmission);
         assertEquals( IBulkSubmission.BulkRequestStatus.COMPLETED.getStatus(),
                       individualRequest.getBulkSubmission().getSubmissionStatus(),BULK_SUBMISSION_STATUS_IS_INCORRECT);
         assertNotNull(individualRequest
@@ -697,7 +705,7 @@ class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestBase {
                           .getBulkSubmission().getUpdatedDate(),"Bulk submission updated date should be populated");
         assertFalse( individualRequest.isDeadLetter(),"Individual Request should not be marked as dead letter" );
 
-        verify(mockIndividualRequestDao).persist(bulkSubmission);
+        verify(mockBulkSubmissionDao).persist(bulkSubmission);
 
         verify(mockCacheable).getValue(IGlobalParameter.class, CONTACT_DETAILS);
         verify(mockErrorMsgCacheable).getValue(IErrorMessage.class, CUST_XML_ERR_CODE);

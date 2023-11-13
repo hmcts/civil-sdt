@@ -81,6 +81,8 @@ public class BulkSubmissionService implements IBulkSubmissionService {
      */
     private IGenericDao genericDao;
 
+    private IGenericDao serviceRequestDao;
+
     /**
      * Bulk Customer Dao property for looking up the bulk customer object.
      */
@@ -109,8 +111,10 @@ public class BulkSubmissionService implements IBulkSubmissionService {
     private BulkSubmissionValidator bulkSubmissionValidator;
 
     @Autowired
-    public BulkSubmissionService(@Qualifier("ServiceRequestDao")
+    public BulkSubmissionService(@Qualifier("BulkSubmissionDao")
                                      IGenericDao genericDao,
+                                 @Qualifier("ServiceRequestDao")
+                                     IGenericDao serviceRequestDao,
                                  @Qualifier("BulkCustomerDao")
                                      IBulkCustomerDao bulkCustomerDao,
                                  @Qualifier("TargetApplicationDao")
@@ -126,6 +130,7 @@ public class BulkSubmissionService implements IBulkSubmissionService {
                                  @Qualifier("concurrentMap")
                                          Map<String, IInFlightMessage> concurrentMap) {
         this.genericDao = genericDao;
+        this.serviceRequestDao = serviceRequestDao;
         this.bulkCustomerDao = bulkCustomerDao;
         this.targetApplicationDao = targetApplicationDao;
         this.individualRequestsXmlParser = individualRequestsXmlParser;
@@ -174,7 +179,10 @@ public class BulkSubmissionService implements IBulkSubmissionService {
         LOGGER.debug("Enqueue {} requests", individualRequests.size());
 
         for (final IIndividualRequest iRequest : individualRequests) {
-            if (iRequest.isEnqueueable()) {
+            boolean isEnqueueable = iRequest.isEnqueueable();
+            LOGGER.debug("Enqueue IndividualRequestReference {} with BulkReference {} Enqueueable {} ",
+                         iRequest.getSdtRequestReference(), iRequest.getSdtBulkReference(), isEnqueueable);
+            if (isEnqueueable) {
                 this.getMessagingUtility().enqueueRequest(iRequest);
             }
         }
@@ -242,7 +250,7 @@ public class BulkSubmissionService implements IBulkSubmissionService {
 
         // Associate with the service request created by the ServiceRequestInboundInterceptor
         final IServiceRequest serviceRequest =
-                genericDao.fetch(IServiceRequest.class, SdtContext.getContext().getServiceRequestId());
+            serviceRequestDao.fetch(IServiceRequest.class, SdtContext.getContext().getServiceRequestId());
         bulkSubmission.setServiceRequest(serviceRequest);
     }
 

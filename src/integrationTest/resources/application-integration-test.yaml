@@ -1,5 +1,7 @@
 spring:
   activemq:
+    packages:
+      trusted: uk.gov.moj.sdt.services.messaging
     in-memory: true
     pool:
       enabled: false

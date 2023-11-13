@@ -16,6 +16,7 @@ import uk.gov.moj.sdt.consumers.api.IConsumerGateway;
 import uk.gov.moj.sdt.consumers.exception.OutageException;
 import uk.gov.moj.sdt.consumers.exception.SoapFaultException;
 import uk.gov.moj.sdt.consumers.exception.TimeoutException;
+import uk.gov.moj.sdt.dao.api.IBulkSubmissionDao;
 import uk.gov.moj.sdt.dao.api.IIndividualRequestDao;
 import uk.gov.moj.sdt.domain.ErrorLog;
 import uk.gov.moj.sdt.domain.api.IErrorLog;
@@ -97,6 +98,8 @@ public class TargetApplicationSubmissionService extends AbstractSdtService imple
     @Autowired
     public TargetApplicationSubmissionService(@Qualifier("IndividualRequestDao")
                                                   IIndividualRequestDao individualRequestDao,
+                                              @Qualifier("BulkSubmissionDao")
+                                                  IBulkSubmissionDao bulkSubmissionDao,
                                               @Qualifier("IndividualResponseXmlParser")
                                                   GenericXmlParser individualResponseXmlParser,
                                               @Qualifier("ConsumerGateway")
@@ -106,7 +109,7 @@ public class TargetApplicationSubmissionService extends AbstractSdtService imple
                                               @Qualifier("MessageWriter")
                                                   IMessageWriter messageWriter,
                                               RequestTypeXmlNodeValidator requestTypeXmlNodeValidator) {
-        super(individualRequestDao, individualResponseXmlParser, requestTypeXmlNodeValidator);
+        super(individualRequestDao, bulkSubmissionDao, individualResponseXmlParser, requestTypeXmlNodeValidator);
         this.individualRequestDao = individualRequestDao;
         this.requestConsumer = requestConsumer;
         this.cmcRequestConsumer = cmcRequestConsumer;
@@ -120,7 +123,7 @@ public class TargetApplicationSubmissionService extends AbstractSdtService imple
 
         // Proceed ahead if the Individual Request is found.
         if (individualRequest != null) {
-            LOGGER.debug("Process individual request [{}].", individualRequest.getSdtBulkReference());
+            LOGGER.debug("Process individual request [{}].", individualRequest.getSdtRequestReference());
 
             // Check the configurable delay from system parameter and delay the consumer call for that time.
             this.delayRequestProcessing(individualRequest);
@@ -168,7 +171,7 @@ public class TargetApplicationSubmissionService extends AbstractSdtService imple
             }
         } else {
             LOGGER.error("SDT Reference {} read from message queue not found in database for individual request.",
-                    sdtRequestReference);
+                         sdtRequestReference);
         }
     }
 
@@ -208,7 +211,7 @@ public class TargetApplicationSubmissionService extends AbstractSdtService imple
     private void updateRequestRejected(final IIndividualRequest individualRequest) {
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("Update individual request [{}] as status REJECTED following Service team's investigation " +
-                    "of DLQ Request.", individualRequest.getSdtBulkReference());
+                    "of DLQ Request.", individualRequest.getSdtRequestReference());
         }
 
         final IErrorMessage errorMessage =
@@ -249,7 +252,7 @@ public class TargetApplicationSubmissionService extends AbstractSdtService imple
     private void updateForwardingRequest(final IIndividualRequest individualRequest) {
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("Update individual request [{}] with status FORWARDED.",
-                    individualRequest.getSdtBulkReference());
+                    individualRequest.getSdtRequestReference());
         }
 
         individualRequest.incrementForwardingAttempts();
@@ -270,7 +273,7 @@ public class TargetApplicationSubmissionService extends AbstractSdtService imple
      */
     private void updateRequestTimeOut(final IIndividualRequest individualRequest) {
         if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Update individual request [{}] as timed out.", individualRequest.getSdtBulkReference());
+            LOGGER.debug("Update individual request [{}] as timed out.", individualRequest.getSdtRequestReference());
         }
 
         // Set the updated date.
@@ -300,7 +303,7 @@ public class TargetApplicationSubmissionService extends AbstractSdtService imple
      */
     private void sendRequestToTargetApp(final IIndividualRequest individualRequest, Boolean caseOffLine)
             throws OutageException, TimeoutException {
-        LOGGER.debug("Send individual request [{}] to target application.", individualRequest.getSdtBulkReference());
+        LOGGER.debug("Send individual request [{}] to target application.", individualRequest.getSdtRequestReference());
 
         final IGlobalParameter connectionTimeOutParam =
                 this.globalParametersCache.getValue(IGlobalParameter.class,
@@ -337,7 +340,7 @@ public class TargetApplicationSubmissionService extends AbstractSdtService imple
     {
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("Update individual request [{}] with internal error and send to dead letter queue.",
-                    individualRequest.getSdtBulkReference());
+                    individualRequest.getSdtRequestReference());
         }
 
         // Truncate the error message to fit database column length

@@ -12,7 +12,7 @@ spring:
     enabled: false
   activemq:
     packages:
-      trust-all: true
+      trusted: uk.gov.moj.sdt.services.messaging
     in-memory: true
     pool:
       enabled: false

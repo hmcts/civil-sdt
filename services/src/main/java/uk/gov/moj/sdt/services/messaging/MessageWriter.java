@@ -39,6 +39,7 @@ import org.springframework.jms.UncategorizedJmsException;
 import org.springframework.jms.connection.CachingConnectionFactory;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Component;
+import uk.gov.moj.sdt.dao.api.IIndividualRequestDao;
 import uk.gov.moj.sdt.services.messaging.api.IMessageWriter;
 import uk.gov.moj.sdt.services.messaging.api.ISdtMessage;
 import uk.gov.moj.sdt.utils.SdtContext;
@@ -103,6 +104,7 @@ public class MessageWriter implements IMessageWriter {
         try {
             this.jmsTemplate.convertAndSend(queueName, sdtMessage);
         } catch (final IllegalStateException e) {
+            LOGGER.error("Error sending message to queue using jms template {}", e.getMessage());
             String message = e.getMessage();
             if (message != null && message.contains("MessageProducer was closed")) {
                 // Link to queue timed out due to idle period expiring, reset and try again.

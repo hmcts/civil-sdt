@@ -41,6 +41,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import uk.gov.moj.sdt.dao.api.IBulkSubmissionDao;
 import uk.gov.moj.sdt.dao.api.IIndividualRequestDao;
 import uk.gov.moj.sdt.domain.BulkCustomer;
 import uk.gov.moj.sdt.domain.BulkSubmission;
@@ -89,6 +90,12 @@ class UpdateRequestServiceTest extends AbstractSdtUnitTestBase {
     private IIndividualRequestDao mockIndividualRequestDao;
 
     /**
+     * Mocked Bulk submission Dao object.
+     */
+    @Mock
+    private IBulkSubmissionDao mockBulkSubmissionDao;
+
+    /**
      * Mocked messaging utility.
      */
     @Mock
@@ -131,6 +138,7 @@ class UpdateRequestServiceTest extends AbstractSdtUnitTestBase {
         genericParser.setEnclosingTag("targetAppDetail");
         requestTypeXmlNodeValidator = new RequestTypeXmlNodeValidator(ccdReferenceValidator, xmlReader);
         updateRequestService = new UpdateRequestService(mockIndividualRequestDao,
+                                                        mockBulkSubmissionDao,
                                                         genericParser,
                                                         mockMessagingUtility,
                                                         requestTypeXmlNodeValidator
