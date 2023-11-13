@@ -294,8 +294,6 @@ class BulkSubmissionServiceTest extends AbstractSdtUnitTestBase {
         when(mockTargetApplicationDao.getTargetApplicationByCode(anyString())).thenReturn(targetApplication);
         when(individualRequestMock.getRequestStatus()).thenReturn("Rejected");
 
-        when(individualRequestMock.isEnqueueable()).thenReturn(false);
-
         // Call the bulk submission service
         bulkSubmissionService.saveBulkSubmission(bulkSubmission);
 
@@ -303,7 +301,6 @@ class BulkSubmissionServiceTest extends AbstractSdtUnitTestBase {
         verify(mockConcurrencyMap).get(key);
         verify(mockBulkCustomerDao).getBulkCustomerBySdtId(10);
         verify(serviceRequestDao).fetch(IServiceRequest.class, 1);
-        verify(individualRequestMock).isEnqueueable();
         verify(individualRequestMock).getRequestStatus();
     }
 
