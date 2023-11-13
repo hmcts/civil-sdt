@@ -78,7 +78,14 @@ public class MessagingUtility implements IMessagingUtility {
 
     @Override
     public void enqueueRequest(final IIndividualRequest individualRequest) {
-        queueRequest(individualRequest);
+        this.getMessageSynchronizer().execute(new Runnable() {
+
+            @Override
+            public void run() {
+                queueRequest(individualRequest);
+            }
+
+        });
     }
 
     private void queueRequest(IIndividualRequest individualRequest) {
