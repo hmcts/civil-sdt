@@ -43,15 +43,8 @@ public class MessagingUtilityTest extends AbstractSdtUnitTestBase {
 
         MessagingUtility messagingUtility = new MessagingUtility(messageWriter,messageSynchronizer);
 
-        ArgumentCaptor<Runnable> runnableCaptor = ArgumentCaptor.forClass(Runnable.class);
-
         //When
         messagingUtility.enqueueRequest(individualRequest);
-
-        // Then
-        verify(messageSynchronizer).execute(runnableCaptor.capture());
-        Runnable runnable = runnableCaptor.getValue();
-        runnable.run();
 
         verify(messageWriter).queueMessage(any(SdtMessage.class), eq("targetAppCode"));
     }
