@@ -174,7 +174,7 @@ public class TargetApplicationSubmissionService extends AbstractSdtService imple
                          sdtRequestReference);
         }
     }
-§
+
     @Override
     public void processDLQRequest(final IIndividualRequest individualRequest, final String requestStatus) {
         // Format the request status parameter to the value acceptable by database.
