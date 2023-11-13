@@ -13,7 +13,6 @@ import org.springframework.jms.listener.DefaultMessageListenerContainer;
 import org.springframework.jms.listener.adapter.MessageListenerAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-import uk.gov.moj.sdt.dao.api.IIndividualRequestDao;
 import uk.gov.moj.sdt.services.messaging.MessageWriter;
 import uk.gov.moj.sdt.services.messaging.QueueConfig;
 
@@ -42,9 +41,6 @@ public class ServicesTestConfig {
     @Autowired
     private QueueConfig queueConfig;
 
-    @Autowired
-    private IIndividualRequestDao individualRequestDao;
-
     @Bean
     @Qualifier("messageListenerContainerMCol")
     public DefaultMessageListenerContainer messageListenerContainerMCol() {
@@ -66,8 +62,7 @@ public class ServicesTestConfig {
     @Qualifier("IMessageWriterBad")
     public MessageWriter IMessageWriterBad() {
         MessageWriter messageWriter = new MessageWriter(jmsTemplate,
-                                                        queueConfig,
-                                                        individualRequestDao);
+                                                        queueConfig);
         return messageWriter;
     }
 }

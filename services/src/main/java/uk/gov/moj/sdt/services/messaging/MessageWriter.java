@@ -40,7 +40,6 @@ import org.springframework.jms.connection.CachingConnectionFactory;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Component;
 import uk.gov.moj.sdt.dao.api.IIndividualRequestDao;
-import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.services.messaging.api.IMessageWriter;
 import uk.gov.moj.sdt.services.messaging.api.ISdtMessage;
 import uk.gov.moj.sdt.utils.SdtContext;
@@ -48,9 +47,6 @@ import uk.gov.moj.sdt.utils.mbeans.SdtMetricsMBean;
 
 import java.util.GregorianCalendar;
 import java.util.Map;
-
-import static uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus.FAILED_QUEUE;
-import static uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus.QUEUED;
 
 /**
  * Message writer that handles writing messages to a message queue.
@@ -76,8 +72,6 @@ public class MessageWriter implements IMessageWriter {
 
     private final QueueConfig queueConfig;
 
-    private IIndividualRequestDao individualRequestDao;
-
     /**
      * Creates a message sender with the JmsTemplate.
      *
@@ -85,11 +79,9 @@ public class MessageWriter implements IMessageWriter {
      */
     @Autowired
     public MessageWriter(final JmsTemplate jmsTemplate,
-                         QueueConfig queueConfig,
-                         IIndividualRequestDao individualRequestDao) {
+                         QueueConfig queueConfig) {
         this.jmsTemplate = jmsTemplate;
         this.queueConfig = queueConfig;
-        this.individualRequestDao = individualRequestDao;
     }
 
     @Override
@@ -111,7 +103,6 @@ public class MessageWriter implements IMessageWriter {
 
         try {
             this.jmsTemplate.convertAndSend(queueName, sdtMessage);
-            updateIndividualRequestStatus(sdtMessage.getSdtRequestReference(), QUEUED);
         } catch (final IllegalStateException e) {
             LOGGER.error("Error sending message to queue using jms template {}", e.getMessage());
             String message = e.getMessage();
@@ -124,7 +115,6 @@ public class MessageWriter implements IMessageWriter {
             }
         } catch (final UncategorizedJmsException e) {
             logQueueConnectFailure(sdtMessage, queueName, e);
-            updateIndividualRequestStatus(sdtMessage.getSdtRequestReference(), FAILED_QUEUE);
         }
     }
 
@@ -147,18 +137,9 @@ public class MessageWriter implements IMessageWriter {
 
         try {
             this.jmsTemplate.convertAndSend(queueName, sdtMessage);
-            updateIndividualRequestStatus(sdtMessage.getSdtRequestReference(), QUEUED);
         } catch (final UncategorizedJmsException e) {
             logQueueConnectFailure(sdtMessage, queueName, e);
-            updateIndividualRequestStatus(sdtMessage.getSdtRequestReference(), FAILED_QUEUE);
         }
-    }
-
-    private void updateIndividualRequestStatus(String sdtRequestReference,
-                                               IIndividualRequest.IndividualRequestStatus individualRequestStatus) {
-        IIndividualRequest individualRequest = individualRequestDao.getRequestBySdtReference(sdtRequestReference);
-        individualRequest.setRequestStatus(individualRequestStatus.getStatus());
-        individualRequestDao.persist(individualRequest);
     }
 
     private void logQueueConnectFailure(ISdtMessage sdtMessage, String queueName, Exception e) {

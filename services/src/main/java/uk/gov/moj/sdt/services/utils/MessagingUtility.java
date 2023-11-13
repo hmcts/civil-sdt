@@ -35,16 +35,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.services.messaging.SdtMessage;
 import uk.gov.moj.sdt.services.messaging.api.IMessageWriter;
 import uk.gov.moj.sdt.services.messaging.api.ISdtMessage;
 import uk.gov.moj.sdt.services.utils.api.IMessagingUtility;
-import uk.gov.moj.sdt.utils.transaction.synchronizer.api.IMessageSynchronizer;
-
-import javax.jms.ObjectMessage;
 
 /**
  * Implementation of the IMessagingUtility interface providing methods
@@ -52,7 +47,6 @@ import javax.jms.ObjectMessage;
  *
  * @author Manoj Kulkarni
  */
-@Transactional(propagation = Propagation.SUPPORTS)
 @Component("MessagingUtility")
 public class MessagingUtility implements IMessagingUtility {
 
@@ -63,31 +57,15 @@ public class MessagingUtility implements IMessagingUtility {
      */
     private IMessageWriter messageWriter;
 
-    /**
-     * Message synchroniser for synchronising the messages in the JMS with
-     * the hibernate transactions.
-     */
-    private IMessageSynchronizer messageSynchronizer;
-
     @Autowired
     public MessagingUtility(@Qualifier("MessageWriter")
-                                IMessageWriter messageWriter,
-                            @Qualifier("MessageSynchronizer")
-                                IMessageSynchronizer messageSynchronizer) {
+                                IMessageWriter messageWriter) {
         this.messageWriter = messageWriter;
-        this.messageSynchronizer = messageSynchronizer;
     }
 
     @Override
     public void enqueueRequest(final IIndividualRequest individualRequest) {
-        this.getMessageSynchronizer().execute(new Runnable() {
-
-            @Override
-            public void run() {
-                queueRequest(individualRequest);
-            }
-
-        });
+        queueRequest(individualRequest);
     }
 
     private void queueRequest(IIndividualRequest individualRequest) {
@@ -100,20 +78,6 @@ public class MessagingUtility implements IMessagingUtility {
         LOGGER.debug("Queuing Request {} to target app code {}",  messageObj, targetAppCode);
         getMessageWriter().queueMessage(messageObj, targetAppCode);
         LOGGER.debug("Queue Request Successful {} to target app code {}",  messageObj, targetAppCode);
-    }
-
-    /**
-     * @return the message synchroniser
-     */
-    public IMessageSynchronizer getMessageSynchronizer() {
-        return messageSynchronizer;
-    }
-
-    /**
-     * @param messageSynchronizer the message synchronizer for synchronising the messages read.
-     */
-    public void setMessageSynchronizer(final IMessageSynchronizer messageSynchronizer) {
-        this.messageSynchronizer = messageSynchronizer;
     }
 
     /**
