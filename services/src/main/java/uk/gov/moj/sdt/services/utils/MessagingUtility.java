@@ -35,8 +35,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.services.messaging.SdtMessage;
 import uk.gov.moj.sdt.services.messaging.api.IMessageWriter;
@@ -44,13 +42,17 @@ import uk.gov.moj.sdt.services.messaging.api.ISdtMessage;
 import uk.gov.moj.sdt.services.utils.api.IMessagingUtility;
 import uk.gov.moj.sdt.utils.transaction.synchronizer.api.IMessageSynchronizer;
 
+import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+
 /**
  * Implementation of the IMessagingUtility interface providing methods
  * to do the tasks related to message queueing.
  *
  * @author Manoj Kulkarni
  */
-@Transactional(propagation = Propagation.REQUIRES_NEW)
 @Component("MessagingUtility")
 public class MessagingUtility implements IMessagingUtility {
 
@@ -67,6 +69,8 @@ public class MessagingUtility implements IMessagingUtility {
      */
     private IMessageSynchronizer messageSynchronizer;
 
+    private ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
+
     @Autowired
     public MessagingUtility(@Qualifier("MessageWriter")
                                 IMessageWriter messageWriter,
@@ -79,6 +83,22 @@ public class MessagingUtility implements IMessagingUtility {
     @Override
     public void enqueueRequest(final IIndividualRequest individualRequest) {
         queueRequest(individualRequest);
+    }
+
+    @Override
+    public void enqueueRequests(List<IIndividualRequest> individualRequests) {
+        executorService.schedule(() -> queueRequest(individualRequests), 2, TimeUnit.SECONDS);
+    }
+
+    private void queueRequest(List<IIndividualRequest> individualRequests) {
+        for (IIndividualRequest iRequest : individualRequests) {
+            boolean enqueueable = iRequest.isEnqueueable();
+            LOGGER.debug("Queue IndividualRequestReference {} with BulkReference {} Enqueueable {} ",
+                         iRequest.getSdtRequestReference(), iRequest.getSdtBulkReference(), enqueueable);
+            if (enqueueable) {
+                queueRequest(iRequest);
+            }
+        }
     }
 
     private void queueRequest(IIndividualRequest individualRequest) {
