@@ -34,13 +34,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.services.messaging.SdtMessage;
 import uk.gov.moj.sdt.services.messaging.api.IMessageWriter;
 import uk.gov.moj.sdt.services.messaging.api.ISdtMessage;
 import uk.gov.moj.sdt.services.utils.api.IMessagingUtility;
-import uk.gov.moj.sdt.utils.transaction.synchronizer.api.IMessageSynchronizer;
+
+import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import java.util.List;
 import java.util.concurrent.Executors;
@@ -63,21 +68,15 @@ public class MessagingUtility implements IMessagingUtility {
      */
     private IMessageWriter messageWriter;
 
-    /**
-     * Message synchroniser for synchronising the messages in the JMS with
-     * the hibernate transactions.
-     */
-    private IMessageSynchronizer messageSynchronizer;
+    @Value("${sdt.service.config.queue_delay:2000}")
+    private int queueDelay;
 
     private ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
 
     @Autowired
     public MessagingUtility(@Qualifier("MessageWriter")
-                                IMessageWriter messageWriter,
-                            @Qualifier("MessageSynchronizer")
-                                IMessageSynchronizer messageSynchronizer) {
+                                IMessageWriter messageWriter) {
         this.messageWriter = messageWriter;
-        this.messageSynchronizer = messageSynchronizer;
     }
 
     @Override
@@ -87,7 +86,7 @@ public class MessagingUtility implements IMessagingUtility {
 
     @Override
     public void enqueueRequests(List<IIndividualRequest> individualRequests) {
-        executorService.schedule(() -> queueRequest(individualRequests), 2, TimeUnit.SECONDS);
+        executorService.schedule(() -> queueRequest(individualRequests), queueDelay, TimeUnit.MILLISECONDS);
     }
 
     private void queueRequest(List<IIndividualRequest> individualRequests) {
@@ -111,20 +110,6 @@ public class MessagingUtility implements IMessagingUtility {
         LOGGER.debug("Queuing Request {} to target app code {}",  messageObj, targetAppCode);
         getMessageWriter().queueMessage(messageObj, targetAppCode);
         LOGGER.debug("Queue Request Successful {} to target app code {}",  messageObj, targetAppCode);
-    }
-
-    /**
-     * @return the message synchroniser
-     */
-    public IMessageSynchronizer getMessageSynchronizer() {
-        return messageSynchronizer;
-    }
-
-    /**
-     * @param messageSynchronizer the message synchronizer for synchronising the messages read.
-     */
-    public void setMessageSynchronizer(final IMessageSynchronizer messageSynchronizer) {
-        this.messageSynchronizer = messageSynchronizer;
     }
 
     /**
