@@ -158,7 +158,7 @@ ext {
   junitVersion = '5.10.0'
   junitPlatformVersion = '1.10.0'
   log4jVersion = '2.21.1'
-  postgresqlVersion = '42.6.0'
+  postgresqlVersion = '42.7.0'
   reformLogging= '5.1.9'
   restAssuredVersion = '4.3.0!!'
   springCloudVersion = '2021.0.8'
