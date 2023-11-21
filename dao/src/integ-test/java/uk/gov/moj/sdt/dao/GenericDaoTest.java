@@ -32,11 +32,14 @@ package uk.gov.moj.sdt.dao;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import uk.gov.moj.sdt.dao.api.IBulkCustomerDao;
 import uk.gov.moj.sdt.dao.config.DaoTestConfig;
 import uk.gov.moj.sdt.domain.BulkCustomer;
@@ -61,7 +64,8 @@ import static org.junit.jupiter.api.Assertions.fail;
  * @author Robin Compston
  */
 @ActiveProfiles("integ")
-@SpringBootTest(classes = { TestConfig.class, DaoTestConfig.class})
+@ExtendWith(SpringExtension.class)
+@SpringBootTest(classes = {TestConfig.class, DaoTestConfig.class})
 @Sql(scripts = {"classpath:uk/gov/moj/sdt/dao/sql/GenericDaoTest.sql"})
 class GenericDaoTest extends AbstractIntegrationTest {
     /**
@@ -69,14 +73,19 @@ class GenericDaoTest extends AbstractIntegrationTest {
      */
     private static final Logger LOGGER = LoggerFactory.getLogger(GenericDaoTest.class);
 
-    CriteriaBuilder criteriaBuilder;
-    CriteriaQuery<BulkCustomer> criteriaQuery;
-    Root<BulkCustomer> root;
+    @Autowired
+    private IBulkCustomerDao bulkCustomerDao;
+
+    @Autowired
+    private GlobalParametersDao genericDao;
+
+    private CriteriaBuilder criteriaBuilder;
+    private CriteriaQuery<BulkCustomer> criteriaQuery;
+    private Root<BulkCustomer> root;
 
     @BeforeEach
     public void setUp() {
-        final IBulkCustomerDao bulkCustomersDao = this.applicationContext.getBean(IBulkCustomerDao.class);
-        criteriaBuilder = bulkCustomersDao.getEntityManager().getCriteriaBuilder();
+        criteriaBuilder = bulkCustomerDao.getEntityManager().getCriteriaBuilder();
         criteriaQuery = criteriaBuilder.createQuery(BulkCustomer.class);
         root = criteriaQuery.from(BulkCustomer.class);
     }
@@ -86,10 +95,8 @@ class GenericDaoTest extends AbstractIntegrationTest {
      */
     @Test
     void testFetch() {
-        final IBulkCustomerDao bulkCustomersDao = this.applicationContext.getBean(IBulkCustomerDao.class);
-
         final long id = 10711;
-        final IBulkCustomer bulkCustomer = bulkCustomersDao.fetch(BulkCustomer.class, id);
+        final IBulkCustomer bulkCustomer = bulkCustomerDao.fetch(BulkCustomer.class, id);
         assertNotNull(bulkCustomer);
     }
 
@@ -98,10 +105,8 @@ class GenericDaoTest extends AbstractIntegrationTest {
      */
     @Test
     void testQuery() {
-        final IBulkCustomerDao bulkCustomersDao = this.applicationContext.getBean(IBulkCustomerDao.class);
-
         final IBulkCustomer[] bulkCustomers =
-            bulkCustomersDao.query(BulkCustomer.class, () -> {
+            bulkCustomerDao.query(BulkCustomer.class, () -> {
                 Predicate[] sdtCustomerPredicate = createCriteria(2L);
                 return criteriaQuery.select(root).where(sdtCustomerPredicate);
             });
@@ -120,9 +125,7 @@ class GenericDaoTest extends AbstractIntegrationTest {
      */
     @Test
     void testQueryAsCount() {
-        final IBulkCustomerDao bulkCustomersDao = this.applicationContext.getBean(IBulkCustomerDao.class);
-
-        final long customerCount = bulkCustomersDao.queryAsCount(BulkCustomer.class, () -> {
+        final long customerCount = bulkCustomerDao.queryAsCount(BulkCustomer.class, () -> {
             Predicate[] sdtCustomerPredicate = createCriteria(2L);
             return criteriaQuery.select(root).where(sdtCustomerPredicate);
         });
@@ -137,7 +140,6 @@ class GenericDaoTest extends AbstractIntegrationTest {
      */
     @Test
     void testGlobalParametersQuery() {
-        final GlobalParametersDao genericDao = this.applicationContext.getBean(GlobalParametersDao.class);
         CriteriaBuilder criteriaBuilderLocal = genericDao.getEntityManager().getCriteriaBuilder();
         CriteriaQuery<GlobalParameter> criteriaQueryLocal = criteriaBuilderLocal.createQuery(GlobalParameter.class);
         Root<GlobalParameter> rootLocal = criteriaQueryLocal.from(GlobalParameter.class);

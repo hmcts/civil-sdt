@@ -166,7 +166,7 @@ ext {
   cxfVersion = '3.6.2'
   jaxwsVersion = "2.3.1"
   testcontainers = '1.19.2'
-  sdtCommonVersion = '1.1.0-SDT-149.0.4'
+  sdtCommonVersion = '2.0.0'
   limits = [
     'instruction': 99,
     'branch'     : 99,
@@ -405,6 +405,15 @@ subprojects { subproject ->
 
   dependencies {
     implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign'
+    implementation group: 'com.github.hmcts', name: 'civil-sdt-common', version: sdtCommonVersion
+
+    testImplementation group: 'com.github.hmcts.civil-sdt-common', name: 'utils', version: sdtCommonVersion, classifier: 'test'
+    testImplementation group: 'com.github.hmcts.civil-sdt-common', name: 'utils', version: sdtCommonVersion, classifier: 'integ-test'
+    testImplementation group: 'com.github.hmcts.civil-sdt-common', name: 'domain', version: sdtCommonVersion, classifier: 'test'
+    testImplementation group: 'com.github.hmcts.civil-sdt-common', name: 'transformers', version: sdtCommonVersion, classifier: 'test'
+    testImplementation group: 'com.github.hmcts.civil-sdt-common', name: 'validators', version: sdtCommonVersion, classifier: 'test'
+    testImplementation group: 'com.github.hmcts.civil-sdt-common', name: 'producers-api', version: sdtCommonVersion, classifier: 'test'
+    testImplementation group: 'com.github.hmcts.civil-sdt-common', name: 'handlers', version: sdtCommonVersion, classifier: 'test'
   }
 
   sourceSets {
@@ -584,7 +593,9 @@ subprojects { subproject ->
     }
   }
 
-  check.dependsOn jacocoTestReport
+  check.dependsOn integration
+  integration.mustRunAfter test
+  jacocoTestReport.mustRunAfter test
 }
 // end::subprojects[]
 

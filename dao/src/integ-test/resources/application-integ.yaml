@@ -17,7 +17,7 @@ spring:
     allow-bean-definition-overriding: true
     allow-circular-references: true
   datasource:
-    url: jdbc:tc:postgresql:11:///civil_sdt_integ?stringtype=unspecified
+    url: jdbc:tc:postgresql:15:///civil_sdt_integ?stringtype=unspecified
     driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
     username: ${SDT_DB_USERNAME:postgres}
     password: ${SDT_DB_PASSWORD:test}
@@ -30,3 +30,28 @@ spring:
   flyway:
     enabled: false
     ignore-migration-patterns: true
+sdt:
+  tx-timeout:
+    default:  1000
+  service:
+    config:
+      concurrentConsumers: ${CONCURRENT_CONSUMERS:1}
+      maxConcurrentConsumers: ${MAX_CONCURRENT_CONSUMERS:5}
+      receiveTimeout: ${RECEIVE_TIMEOUT:30000}
+      idleTaskExecutionLimit:  ${IDLE_TASK_EXECUTION_LIMIT:10}
+      idleConsumerLimit:  ${IDLE_CONSUMER_LIMIT:5}
+  retry-send:
+    cron: ${RETRY_SEND_CRON:0 0 * * * ?}
+  purge:
+    cron: ${PURGE_SCHEDULE_CRON:0 15 0 * * ?}
+    commitInterval: ${PURGE_COMMIT_INTERVAL:1000}
+idam:
+  s2s-auth:
+    microservice: civil_sdt
+    totp_secret: ${CIVIL_SDT_S2S_KEY:AAAAAAAAAAAAAAAA}
+    url: ${IDAM_S2S_URL:http://localhost:4502}
+  sdt:
+    username: ${IDAM_SDT_USERNAME:master.sdt@gmail.com}
+    password: ${IDAM_SDT_PASSWORD:Pa55word11}
+  api:
+    url: ${IDAM_API_URL:http://localhost:5000}
