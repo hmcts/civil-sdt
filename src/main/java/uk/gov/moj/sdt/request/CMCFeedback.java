@@ -9,6 +9,7 @@ import java.util.Date;
 public class CMCFeedback {
 
     private int errorCode;
+    private String claimNumber;
     private String errorText;
     @JsonFormat(pattern="yyyy-MM-dd")
     protected Date issueDate;
@@ -21,7 +22,7 @@ public class CMCFeedback {
     private String warrantNumber;
     private String enforcingCourtCode;
     private String enforcingCourtName;
-    private double fee;
+    private Long fee;
     private String judgmentWarrantStatus;
     private String processingStatus;
 }
