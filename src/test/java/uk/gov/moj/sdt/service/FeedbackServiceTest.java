@@ -15,7 +15,6 @@ import uk.gov.moj.sdt.request.CMCFeedback;
 import uk.gov.moj.sdt.utils.cmc.RequestType;
 
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.util.Calendar;
 
 import static org.mockito.ArgumentMatchers.any;
