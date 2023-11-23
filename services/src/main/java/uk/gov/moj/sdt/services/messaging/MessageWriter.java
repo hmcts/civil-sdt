@@ -60,11 +60,6 @@ public class MessageWriter implements IMessageWriter {
     private static final Logger LOGGER = LoggerFactory.getLogger(MessageWriter.class);
 
     /**
-     * Default suffix for DLQ name.
-     */
-    private static final String DLQ_SUFFIX = "/$deadletterqueue";
-
-    /**
      * The last id used for a queued message.
      */
     private static long lastQueueId;
@@ -89,10 +84,10 @@ public class MessageWriter implements IMessageWriter {
     }
 
     @Override
-    public void queueMessage(final ISdtMessage sdtMessage, final String targetAppCode, final boolean deadLetter) {
+    public void queueMessage(final ISdtMessage sdtMessage, final String targetAppCode) {
 
         // Check the target application code is valid and return queue name.
-        final String queueName = getQueueName(targetAppCode, deadLetter);
+        final String queueName = getQueueName(targetAppCode);
 
         LOGGER.debug("Sending message with SDT request reference [{}] to queue [{}]",
                      sdtMessage.getSdtRequestReference(),
@@ -108,6 +103,7 @@ public class MessageWriter implements IMessageWriter {
         try {
             this.jmsTemplate.convertAndSend(queueName, sdtMessage);
         } catch (final IllegalStateException e) {
+            LOGGER.error("Error sending message to queue using jms template {}", e.getMessage());
             String message = e.getMessage();
             if (message != null && message.contains("MessageProducer was closed")) {
                 // Link to queue timed out due to idle period expiring, reset and try again.
@@ -186,12 +182,9 @@ public class MessageWriter implements IMessageWriter {
      * that is mapped to the target application code.
      *
      * @param targetApplicationCode the target application code.
-     * @param deadLetter            flags whether dead letter queue name should be returned.
      * @return the queue name matching to the target application code.
      */
-    private String getQueueName(final String targetApplicationCode, final boolean deadLetter) {
-        String queueName;
-
+    private String getQueueName(final String targetApplicationCode) {
         // The target application code should be supplied.
         if (targetApplicationCode == null || targetApplicationCode.trim().length() == 0) {
             throw new IllegalArgumentException("Target application code must be supplied.");
@@ -202,13 +195,7 @@ public class MessageWriter implements IMessageWriter {
                 throw new IllegalArgumentException("Target application code [" + targetApplicationCode +
                         "] does not have a JMS queue mapped.");
             } else {
-                queueName = this.getQueueNameMap().get(targetApplicationCode);
-                if (deadLetter) {
-                    // Append DLQ suffix for dead letter.
-                    queueName += DLQ_SUFFIX;
-
-                }
-                return queueName;
+                return this.getQueueNameMap().get(targetApplicationCode);
             }
         }
     }

@@ -7,18 +7,19 @@ module "postgresql" {
     azurerm.postgres_network = azurerm.private_endpoint
   }
 
-  admin_user_object_id = var.jenkins_AAD_objectId
-  business_area        = "cft"
-  common_tags          = local.tags
-  component            = var.component
-  env                  = var.env
+  admin_user_object_id  = var.jenkins_AAD_objectId
+  business_area         = "cft"
+  common_tags           = local.tags
+  component             = var.component
+  env                   = var.env
   pgsql_databases = [
     {
       name = "civil_sdt"
     }
   ]
-  pgsql_version        = "11"
-  product              = var.product
+  pgsql_version         = "11"
+  product               = var.product
+  backup_retention_days = "${var.database_backup_retention_days}"
 }
 
 # Create secret for database user
@@ -39,5 +40,50 @@ resource "azurerm_key_vault_secret" "POSTGRES-PASS" {
 resource "azurerm_key_vault_secret" "POSTGRES-HOST" {
   name         = "civil-sdt-POSTGRES-HOST"
   value        = module.postgresql.fqdn
+  key_vault_id = module.civil_sdt_key_vault.key_vault_id
+}
+
+
+module "postgresql-v15" {
+  source = "git@github.com:hmcts/terraform-module-postgresql-flexible?ref=master"
+
+  providers = {
+    azurerm.postgres_network = azurerm.private_endpoint
+  }
+
+  admin_user_object_id  = var.jenkins_AAD_objectId
+  business_area         = "cft"
+  common_tags           = local.tags
+  component             = var.component
+  env                   = var.env
+  pgsql_databases = [
+    {
+      name = "civil_sdt"
+    }
+  ]
+  pgsql_version         = "15"
+  product               = var.product
+  name                  = join("-", [var.product, var.component, "v15"])
+  backup_retention_days = "${var.database_backup_retention_days}"
+}
+
+# Create secret for database user
+resource "azurerm_key_vault_secret" "POSTGRES-USER-V15" {
+  name         = "civil-sdt-POSTGRES-USER-V15"
+  value        = module.postgresql-v15.username
+  key_vault_id = module.civil_sdt_key_vault.key_vault_id
+}
+
+# Create secret for database password
+resource "azurerm_key_vault_secret" "POSTGRES-PASS-V15" {
+  name         = "civil-sdt-POSTGRES-PASS-V15"
+  value        = module.postgresql-v15.password
+  key_vault_id = module.civil_sdt_key_vault.key_vault_id
+}
+
+# Create secret for database host
+resource "azurerm_key_vault_secret" "POSTGRES-HOST-V15" {
+  name         = "civil-sdt-POSTGRES-HOST-V15"
+  value        = module.postgresql-v15.fqdn
   key_vault_id = module.civil_sdt_key_vault.key_vault_id
 }

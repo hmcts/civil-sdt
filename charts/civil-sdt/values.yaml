@@ -22,13 +22,15 @@ java:
           alias: IDAM_SDT_CLIENT_SECRET
         - name: civil-sdt-appinsights-connection-string
           alias: APPINSIGHTS_CONNECTION_STRING
-        - name: civil-sdt-POSTGRES-USER
+        - name: civil-sdt-POSTGRES-USER-V15
           alias: SDT_DB_USERNAME
-        - name: civil-sdt-POSTGRES-PASS
+        - name: civil-sdt-POSTGRES-PASS-V15
           alias: SDT_DB_PASSWORD
-        - name: civil-sdt-POSTGRES-HOST
+        - name: civil-sdt-POSTGRES-HOST-V15
           alias: SDT_DB_HOST
         - name: civil-sdt-servicebus-connection-string
           alias: CIVIL_SDT_SERVICEBUS_CONNECTION_STRING
+        - name: civil-sdt-servicebus-pricing-tier
+          alias: CIVIL_SDT_SERVICEBUS_PRICING_TIER
 servicebus:
   enabled: false

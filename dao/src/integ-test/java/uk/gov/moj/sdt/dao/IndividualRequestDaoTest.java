@@ -32,11 +32,14 @@ package uk.gov.moj.sdt.dao;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import uk.gov.moj.sdt.dao.api.IBulkCustomerDao;
 import uk.gov.moj.sdt.dao.api.IBulkSubmissionDao;
 import uk.gov.moj.sdt.dao.api.IIndividualRequestDao;
@@ -65,7 +68,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @author Son Loi
  */
 @ActiveProfiles("integ")
-@SpringBootTest(classes = { TestConfig.class, DaoTestConfig.class})
+@ExtendWith(SpringExtension.class)
+@SpringBootTest(classes = {TestConfig.class, DaoTestConfig.class})
 @Sql(scripts = {"classpath:uk/gov/moj/sdt/dao/sql/IndividualRequestDaoTest.sql"})
 class IndividualRequestDaoTest extends AbstractIntegrationTest {
     /**
@@ -76,7 +80,14 @@ class IndividualRequestDaoTest extends AbstractIntegrationTest {
     /**
      * *Individual Request DAO.
      */
+    @Autowired
     private IIndividualRequestDao individualRequestDao;
+
+    @Autowired
+    private IBulkSubmissionDao bulkSubmissionDao;
+
+    @Autowired
+    private IBulkCustomerDao bulkCustomerDao;
 
     /**
      * Bulk Customer to use for the test.
@@ -98,12 +109,8 @@ class IndividualRequestDaoTest extends AbstractIntegrationTest {
      */
     @BeforeEach
     public void setUp() {
-        individualRequestDao = (IIndividualRequestDao) this.applicationContext.getBean("IndividualRequestDao");
-        IBulkSubmissionDao iBulkSubmissionDao = this.applicationContext.getBean(IBulkSubmissionDao.class);
-        IBulkCustomerDao iBulkCustomerDao = this.applicationContext.getBean(IBulkCustomerDao.class);
-
-        bulkSubmission = iBulkSubmissionDao.fetch(BulkSubmission.class, 10710);
-        bulkCustomer = iBulkCustomerDao.fetch(BulkCustomer.class, 10711);
+        bulkSubmission = bulkSubmissionDao.fetch(BulkSubmission.class, 10710);
+        bulkCustomer = bulkCustomerDao.fetch(BulkCustomer.class, 10711);
         dataRetentionPeriod = 90;
     }
 

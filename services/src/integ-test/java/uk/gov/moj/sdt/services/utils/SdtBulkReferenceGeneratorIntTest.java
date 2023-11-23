@@ -31,24 +31,24 @@
 
 package uk.gov.moj.sdt.services.utils;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
-
 import uk.gov.moj.sdt.services.config.ServicesTestConfig;
 import uk.gov.moj.sdt.services.utils.api.ISdtBulkReferenceGenerator;
 import uk.gov.moj.sdt.test.utils.AbstractIntegrationTest;
 import uk.gov.moj.sdt.test.utils.TestConfig;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Test class for SdtBulkReferenceGenerator.
@@ -56,7 +56,7 @@ import uk.gov.moj.sdt.test.utils.TestConfig;
  * @author Manoj Kulkarni
  */
 @ActiveProfiles("integ")
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = {TestConfig.class, ServicesTestConfig.class })
 @Sql(scripts = {"classpath:uk/gov/moj/sdt/services/sql/RefData.sql", "classpath:uk/gov/moj/sdt/services/sql/SubmitQueryServiceIntTest.sql"})
 @Transactional
@@ -66,16 +66,14 @@ public class SdtBulkReferenceGeneratorIntTest extends AbstractIntegrationTest {
      */
     private static final Logger LOGGER = LoggerFactory.getLogger(SdtBulkReferenceGeneratorIntTest.class);
 
+    @Autowired
+    private ISdtBulkReferenceGenerator referenceGenerator;
     /**
      * Test method for the SDT bulk reference generation.
      */
     @Test
     @Transactional
     public void testGetSdtBulkReference() {
-        final ISdtBulkReferenceGenerator referenceGenerator =
-                (ISdtBulkReferenceGenerator) this.applicationContext
-                        .getBean("SdtBulkReferenceGenerator");
-
         // Negative Test 1 - Supply blank application name
         try {
             referenceGenerator.getSdtBulkReference(null);

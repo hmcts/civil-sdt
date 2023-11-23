@@ -33,10 +33,12 @@ package uk.gov.moj.sdt.services;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.transaction.annotation.Transactional;
 import uk.gov.moj.sdt.domain.BulkCustomer;
 import uk.gov.moj.sdt.domain.BulkSubmission;
 import uk.gov.moj.sdt.domain.IndividualRequest;
@@ -79,11 +81,13 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = {TestConfig.class, ServicesTestConfig.class })
 @Sql(scripts = {"classpath:uk/gov/moj/sdt/services/sql/RefData.sql", "classpath:uk/gov/moj/sdt/services/sql/BulkSubmissionServiceIntTest.sql"})
+@Transactional
 public class BulkSubmissionServiceIntTest extends AbstractIntegrationTest {
 
     /**
      * Test subject.
      */
+    @Autowired
     private BulkSubmissionService bulkSubmissionService;
 
     /**
@@ -100,12 +104,9 @@ public class BulkSubmissionServiceIntTest extends AbstractIntegrationTest {
     @BeforeEach
     @SuppressWarnings("unchecked")
     public void setUp() {
-        bulkSubmissionService = this.applicationContext.getBean(BulkSubmissionService.class);
-
         // Get the concurrency map so we can clear it after test.
         concurrencyMap = new HashMap<>();
         bulkSubmissionService.setConcurrencyMap(concurrencyMap);
-
     }
 
     /**

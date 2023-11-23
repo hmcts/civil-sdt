@@ -30,30 +30,27 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.services.messaging;
 
-import com.google.common.collect.Lists;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import uk.gov.moj.sdt.services.config.ServicesTestConfig;
 import uk.gov.moj.sdt.services.messaging.api.ISdtMessage;
 import uk.gov.moj.sdt.test.utils.AbstractIntegrationTest;
 import uk.gov.moj.sdt.test.utils.TestConfig;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.List;
-import java.util.stream.Collectors;
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.ObjectMessage;
+import java.text.SimpleDateFormat;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * IntegrationTest class for testing the MessageWriter implementation.
@@ -61,83 +58,90 @@ import static org.junit.Assert.assertTrue;
  * @author Manoj Kulkarni
  */
 @ActiveProfiles("integ")
-@RunWith(SpringRunner.class)
-@SpringBootTest(classes = {TestConfig.class, ServicesTestConfig.class })
-public class MessageWriterIntTest extends AbstractIntegrationTest {
+@ExtendWith(SpringExtension.class)
+@SpringBootTest(classes = {TestConfig.class, ServicesTestConfig.class})
+class MessageWriterIntTest extends AbstractIntegrationTest {
+
+    private static final String TARGET_APP_CODE = "TEST1";
+
+    @Autowired
+    @Qualifier("MessageWriter")
+    private MessageWriter messageWriter;
+
+    @Autowired
+    @Qualifier("IMessageWriterBad")
+    private MessageWriter messageWriterBad;
+
+    @Autowired
+    private JmsTemplate jmsTemplate;
+
+    @Autowired
+    private QueueConfig queueConfig;
 
     /**
      * Test method to test the sending of message.
-     *
-     * @throws JMSException         exception
-     * @throws InterruptedException exception
      */
     @Test
-    public void testQueueMessage() throws JMSException, InterruptedException {
-        // Get message writer from Spring.
-        final MessageWriter messageWriter = (MessageWriter) this.applicationContext.getBean("MessageWriter");
-
+    void testQueueMessage() {
         final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
 
         // Send the first message.
-        final ISdtMessage message1 = new SdtMessage();
         final String strMessage1 =
                 "TestMessage1" + dateFormat.format(new java.util.Date(System.currentTimeMillis()));
-        message1.setSdtRequestReference(strMessage1);
-        messageWriter.queueMessage(message1, "TEST1", false);
+        final ISdtMessage message1 = createSdtMessage(strMessage1);
+        messageWriter.queueMessage(message1, TARGET_APP_CODE);
 
         // Send the second message.
-        final ISdtMessage message2 = new SdtMessage();
         final String strMessage2 =
                 "TestMessage2" + dateFormat.format(new java.util.Date(System.currentTimeMillis()));
-        message2.setSdtRequestReference(strMessage2);
-        messageWriter.queueMessage(message2, "TEST1", false);
+        final ISdtMessage message2 = createSdtMessage(strMessage2);
+        messageWriter.queueMessage(message2, TARGET_APP_CODE);
 
-        readMessageFromQueue(3, Lists.newArrayList(strMessage1, strMessage2));
-
+        // Check messages retrieved from queue in expected order
+        checkQueueMessage(strMessage1);
+        checkQueueMessage(strMessage2);
     }
 
     /**
      * Test method to test failure behaviour when Azure Service Bus not running.
-     *
-     * @throws JMSException exception
      */
     @Test
-    public void testAzureServiceBusDown() throws JMSException {
-        // Get message writer from Spring.
-        final MessageWriter messageWriter = (MessageWriter) this.applicationContext.getBean("IMessageWriterBad");
-
+    void testAzureServiceBusDown() {
         // Send the message.
-        final ISdtMessage message = new SdtMessage();
-        message.setSdtRequestReference("Test message");
+        final String strMessage = "Test message";
+        final ISdtMessage message = createSdtMessage(strMessage);
 
-        messageWriter.queueMessage(message, "TEST1", false);
-        Assert.assertTrue("Test completed", true);
+        messageWriterBad.queueMessage(message, TARGET_APP_CODE);
+        assertTrue(true, "Test completed");
 
-        readMessageFromQueue(1);
+        // Remove message from queue so other tests aren't affected
+        checkQueueMessage(strMessage);
     }
 
-    public List<ISdtMessage> readMessageFromQueue(int countOfMessages) {
-        final JmsTemplate jmsTemplate = this.applicationContext.getBean(JmsTemplate.class);
-        final QueueConfig queueConfig = applicationContext.getBean(QueueConfig.class);
-        List<ISdtMessage> listMessages = new ArrayList<>();
-        jmsTemplate.browse(queueConfig.getTargetAppQueue().get("TEST1"), (session, browser) -> {
-            Enumeration<Message> messages = browser.getEnumeration();
-            while (messages.hasMoreElements()) {
-                Message message = messages.nextElement();
+    private ISdtMessage createSdtMessage(String requestRef) {
+        ISdtMessage sdtMessage = new SdtMessage();
+        sdtMessage.setSdtRequestReference(requestRef);
+
+        return sdtMessage;
+    }
+
+    private void checkQueueMessage(String expectedRequestRef) {
+        // Set timeout to 1 second in case queue doesn't contain a message
+        jmsTemplate.setReceiveTimeout(1000);
+
+        Message message = jmsTemplate.receive(queueConfig.getTargetAppQueue().get(TARGET_APP_CODE));
+
+        if(message != null) {
+            try {
                 ObjectMessage objectMessage = (ObjectMessage) message;
                 ISdtMessage sdtMessage = (ISdtMessage) objectMessage.getObject();
-                listMessages.add(sdtMessage);
+                assertEquals(expectedRequestRef, sdtMessage.getSdtRequestReference(),
+                             "Unexpected message retrieved from queue");
+            } catch (JMSException e) {
+                fail("Unable to get message from queue");
             }
-            return listMessages;
-        });
-        assertEquals(countOfMessages, listMessages.size());
-        return listMessages;
-    }
-
-    public void readMessageFromQueue(int countOfMessages, List<String> messagesToValidate) {
-        List<ISdtMessage> listMessages = readMessageFromQueue(countOfMessages);
-
-        assertTrue(listMessages.stream().map(iSdtMessage -> iSdtMessage.getSdtRequestReference()).collect(Collectors.toSet())
-                       .containsAll(messagesToValidate));
+        } else {
+            fail("No message retrieved from queue");
+        }
     }
 }

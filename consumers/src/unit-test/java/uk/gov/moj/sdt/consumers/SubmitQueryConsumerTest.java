@@ -45,9 +45,7 @@ import org.mockito.stubbing.Answer;
 import uk.gov.moj.sdt.consumers.exception.OutageException;
 import uk.gov.moj.sdt.consumers.exception.SoapFaultException;
 import uk.gov.moj.sdt.consumers.exception.TimeoutException;
-import uk.gov.moj.sdt.domain.api.IServiceRouting;
 import uk.gov.moj.sdt.domain.api.ISubmitQueryRequest;
-import uk.gov.moj.sdt.domain.api.ITargetApplication;
 import uk.gov.moj.sdt.transformers.api.IConsumerTransformer;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.StatusCodeType;
 import uk.gov.moj.sdt.ws._2013.sdt.baseschema.StatusType;
@@ -80,7 +78,6 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.withSettings;
-import static org.powermock.api.mockito.PowerMockito.verifyStatic;
 
 /**
  * Test class for the submit query consumer.
@@ -145,17 +142,17 @@ class SubmitQueryConsumerTest extends ConsumerTestBase {
         ITargetAppInternalEndpointPortType portType;
 
         try(MockedStatic<ClientProxy> mockClientProxy = mockStatic(ClientProxy.class)) {
-            Client mockClient = mock(Client.class);
+            Client mockCxfClient = mock(Client.class);
             ITargetAppInternalEndpointPortType mockEndpointPortType
                 = mock(ITargetAppInternalEndpointPortType.class,
                        withSettings().extraInterfaces(BindingProvider.class));
             HTTPConduit mockHTTPConduit = mock(HTTPConduit.class);
 
             mockClientProxy.when(() -> ClientProxy.getClient(any()))
-                .thenReturn(mockClient);
+                .thenReturn(mockCxfClient);
             when(submitQueryConsumer.createTargetAppEndPoint())
                 .thenReturn(mockEndpointPortType);
-            when(mockClient.getConduit())
+            when(mockCxfClient.getConduit())
                 .thenReturn(mockHTTPConduit);
 
             portType = submitQueryConsumer.getClient(targetApplicationCode, serviceType, webServiceEndPoint, connectionTimeOut, receiveTimeOut);
@@ -163,7 +160,7 @@ class SubmitQueryConsumerTest extends ConsumerTestBase {
             mockClientProxy.verify(() -> ClientProxy.getClient(any()));
             verify(submitQueryConsumer).createTargetAppEndPoint();
             verify((BindingProvider) mockEndpointPortType, times(2)).getRequestContext();
-            verify(mockClient).getConduit();
+            verify(mockCxfClient).getConduit();
             verify(mockHTTPConduit).setClient(any(HTTPClientPolicy.class));
 
             // coverage for this.clientCache.containsKey()
