@@ -43,8 +43,4 @@ public class JudgementWarrantResponse {
     private Long fee;
 
     private JudgmentWarrantStatus judgmentWarrantStatus;
-
-    public String getJudgmentWarrantStatus() {
-        return judgmentWarrantStatus == null ? null : judgmentWarrantStatus.getMessage();
-    }
 }

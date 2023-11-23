@@ -95,7 +95,8 @@ public class FeedbackService {
                                       IIndividualRequest individualRequest) {
         addStatusAndErrorLog(cmcFeedback, individualRequest);
         JudgementWarrantResponse response = new JudgementWarrantResponse();
-        response.setJudgmentWarrantStatus(JudgmentWarrantStatus.valueOf(cmcFeedback.getJudgmentWarrantStatus()));
+        response.setJudgmentWarrantStatus(JudgmentWarrantStatus
+                                              .getJudgmentWarrantStatus(cmcFeedback.getJudgmentWarrantStatus()));
         response.setFee(cmcFeedback.getFee());
         response.setWarrantNumber(cmcFeedback.getWarrantNumber());
         response.setEnforcingCourtName(cmcFeedback.getEnforcingCourtName());

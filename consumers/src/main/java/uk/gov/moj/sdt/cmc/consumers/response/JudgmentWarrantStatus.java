@@ -23,7 +23,6 @@ public enum JudgmentWarrantStatus {
         return message;
     }
 
-
     public static JudgmentWarrantStatus getJudgmentWarrantStatus(String status) {
         return Arrays.stream(values()).filter(value -> value.getMessage().equals(status)
             || value.name().equals(status)).findFirst().orElse(null);
