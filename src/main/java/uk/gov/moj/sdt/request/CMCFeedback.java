@@ -8,21 +8,33 @@ import java.util.Date;
 @Data
 public class CMCFeedback {
 
-    private int errorCode;
+    private String errorCode;
+
     private String claimNumber;
+
     private String errorText;
+
     @JsonFormat(pattern="yyyy-MM-dd")
     protected Date issueDate;
+
     @JsonFormat(pattern="yyyy-MM-dd")
     protected Date serviceDate;
+
     @JsonFormat(pattern="yyyy-MM-dd")
     protected Date judgmentEnteredDate;
+
     @JsonFormat(pattern="yyyy-MM-dd")
     protected Date firstPaymentDate;
+
     private String warrantNumber;
+
     private String enforcingCourtCode;
+
     private String enforcingCourtName;
+
     private Long fee;
+
     private String judgmentWarrantStatus;
+
     private String processingStatus;
 }

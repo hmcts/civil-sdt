@@ -27,7 +27,7 @@ class FeedbackControllerTest {
 
     private String CLAIM_NUMBER = "123456";
 
-    private int ERROR_CODE = 1234;
+    private String ERROR_CODE = "1234";
 
     @Test
     void shouldInvokeFeedbackService() {

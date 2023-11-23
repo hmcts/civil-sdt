@@ -3,6 +3,7 @@ package uk.gov.moj.sdt.cmc.consumers.response;
 import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -21,6 +22,7 @@ import lombok.ToString;
     "fee",
     "judgmentWarrantStatus",
 })
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class JudgementWarrantResponse {
 
     @JsonFormat(pattern="yyyy-MM-dd")

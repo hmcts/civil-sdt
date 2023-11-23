@@ -62,6 +62,7 @@ public class FeedbackService {
         response.setClaimNumber(cmcFeedback.getClaimNumber());
         response.setIssueDate(cmcFeedback.getIssueDate());
         response.setServiceDate(cmcFeedback.getServiceDate());
+        response.setFee(cmcFeedback.getFee());
         individualRequest.setTargetApplicationResponse(convertObjectToXml(response));
     }
 
@@ -69,6 +70,8 @@ public class FeedbackService {
                                           IIndividualRequest individualRequest) {
         addStatusAndErrorLog(cmcFeedback, individualRequest);
         JudgementResponse response = new JudgementResponse();
+        response.setJudgmentWarrantStatus(JudgmentWarrantStatus
+                                              .getJudgmentWarrantStatus(cmcFeedback.getJudgmentWarrantStatus()));
         response.setJudgmentEnteredDate(cmcFeedback.getJudgmentEnteredDate());
         response.setFirstPaymentDate(cmcFeedback.getFirstPaymentDate());
         individualRequest.setTargetApplicationResponse(convertObjectToXml(response));
@@ -78,6 +81,9 @@ public class FeedbackService {
                                         IIndividualRequest individualRequest) {
         addStatusAndErrorLog(cmcFeedback, individualRequest);
         WarrantResponse response = new WarrantResponse();
+        response.setIssueDate(cmcFeedback.getIssueDate());
+        response.setJudgmentWarrantStatus(JudgmentWarrantStatus
+                                              .getJudgmentWarrantStatus(cmcFeedback.getJudgmentWarrantStatus()));
         response.setFee(cmcFeedback.getFee());
         response.setWarrantNumber(cmcFeedback.getWarrantNumber());
         response.setEnforcingCourtCode(cmcFeedback.getEnforcingCourtCode());
