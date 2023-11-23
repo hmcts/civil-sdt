@@ -4,6 +4,7 @@ import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -13,6 +14,11 @@ import uk.gov.moj.sdt.cmc.consumers.response.JudgmentWarrantStatus;
 @ToString
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
+@JsonPropertyOrder({
+    "firstPaymentDate",
+    "judgmentEnteredDate",
+    "judgmentWarrantStatus",
+})
 public class JudgementResponse {
 
     @JsonFormat(pattern="yyyy-MM-dd")
