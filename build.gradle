@@ -8,7 +8,7 @@ plugins {
   id "io.freefair.lombok" version "8.4"
   id 'io.spring.dependency-management' version '1.1.4'
   id 'com.github.ben-manes.versions' version '0.50.0'
-  id 'org.springframework.boot' version '2.7.17'
+  id 'org.springframework.boot' version '2.7.18'
   id 'org.owasp.dependencycheck' version '8.4.3'
   id 'com.github.kt3k.coveralls' version '2.12.2'
   id 'com.github.spacialcircumstances.gradle-cucumber-reporting' version '0.1.25'
