@@ -17,7 +17,9 @@ springdoc:
 spring:
   jms:
     servicebus:
+      idle-timeout: ${QUEUE_TIME_OUT:900000}
       connection-string: ${CIVIL_SDT_SERVICEBUS_CONNECTION_STRING:Endpoint=sb://destination1.servicebus.windows.net;SharedAccessKeyName=[KEYNAME];SharedAccessKey=[KEY]}
+      pricing-tier: ${CIVIL_SDT_SERVICEBUS_PRICING_TIER:Standard}
       internal:
         targetAppQueue:
           MCOL: ${CIVIL_SDT_QUEUE}
@@ -69,6 +71,7 @@ sdt:
           receiveTimeout: ${RECEIVE_TIMEOUT:30000}
           idleTaskExecutionLimit:  ${IDLE_TASK_EXECUTION_LIMIT:10}
           idleConsumerLimit:  ${IDLE_CONSUMER_LIMIT:5}
+          queue_delay: ${QUEUE_DELAY:500}
   retry-send:
       cron: ${RETRY_SEND_CRON:0 0 * * * ?}
   purge:

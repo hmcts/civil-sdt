@@ -42,11 +42,27 @@ public class ServicesTestConfig {
     private QueueConfig queueConfig;
 
     @Bean
+    @Qualifier("messageListenerContainer")
+    public DefaultMessageListenerContainer messageListenerContainer() {
+        DefaultMessageListenerContainer defaultMessageListenerContainer = new DefaultMessageListenerContainer();
+        defaultMessageListenerContainer.setConnectionFactory(jmsConnectionFactory);
+        defaultMessageListenerContainer.setDestinationName(queueConfig.getTargetAppQueue().get("MCOLS"));
+        defaultMessageListenerContainer.setMessageListener(messageListenerAdapter);
+        defaultMessageListenerContainer.setTransactionManager(transactionManager);
+        defaultMessageListenerContainer.setConcurrentConsumers(1);
+        defaultMessageListenerContainer.setMaxConcurrentConsumers(1);
+        defaultMessageListenerContainer.setReceiveTimeout(30000);
+        defaultMessageListenerContainer.setIdleTaskExecutionLimit(1);
+        defaultMessageListenerContainer.setIdleConsumerLimit(1);
+        return defaultMessageListenerContainer;
+    }
+
+    @Bean
     @Qualifier("messageListenerContainerMCol")
     public DefaultMessageListenerContainer messageListenerContainerMCol() {
         DefaultMessageListenerContainer defaultMessageListenerContainer = new DefaultMessageListenerContainer();
         defaultMessageListenerContainer.setConnectionFactory(jmsConnectionFactory);
-        defaultMessageListenerContainer.setDestinationName(queueConfig.getTargetAppQueue().get("MCOLS"));
+        defaultMessageListenerContainer.setDestinationName(queueConfig.getTargetAppQueue().get("MCOL"));
         defaultMessageListenerContainer.setMessageListener(messageListenerAdapter);
         defaultMessageListenerContainer.setTransactionManager(transactionManager);
         defaultMessageListenerContainer.setConcurrentConsumers(1);
@@ -61,8 +77,6 @@ public class ServicesTestConfig {
     @Lazy
     @Qualifier("IMessageWriterBad")
     public MessageWriter IMessageWriterBad() {
-        MessageWriter messageWriter = new MessageWriter(jmsTemplate,
-                                                        queueConfig);
-        return messageWriter;
+        return new MessageWriter(jmsTemplate, queueConfig);
     }
 }

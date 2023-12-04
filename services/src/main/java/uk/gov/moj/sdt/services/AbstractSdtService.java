@@ -30,6 +30,18 @@
  * $LastChangedBy: $ */
 package uk.gov.moj.sdt.services;
 
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import uk.gov.moj.sdt.dao.api.IBulkSubmissionDao;
+import uk.gov.moj.sdt.dao.api.IBulkSubmissionDao;
+import uk.gov.moj.sdt.dao.api.IIndividualRequestDao;
+import uk.gov.moj.sdt.domain.IndividualRequest;
+import uk.gov.moj.sdt.domain.api.IBulkSubmission;
+import uk.gov.moj.sdt.domain.api.IIndividualRequest;
+import uk.gov.moj.sdt.services.utils.GenericXmlParser;
+import uk.gov.moj.sdt.utils.cmc.RequestTypeXmlNodeValidator;
+
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
@@ -38,17 +50,6 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Qualifier;
-import uk.gov.moj.sdt.dao.api.IIndividualRequestDao;
-import uk.gov.moj.sdt.domain.IndividualRequest;
-import uk.gov.moj.sdt.domain.api.IBulkSubmission;
-import uk.gov.moj.sdt.domain.api.IIndividualRequest;
-import uk.gov.moj.sdt.services.utils.GenericXmlParser;
-import uk.gov.moj.sdt.utils.cmc.RequestTypeXmlNodeValidator;
 
 import static uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus.ACCEPTED;
 import static uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus.REJECTED;
@@ -71,6 +72,8 @@ public abstract class AbstractSdtService {
      */
     private IIndividualRequestDao individualRequestDao;
 
+    private IBulkSubmissionDao bulkSubmissionDao;
+
     /**
      * Parser for individual response.
      */
@@ -78,12 +81,12 @@ public abstract class AbstractSdtService {
 
     private RequestTypeXmlNodeValidator requestTypeXmlNodeValidator;
 
-    protected AbstractSdtService(@Qualifier("IndividualRequestDao")
-                                      IIndividualRequestDao individualRequestDao,
-                              @Qualifier("IndividualResponseXmlParser")
-                                  GenericXmlParser individualResponseXmlParser,
+    protected AbstractSdtService(IIndividualRequestDao individualRequestDao,
+                                 IBulkSubmissionDao bulkSubmissionDao,
+                                 GenericXmlParser individualResponseXmlParser,
                                  RequestTypeXmlNodeValidator requestTypeXmlNodeValidator) {
         this.individualRequestDao = individualRequestDao;
+        this.bulkSubmissionDao = bulkSubmissionDao;
         this.individualResponseXmlParser = individualResponseXmlParser;
         this.requestTypeXmlNodeValidator = requestTypeXmlNodeValidator;
     }
@@ -143,7 +146,7 @@ public abstract class AbstractSdtService {
 
             bulkSubmission.markAsCompleted();
 
-            this.getIndividualRequestDao().persist(bulkSubmission);
+            bulkSubmissionDao.persist(bulkSubmission);
         }
     }
 

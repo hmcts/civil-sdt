@@ -1,7 +1,7 @@
 spring:
   activemq:
     packages:
-      trust-all: true
+      trusted: uk.gov.moj.sdt.services.messaging
     in-memory: true
     pool:
       enabled: false
@@ -9,8 +9,8 @@ spring:
     servicebus:
       internal:
         targetAppQueue:
-          MCOL: ${CIVIL_SDT_QUEUE:Test1Queue}
-          MCOLS: ${CIVIL_SDT_QUEUE:Test1Queue}
+          MCOL: ${CIVIL_SDT_QUEUE:McolQueue}
+          MCOLS: ${CIVIL_SDT_QUEUE:McolsQueue}
           TEST1: ${CIVIL_SDT_QUEUE:Test1Queue}
       connection-string: ${CIVIL_SDT_SERVICEBUS_CONNECTION_STRING:Endpoint=sb://destination1.servicebus.windows.net;SharedAccessKeyName=[KEYNAME];SharedAccessKey=[KEY]}
       enabled: false
@@ -21,7 +21,7 @@ spring:
     allow-bean-definition-overriding: true
     allow-circular-references: true
   datasource:
-    url: jdbc:tc:postgresql:11:///civil_sdt_integ?stringtype=unspecified
+    url: jdbc:tc:postgresql:15:///civil_sdt_integ?stringtype=unspecified
     driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
     username: ${SDT_DB_USERNAME:postgres}
     password: ${SDT_DB_PASSWORD:test}
@@ -44,6 +44,7 @@ sdt:
       receiveTimeout: ${RECEIVE_TIMEOUT:30000}
       idleTaskExecutionLimit:  ${IDLE_TASK_EXECUTION_LIMIT:10}
       idleConsumerLimit:  ${IDLE_CONSUMER_LIMIT:5}
+      queue_delay: ${QUEUE_DELAY:500}
   purge:
     cron: ${PURGE_SCHEDULE_CRON:0 10 5 * * ?}
     commitInterval: ${PURGE_COMMIT_INTERVAL:1000}
@@ -52,4 +53,13 @@ sdt:
   requeue:
     cron: ${REQUEUE_SCHEDULE_CRON:0 */20 * * * ?}
     minimumAge: ${MINIMUM_AGE:15}
-
+idam:
+  s2s-auth:
+    microservice: civil_sdt
+    totp_secret: ${CIVIL_SDT_S2S_KEY:AAAAAAAAAAAAAAAA}
+    url: ${IDAM_S2S_URL:http://localhost:4502}
+  sdt:
+    username: ${IDAM_SDT_USERNAME:master.sdt@gmail.com}
+    password: ${IDAM_SDT_PASSWORD:Pa55word11}
+  api:
+    url: ${IDAM_API_URL:http://localhost:5000}

@@ -9,6 +9,9 @@ dependencyCheck {
     suppressionFile = "${rootDir}/config/owasp/suppressions.xml"
 }
 
+dependencies {
+  testImplementation project (':services')
+}
 
 bootJar {
     enabled = false

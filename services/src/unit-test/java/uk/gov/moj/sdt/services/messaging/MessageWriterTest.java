@@ -18,6 +18,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.jms.UncategorizedJmsException;
 import org.springframework.jms.connection.CachingConnectionFactory;
 import org.springframework.jms.core.JmsTemplate;
+import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.services.messaging.api.ISdtMessage;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 
@@ -110,6 +111,7 @@ class MessageWriterTest extends AbstractSdtUnitTestBase {
     void testQueueMessage() {
         // Send the message.
         try {
+            IIndividualRequest individualRequest = mock(IIndividualRequest.class);
             messageWriter.queueMessage(sdtMessage, UNIT_TEST);
             assertNotEquals(0L, sdtMessage.getMessageSentTimestamp());
             verify(mockJmsTemplate).convertAndSend(UNIT_TEST_QUEUE, sdtMessage);
@@ -124,6 +126,7 @@ class MessageWriterTest extends AbstractSdtUnitTestBase {
 
         doThrow(uncategorizedJmsException).
             when(mockJmsTemplate).convertAndSend(UNIT_TEST_QUEUE, sdtMessage);
+        IIndividualRequest individualRequest = mock(IIndividualRequest.class);
 
         Logger messageWriterLogger = (Logger) LoggerFactory.getLogger(MessageWriter.class);
         ListAppender<ILoggingEvent> listAppender = new ListAppender<>();
@@ -147,6 +150,7 @@ class MessageWriterTest extends AbstractSdtUnitTestBase {
 
     @Test
     void testResetConnectionAndQueueMessage() {
+        IIndividualRequest individualRequest = mock(IIndividualRequest.class);
         // Using two exception classes with the same name so need to qualify declarations
         javax.jms.IllegalStateException javaxIllegalStateException =
             new javax.jms.IllegalStateException(ILLEGAL_STATE_EXCEPTION_MESSAGE);
@@ -196,6 +200,7 @@ class MessageWriterTest extends AbstractSdtUnitTestBase {
 
     @Test
     void testResetConnectionAndQueueMessageUncategorizedJmsException() {
+        IIndividualRequest individualRequest = mock(IIndividualRequest.class);
         javax.jms.IllegalStateException javaxIllegalStateException =
             new javax.jms.IllegalStateException(ILLEGAL_STATE_EXCEPTION_MESSAGE);
         org.springframework.jms.IllegalStateException springIllegalStateException =

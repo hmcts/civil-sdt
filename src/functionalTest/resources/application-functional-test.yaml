@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:tc:postgresql:11:///civil_sdt_integ?stringtype=unspecified
+    url: jdbc:tc:postgresql:15:///civil_sdt_integ?stringtype=unspecified
     driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
     username: ${SDT_DB_USERNAME:postgres}
     password: ${SDT_DB_PASSWORD:test}
@@ -19,3 +19,4 @@ sdt:
       receiveTimeout: ${RECEIVE_TIMEOUT:30000}
       idleTaskExecutionLimit:  ${IDLE_TASK_EXECUTION_LIMIT:10}
       idleConsumerLimit:  ${IDLE_CONSUMER_LIMIT:5}
+      queue_delay: ${QUEUE_DELAY:500}
