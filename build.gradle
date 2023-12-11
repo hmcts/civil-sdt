@@ -192,6 +192,7 @@ ext.libraries = [
 ext['guava.version'] = '30.0-jre'
 ext['apache.poi.version'] = '4.1.0'
 ext['snakeyaml.version'] = '1.33'
+ext['logback.version'] = '1.2.13'
 ext['hibernate-validator.version'] = '6.0.20.Final'
 ext['activemq.version'] = '5.18.3'
 
@@ -220,8 +221,6 @@ allprojects {
 
   dependencies {
     annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.5.Final', 'org.projectlombok:lombok-mapstruct-binding:0.2.0'
-    implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.10'
-    implementation group: 'ch.qos.logback', name: 'logback-core', version: '1.2.10'
     implementation group: 'com.azure', name: 'azure-core', version: '1.45.1'
     implementation group: 'com.azure', name: 'azure-messaging-servicebus', version: '7.14.6'
     implementation group: 'com.fasterxml.jackson.module', name: 'jackson-module-jaxb-annotations', version: '2.15.3'
