@@ -6,20 +6,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-import uk.gov.moj.sdt.services.mbeans.SdtManagementMBean;
+import uk.gov.moj.sdt.utils.mbeans.api.ISdtManagementMBean;
 
 @Service
 public class RequeueOldIndividualRequests {
 
     private static Logger LOGGER = LoggerFactory.getLogger(RequeueOldIndividualRequests.class);
 
-    private SdtManagementMBean sdtManagementMBean;
+    private ISdtManagementMBean sdtManagementMBean;
 
     @Value("${sdt.requeue.minimumAge:15}")
     private int minimumAge;
 
     @Autowired
-    public RequeueOldIndividualRequests(SdtManagementMBean sdtManagementMBean) {
+    public RequeueOldIndividualRequests(ISdtManagementMBean sdtManagementMBean) {
         this.sdtManagementMBean = sdtManagementMBean;
     }
 

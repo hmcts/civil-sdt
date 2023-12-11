@@ -5,8 +5,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import uk.gov.moj.sdt.services.mbeans.SdtManagementMBean;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
+import uk.gov.moj.sdt.utils.mbeans.api.ISdtManagementMBean;
 
 import static org.mockito.Mockito.verify;
 
@@ -18,7 +18,7 @@ public class RequeueOldIndividualRequestsTest extends AbstractSdtUnitTestBase {
     private RequeueOldIndividualRequests requeueOldIndividualRequests;
 
     @Mock
-    private SdtManagementMBean sdtManagementMBean;
+    private ISdtManagementMBean sdtManagementMBean;
 
     @BeforeEach
     @Override
