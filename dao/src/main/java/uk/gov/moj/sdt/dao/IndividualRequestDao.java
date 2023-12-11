@@ -173,7 +173,7 @@ public class IndividualRequestDao extends GenericDao<IndividualRequest> implemen
     }
 
     private Predicate[] createIndividualRequestPredicate(LocalDateTime latestTime) {
-        Predicate[] predicates = new Predicate[3];
+        Predicate[] predicates = new Predicate[2];
         predicates[0] = criteriaBuilder.or(criteriaBuilder.equal(root.get(REQUEST_STATUS), RECEIVED.getStatus()),
                                            criteriaBuilder.equal(root.get(REQUEST_STATUS), QUEUED.getStatus()),
                                            criteriaBuilder.equal(root.get(REQUEST_STATUS), FAILED_QUEUE.getStatus()),
