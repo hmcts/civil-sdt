@@ -220,7 +220,7 @@ allprojects {
 
   dependencies {
     annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.5.Final', 'org.projectlombok:lombok-mapstruct-binding:0.2.0'
-    implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.10'
+    implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.4.14'
     implementation group: 'ch.qos.logback', name: 'logback-core', version: '1.2.10'
     implementation group: 'com.azure', name: 'azure-core', version: '1.45.1'
     implementation group: 'com.azure', name: 'azure-messaging-servicebus', version: '7.14.6'
