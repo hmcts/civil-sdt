@@ -24,13 +24,11 @@
   <suppress>
     <notes>Temporary Suppressions
       CVE-2023-4586
-      CVE-2023-6378
       CVE-2023-36052
       CVE-2023-36414 - Still flagged despite azure-identity-extensions dependency constraint
       CVE-2023-36415 - Still flagged despite azure-identity-extensions dependency constraint
     </notes>
     <cve>CVE-2023-4586</cve>
-    <cve>CVE-2023-6378</cve>
     <cve>CVE-2023-36052</cve>
     <cve>CVE-2023-36414</cve>
     <cve>CVE-2023-36415</cve>
