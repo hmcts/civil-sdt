@@ -38,6 +38,9 @@ public class FeedbackService {
 
     public void feedback(String sdtRequestId, CMCFeedback cmcFeedback) {
         IIndividualRequest individualRequest = individualRequestDao.getRequestBySdtReference(sdtRequestId);
+        if (individualRequest == null) {
+            return;
+        }
         String requestType = individualRequest.getRequestType();
         if (RequestType.JUDGMENT.getType().equals(requestType)) {
             updateJudgementRequest(cmcFeedback, individualRequest);

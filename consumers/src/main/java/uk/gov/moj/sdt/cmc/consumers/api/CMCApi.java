@@ -44,7 +44,7 @@ public interface CMCApi {
                                           @RequestHeader(SDT_REQUEST_ID) String sdtRequestId,
                                           @RequestBody BreathingSpaceRequest breathingSpaceRequest);
 
-    @PostMapping("/breathingSpace")
+    @PostMapping("/requestJudgment")
     JudgementResponse requestJudgment(
         @RequestHeader(IDAM_ID_HEADER) String idamId,
         @RequestHeader(SDT_REQUEST_ID) String sdtRequestId,
