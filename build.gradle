@@ -229,7 +229,7 @@ allprojects {
     implementation group: 'com.azure.spring', name: 'spring-cloud-azure-starter-servicebus-jms', version: '4.13.0'
     implementation group: 'com.azure', name: 'azure-identity-extensions'
     constraints {
-      implementation(group: 'com.azure', name: 'azure-identity-extensions', version: '1.1.10') {
+      implementation(group: 'com.azure', name: 'azure-identity-extensions', version: '1.1.11') {
         because 'CVE-2023-36414 and CVE-2023-36415 from dependency in com.azure.spring:spring-cloud-azure-starter-servicebus-jms:4.12.0'
       }
     }
