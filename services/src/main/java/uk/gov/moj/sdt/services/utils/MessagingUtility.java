@@ -68,7 +68,7 @@ public class MessagingUtility implements IMessagingUtility {
      */
     private IMessageWriter messageWriter;
 
-    @Value("${sdt.service.config.queue_delay:2000}")
+    @Value("${sdt.service.config.queue_delay:500}")
     private int queueDelay;
 
     private ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
