@@ -1,0 +1,24 @@
+{
+  "request": {
+    "method": "POST",
+    "url": "/breathingSpace",
+    "headers": {
+      "IDAMID": {
+        "equalTo": "1234"
+      },
+      "SDTREQUESTID": {
+        "equalTo": "MCOL-0000001"
+      }
+    }
+  },
+  "response": {
+    "status": 400,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "jsonBody": {
+      "error": "Bad Request",
+      "message": "001 unknown user"
+    }
+  }
+}

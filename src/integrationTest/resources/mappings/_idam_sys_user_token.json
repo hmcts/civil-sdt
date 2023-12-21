@@ -1,7 +1,10 @@
 {
   "request": {
     "method": "POST",
-    "url": "/claimStatusUpdate"
+    "url": "/o/token",
+    "bodyPatterns" : [{
+      "contains" : "data.store.idam.system.user%40gmail.com"
+    }]
   },
   "response": {
     "status": 200,
@@ -9,7 +12,7 @@
       "Content-Type": "application/json"
     },
     "jsonBody": {
-      "processingStatus": "PROCESSED"
+      "access_token": "eyAidGVzdCI6InRlc3QiIH0"
     }
   }
 }

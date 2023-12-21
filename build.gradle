@@ -663,6 +663,7 @@ bootJar {
 
 dependencies {
   implementation project(':consumers')
+  testImplementation project(":consumers").sourceSets.unitTest.output
   implementation project(':dao')
   implementation project(':producers')
   implementation project(':services')

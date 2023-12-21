@@ -25,8 +25,7 @@ import static com.google.common.net.HttpHeaders.AUTHORIZATION;
 
 @FeignClient(name = "civil-api",
     url = "${civil.api.url}",
-    configuration = CMCConfig.class,
-    fallback = CMCApiFallback.class)
+    configuration = CMCConfig.class)
 public interface CMCApi {
 
     String IDAM_ID_HEADER = "IDAMID";
@@ -81,7 +80,7 @@ public interface CMCApi {
                                                      @RequestHeader(SDT_REQUEST_ID) String sdtRequestId,
                                                      @RequestBody JudgementWarrantRequest judgmentWarrantRequest);
 
-    @PostMapping("/createSDTClaim ")
+    @PostMapping("/createSDTClaim")
     ClaimResponse createSDTClaim(
         @RequestHeader(IDAM_ID_HEADER)  String idamId,
         @RequestHeader(SDT_REQUEST_ID) String sdtRequestId,

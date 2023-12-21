@@ -16,8 +16,8 @@ public abstract class BaseXmlTest {
     protected String readXmlAsString(String fileName) {
         StringBuilder sb = new StringBuilder();
         try {
-            URL breathingSpaceURL = getClass().getClassLoader().getResource(fileName);
-            Reader fileReader = new FileReader(breathingSpaceURL.getPath());
+            URL fileUrl = getClass().getClassLoader().getResource(fileName);
+            Reader fileReader = new FileReader(fileUrl.getPath());
             BufferedReader bufReader = new BufferedReader(fileReader);
             String line = bufReader.readLine();
             while (line != null) {
@@ -33,8 +33,8 @@ public abstract class BaseXmlTest {
     protected String readFile(String fileName) {
         StringBuilder sb = new StringBuilder();
         try {
-            URL breathingSpaceURL = getClass().getClassLoader().getResource(fileName);
-            Reader fileReader = new FileReader(breathingSpaceURL.getPath());
+            URL fileUrl = getClass().getClassLoader().getResource(fileName);
+            Reader fileReader = new FileReader(fileUrl.getPath());
             BufferedReader bufReader = new BufferedReader(fileReader);
             String line = bufReader.readLine();
             while (line != null) {

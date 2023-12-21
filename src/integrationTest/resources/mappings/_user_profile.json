@@ -1,15 +1,15 @@
 {
   "request": {
-    "method": "POST",
-    "url": "/claimStatusUpdate"
+    "method": "PUT",
+    "url": "/user-profile/users"
   },
   "response": {
-    "status": 200,
+    "status": 201,
     "headers": {
       "Content-Type": "application/json"
     },
     "jsonBody": {
-      "processingStatus": "PROCESSED"
+      "hello": "Hello world!"
     }
   }
 }

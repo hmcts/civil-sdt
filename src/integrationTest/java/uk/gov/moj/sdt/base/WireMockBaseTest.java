@@ -16,16 +16,17 @@ import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
+import uk.gov.moj.sdt.cmc.consumers.client.BaseXmlTest;
 
 import java.nio.charset.Charset;
 import javax.inject.Inject;
 
 @ActiveProfiles("integration-test")
 @RunWith(SpringRunner.class)
+@AutoConfigureWireMock(port = 0, stubs="file:src/integrationTest/resources/mappings")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@AutoConfigureWireMock(port = 0)
 @Slf4j
-public abstract class WireMockBaseTest {
+public abstract class WireMockBaseTest extends BaseXmlTest {
 
     @Inject
     protected WireMockServer wireMockServer;

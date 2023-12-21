@@ -49,10 +49,13 @@ import static uk.gov.moj.sdt.utils.cmc.exception.CMCExceptionMessages.CASE_OFF_L
 public class CMCConsumerGateway implements IConsumerGateway {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CMCConsumerGateway.class);
+
     public static final String FROM_DATE = "fromDate";
+
     public static final String TO_DATE = "toDate";
 
     private IBreathingSpaceService breathingSpace;
+
     private IClaimStatusUpdateService claimStatusUpdate;
 
     private IClaimRequestService claimRequestService;
@@ -70,6 +73,7 @@ public class CMCConsumerGateway implements IConsumerGateway {
     private XmlElementValueReader xmlElementValueReader;
 
     private IdamRepository idamRepository;
+
     private S2SRepository s2SRepository;
 
     @Autowired
