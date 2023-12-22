@@ -1,5 +1,6 @@
 package uk.gov.moj.sdt.cmc.consumers;
 
+import com.github.tomakehurst.wiremock.client.WireMock;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,14 +11,23 @@ import uk.gov.moj.sdt.base.WireMockBaseTest;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.utils.SdtContext;
 import uk.gov.moj.sdt.utils.cmc.RequestType;
+import uk.gov.moj.sdt.utils.cmc.exception.CMCException;
+import uk.gov.moj.sdt.utils.cmc.exception.CaseOffLineException;
 
 import java.nio.charset.StandardCharsets;
 import javax.inject.Inject;
 
+import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
+import static com.github.tomakehurst.wiremock.client.WireMock.containing;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlPathMatching;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static uk.gov.moj.sdt.utils.cmc.RequestType.BREATHING_SPACE;
 import static uk.gov.moj.sdt.utils.cmc.RequestType.CLAIM;
 import static uk.gov.moj.sdt.utils.cmc.RequestType.CLAIM_STATUS_UPDATE;
@@ -40,6 +50,10 @@ public class CMCConsumerGatewayIT extends WireMockBaseTest {
     private static long receiveTimeOut = 1000;
 
     private static final String SDT_REFERENCE = "MCOL-0000001";
+
+    private static final String IDAMID = "1234";
+
+    private static final String IDAMID_SUCCESS = "12345";
 
     private static final String XML_FOLDER = "xmlrequest/";
 
@@ -74,20 +88,233 @@ public class CMCConsumerGatewayIT extends WireMockBaseTest {
 
     @Test
     public void shouldReturnSuccessOnBreathingSpace() {
+        wireMockServer.stubFor(WireMock.post(urlPathMatching("/breathingSpace"))
+                                   .withHeader("IDAMID", containing(IDAMID_SUCCESS))
+                                   .withHeader("SDTREQUESTID", containing(SDT_REFERENCE))
+                                   .willReturn(aResponse()
+                                                   .withHeader(CONTENT_TYPE, APPLICATION_JSON_VALUE)
+                                                   .withBody("""
+                                                                 {
+                                                                       "processingStatus": "PROCESSED"
+                                                                 }
+                                                                 """)
+                                                   .withStatus(200)));
+
         IIndividualRequest individualRequest = mock(IIndividualRequest.class);
         String xmlContent = readXmlAsString(BREATHING_SPACE_XML);
         setupMockBehaviour(BREATHING_SPACE, xmlContent, individualRequest);
+        SdtContext.getContext().setCustomerIdamId(IDAMID_SUCCESS);
         cmcConsumerGateway.individualRequest(individualRequest, connectionTimeOut, receiveTimeOut);
         verify(individualRequest).setRequestStatus(any());
     }
 
-    public void shouldReturn404OnBreathingSpace() {
+    @Test
+    public void shouldReturn400OnBreathingSpace001UnknownUser() {
+        wireMockServer.stubFor(WireMock.post(urlPathMatching("/breathingSpace"))
+                                   .withHeader("IDAMID", containing(IDAMID))
+                                   .withHeader("SDTREQUESTID", containing(SDT_REFERENCE))
+                                   .willReturn(aResponse()
+                                                   .withStatus(400)
+                                                   .withBody("""
+                                                                 {
+                                                                       "error": "Bad Request",
+                                                                       "message": "001 unknown user"
+                                                                 }
+                                                                 """)));
+
         IIndividualRequest individualRequest = mock(IIndividualRequest.class);
         String xmlContent = readXmlAsString(BREATHING_SPACE_XML);
         setupMockBehaviour(BREATHING_SPACE, xmlContent, individualRequest);
-        SdtContext.getContext().setCustomerIdamId("1234");
-        cmcConsumerGateway.individualRequest(individualRequest, connectionTimeOut, receiveTimeOut);
-        verify(individualRequest).setRequestStatus(any());
+        SdtContext.getContext().setCustomerIdamId(IDAMID);
+        CMCException exception = assertThrows(CMCException.class, () ->
+            cmcConsumerGateway.individualRequest(individualRequest, connectionTimeOut, receiveTimeOut));
+        assertTrue(exception.getMessage().contains("001 unknown user"));
+    }
+
+
+    @Test
+    public void shouldReturn400OnBreathingSpaceSpecifiedClaimDoesNotBelongToTheRequestingCustomer() {
+        wireMockServer.stubFor(WireMock.post(urlPathMatching("/breathingSpace"))
+                                   .withHeader("IDAMID", containing(IDAMID))
+                                   .withHeader("SDTREQUESTID", containing(SDT_REFERENCE))
+                                   .willReturn(aResponse()
+                                                   .withStatus(400)
+                                                   .withBody("""
+                                                                 {
+                                                                       "error": "Bad Request",
+                                                                       "message": "023 Specified claim does not belong to the requesting customer"
+                                                                 }
+                                                                 """)));
+
+        IIndividualRequest individualRequest = mock(IIndividualRequest.class);
+        String xmlContent = readXmlAsString(BREATHING_SPACE_XML);
+        setupMockBehaviour(BREATHING_SPACE, xmlContent, individualRequest);
+        SdtContext.getContext().setCustomerIdamId(IDAMID);
+        CMCException exception = assertThrows(CMCException.class, () ->
+            cmcConsumerGateway.individualRequest(individualRequest, connectionTimeOut, receiveTimeOut));
+        assertTrue(exception.getMessage().contains("023 Specified claim does not belong to the requesting customer"));
+    }
+
+    @Test
+    public void shouldReturn400OnBreathingSpaceDefendant2SpecifiedButThereIsOnly1Defendant() {
+        wireMockServer.stubFor(WireMock.post(urlPathMatching("/breathingSpace"))
+                                   .withHeader("IDAMID", containing(IDAMID))
+                                   .withHeader("SDTREQUESTID", containing(SDT_REFERENCE))
+                                   .willReturn(aResponse()
+                                                   .withStatus(400)
+                                                   .withBody("""
+                                                                 {
+                                                                       "error": "Bad Request",
+                                                                       "message": "028 Defendant 2 is specified but there is only 1 defendant on the claim"
+                                                                 }
+                                                                 """)));
+
+        IIndividualRequest individualRequest = mock(IIndividualRequest.class);
+        String xmlContent = readXmlAsString(BREATHING_SPACE_XML);
+        setupMockBehaviour(BREATHING_SPACE, xmlContent, individualRequest);
+        SdtContext.getContext().setCustomerIdamId(IDAMID);
+        CMCException exception = assertThrows(CMCException.class, () ->
+            cmcConsumerGateway.individualRequest(individualRequest, connectionTimeOut, receiveTimeOut));
+        assertTrue(exception.getMessage().contains("028 Defendant 2 is specified but there is only 1 defendant on the claim"));
+    }
+
+    @Test
+    public void shouldReturn400OnBreathingSpaceInvalidOnTheReferencedClaim() {
+        wireMockServer.stubFor(WireMock.post(urlPathMatching("/breathingSpace"))
+                                   .withHeader("IDAMID", containing(IDAMID))
+                                   .withHeader("SDTREQUESTID", containing(SDT_REFERENCE))
+                                   .willReturn(aResponse()
+                                                   .withStatus(400)
+                                                   .withBody("""
+                                                                 {
+                                                                       "error": "Bad Request",
+                                                                       "message": "099 This breathing space request is invalid on the referenced claim"
+                                                                 }
+                                                                 """)));
+
+        IIndividualRequest individualRequest = mock(IIndividualRequest.class);
+        String xmlContent = readXmlAsString(BREATHING_SPACE_XML);
+        setupMockBehaviour(BREATHING_SPACE, xmlContent, individualRequest);
+        SdtContext.getContext().setCustomerIdamId(IDAMID);
+        CMCException exception = assertThrows(CMCException.class, () ->
+            cmcConsumerGateway.individualRequest(individualRequest, connectionTimeOut, receiveTimeOut));
+        assertTrue(exception.getMessage().contains("099 This breathing space request is invalid on the referenced claim"));
+    }
+
+    @Test
+    public void shouldReturn400DefendantIsAlreadyInActiveBreathingSpace() {
+        wireMockServer.stubFor(WireMock.post(urlPathMatching("/breathingSpace"))
+                                   .withHeader("IDAMID", containing(IDAMID))
+                                   .withHeader("SDTREQUESTID", containing(SDT_REFERENCE))
+                                   .willReturn(aResponse()
+                                                   .withStatus(400)
+                                                   .withBody("""
+                                                                 {
+                                                                       "error": "Bad Request",
+                                                                       "message": "100 The defendant is already in active Breathing Space"
+                                                                 }
+                                                                 """)));
+
+        IIndividualRequest individualRequest = mock(IIndividualRequest.class);
+        String xmlContent = readXmlAsString(BREATHING_SPACE_XML);
+        setupMockBehaviour(BREATHING_SPACE, xmlContent, individualRequest);
+        SdtContext.getContext().setCustomerIdamId(IDAMID);
+        CMCException exception = assertThrows(CMCException.class, () ->
+            cmcConsumerGateway.individualRequest(individualRequest, connectionTimeOut, receiveTimeOut));
+        assertTrue(exception.getMessage().contains("100 The defendant is already in active Breathing Space"));
+    }
+
+    @Test
+    public void shouldReturn400DefendantIsNotCurrentlyInActiveBreathingSpace() {
+        wireMockServer.stubFor(WireMock.post(urlPathMatching("/breathingSpace"))
+                                   .withHeader("IDAMID", containing(IDAMID))
+                                   .withHeader("SDTREQUESTID", containing(SDT_REFERENCE))
+                                   .willReturn(aResponse()
+                                                   .withStatus(400)
+                                                   .withBody("""
+                                                                 {
+                                                                       "error": "Bad Request",
+                                                                       "message": "101 The defendant is not currently in active Breathing Space"
+                                                                 }
+                                                                 """)));
+
+        IIndividualRequest individualRequest = mock(IIndividualRequest.class);
+        String xmlContent = readXmlAsString(BREATHING_SPACE_XML);
+        setupMockBehaviour(BREATHING_SPACE, xmlContent, individualRequest);
+        SdtContext.getContext().setCustomerIdamId(IDAMID);
+        CMCException exception = assertThrows(CMCException.class, () ->
+            cmcConsumerGateway.individualRequest(individualRequest, connectionTimeOut, receiveTimeOut));
+        assertTrue(exception.getMessage().contains("101 The defendant is not currently in active Breathing Space"));
+    }
+
+    @Test
+    public void shouldReturn400IncorrectBreathingSpaceCeasingEventType() {
+        wireMockServer.stubFor(WireMock.post(urlPathMatching("/breathingSpace"))
+                                   .withHeader("IDAMID", containing(IDAMID))
+                                   .withHeader("SDTREQUESTID", containing(SDT_REFERENCE))
+                                   .willReturn(aResponse()
+                                                   .withStatus(400)
+                                                   .withBody("""
+                                                                 {
+                                                                       "error": "Bad Request",
+                                                                       "message": "102 Incorrect Breathing Space ceasing event type"
+                                                                 }
+                                                                 """)));
+
+        IIndividualRequest individualRequest = mock(IIndividualRequest.class);
+        String xmlContent = readXmlAsString(BREATHING_SPACE_XML);
+        setupMockBehaviour(BREATHING_SPACE, xmlContent, individualRequest);
+        SdtContext.getContext().setCustomerIdamId(IDAMID);
+        CMCException exception = assertThrows(CMCException.class, () ->
+            cmcConsumerGateway.individualRequest(individualRequest, connectionTimeOut, receiveTimeOut));
+        assertTrue(exception.getMessage().contains("102 Incorrect Breathing Space ceasing event type"));
+    }
+
+    @Test
+    public void shouldReturn400CaseOffline() {
+        wireMockServer.stubFor(WireMock.post(urlPathMatching("/breathingSpace"))
+                                   .withHeader("IDAMID", containing(IDAMID))
+                                   .withHeader("SDTREQUESTID", containing(SDT_REFERENCE))
+                                   .willReturn(aResponse()
+                                                   .withHeader(CONTENT_TYPE, APPLICATION_JSON_VALUE)
+                                                   .withStatus(400)
+                                                   .withBody("""
+                                                                 {
+                                                                       "error": "Bad Request",
+                                                                       "message": "200 Case Is Offline."
+                                                                 }
+                                                                 """)));
+
+        IIndividualRequest individualRequest = mock(IIndividualRequest.class);
+        String xmlContent = readXmlAsString(BREATHING_SPACE_XML);
+        setupMockBehaviour(BREATHING_SPACE, xmlContent, individualRequest);
+        SdtContext.getContext().setCustomerIdamId(IDAMID);
+        CaseOffLineException exception = assertThrows(CaseOffLineException.class, () ->
+            cmcConsumerGateway.individualRequest(individualRequest, connectionTimeOut, receiveTimeOut));
+        assertTrue(exception.getMessage().contains("200 Case Is Offline."));
+    }
+
+    @Test
+    public void shouldReturn400RequestAlreadyProcessed() {
+        wireMockServer.stubFor(WireMock.post(urlPathMatching("/breathingSpace"))
+                                   .withHeader("IDAMID", containing(IDAMID))
+                                   .withHeader("SDTREQUESTID", containing(SDT_REFERENCE))
+                                   .willReturn(aResponse()
+                                                   .withStatus(400)
+                                                   .withBody("""
+                                                                 {
+                                                                       "error": "Bad Request",
+                                                                       "message": "201 Request already processed"
+                                                                 }
+                                                                 """)));
+
+        IIndividualRequest individualRequest = mock(IIndividualRequest.class);
+        String xmlContent = readXmlAsString(BREATHING_SPACE_XML);
+        setupMockBehaviour(BREATHING_SPACE, xmlContent, individualRequest);
+        SdtContext.getContext().setCustomerIdamId(IDAMID);
+        CMCException exception = assertThrows(CMCException.class, () ->
+            cmcConsumerGateway.individualRequest(individualRequest, connectionTimeOut, receiveTimeOut));
+        assertTrue(exception.getMessage().contains("201 Request already processed"));
     }
 
     @Test
