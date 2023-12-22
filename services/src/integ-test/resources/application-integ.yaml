@@ -60,3 +60,6 @@ idam:
     password: ${IDAM_SDT_PASSWORD:Pa55word11}
   api:
     url: ${IDAM_API_URL:http://localhost:${wiremock.server.port:5000}}
+civil:
+  api:
+    url: ${CIVIL_API_URL:http://localhost:${wiremock.server.port:5000}}

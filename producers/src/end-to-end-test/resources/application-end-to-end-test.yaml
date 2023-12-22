@@ -53,3 +53,6 @@ systemPropertiesModeName: SYSTEM_PROPERTIES_MODE_OVERRIDE
 ignoreResourceNotFound: true
 ignoreUnresolvablePlaceholders: true
 
+civil:
+  api:
+    url: ${CIVIL_API_URL:http://localhost:${wiremock.server.port:5000}}
