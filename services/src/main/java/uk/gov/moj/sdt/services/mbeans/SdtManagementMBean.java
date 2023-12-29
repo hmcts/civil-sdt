@@ -202,6 +202,7 @@ public class SdtManagementMBean implements ISdtManagementMBean {
         // Loop through the list of the individual requests found.
         if (!individualRequests.isEmpty()) {
             for (IIndividualRequest individualRequest : individualRequests) {
+                individualRequest.setDeadLetter(false);
                 this.messagingUtility.enqueueRequest(individualRequest);
 
                 // Re-set the forwarding attempts on the individual request.

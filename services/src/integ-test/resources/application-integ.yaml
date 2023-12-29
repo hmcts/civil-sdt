@@ -50,6 +50,9 @@ sdt:
     commitInterval: ${PURGE_COMMIT_INTERVAL:1000}
   retry-send:
     cron: ${RETRY_SEND_CRON:0 0 * * * ?}
+  requeue:
+    cron: ${REQUEUE_SCHEDULE_CRON:0 */20 * * * ?}
+    minimumAge: ${MINIMUM_AGE:15}
 idam:
   s2s-auth:
     microservice: civil_sdt
