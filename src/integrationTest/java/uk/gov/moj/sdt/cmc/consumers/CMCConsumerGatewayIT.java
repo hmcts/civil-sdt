@@ -78,7 +78,7 @@ class CMCConsumerGatewayIT extends WireMockBaseTest {
     }
 
     @Test
-    public void shouldReturnSuccessOnJudgment() {
+    void shouldReturnSuccessOnJudgment() {
         IIndividualRequest individualRequest = mock(IIndividualRequest.class);
         String xmlContent = readXmlAsString(JUDGMENT_XML);
         setupMockBehaviour(JUDGMENT, xmlContent, individualRequest);
@@ -87,7 +87,7 @@ class CMCConsumerGatewayIT extends WireMockBaseTest {
     }
 
     @Test
-    public void shouldReturnSuccessOnBreathingSpace() {
+    void shouldReturnSuccessOnBreathingSpace() {
         wireMockServer.stubFor(WireMock.post(urlPathMatching("/breathingSpace"))
                                    .withHeader("IDAMID", containing(IDAMID_SUCCESS))
                                    .withHeader("SDTREQUESTID", containing(SDT_REFERENCE))
@@ -109,7 +109,7 @@ class CMCConsumerGatewayIT extends WireMockBaseTest {
     }
 
     @Test
-    public void shouldReturn400OnBreathingSpace001UnknownUser() {
+    void shouldReturn400OnBreathingSpace001UnknownUser() {
         wireMockServer.stubFor(WireMock.post(urlPathMatching("/breathingSpace"))
                                    .withHeader("IDAMID", containing(IDAMID))
                                    .withHeader("SDTREQUESTID", containing(SDT_REFERENCE))
@@ -133,7 +133,7 @@ class CMCConsumerGatewayIT extends WireMockBaseTest {
 
 
     @Test
-    public void shouldReturn400OnBreathingSpaceSpecifiedClaimDoesNotBelongToTheRequestingCustomer() {
+    void shouldReturn400OnBreathingSpaceSpecifiedClaimDoesNotBelongToTheRequestingCustomer() {
         wireMockServer.stubFor(WireMock.post(urlPathMatching("/breathingSpace"))
                                    .withHeader("IDAMID", containing(IDAMID))
                                    .withHeader("SDTREQUESTID", containing(SDT_REFERENCE))
@@ -156,7 +156,7 @@ class CMCConsumerGatewayIT extends WireMockBaseTest {
     }
 
     @Test
-    public void shouldReturn400OnBreathingSpaceDefendant2SpecifiedButThereIsOnly1Defendant() {
+    void shouldReturn400OnBreathingSpaceDefendant2SpecifiedButThereIsOnly1Defendant() {
         wireMockServer.stubFor(WireMock.post(urlPathMatching("/breathingSpace"))
                                    .withHeader("IDAMID", containing(IDAMID))
                                    .withHeader("SDTREQUESTID", containing(SDT_REFERENCE))
@@ -179,7 +179,7 @@ class CMCConsumerGatewayIT extends WireMockBaseTest {
     }
 
     @Test
-    public void shouldReturn400OnBreathingSpaceInvalidOnTheReferencedClaim() {
+    void shouldReturn400OnBreathingSpaceInvalidOnTheReferencedClaim() {
         wireMockServer.stubFor(WireMock.post(urlPathMatching("/breathingSpace"))
                                    .withHeader("IDAMID", containing(IDAMID))
                                    .withHeader("SDTREQUESTID", containing(SDT_REFERENCE))
@@ -202,7 +202,7 @@ class CMCConsumerGatewayIT extends WireMockBaseTest {
     }
 
     @Test
-    public void shouldReturn400DefendantIsAlreadyInActiveBreathingSpace() {
+    void shouldReturn400DefendantIsAlreadyInActiveBreathingSpace() {
         wireMockServer.stubFor(WireMock.post(urlPathMatching("/breathingSpace"))
                                    .withHeader("IDAMID", containing(IDAMID))
                                    .withHeader("SDTREQUESTID", containing(SDT_REFERENCE))
@@ -225,7 +225,7 @@ class CMCConsumerGatewayIT extends WireMockBaseTest {
     }
 
     @Test
-    public void shouldReturn400DefendantIsNotCurrentlyInActiveBreathingSpace() {
+    void shouldReturn400DefendantIsNotCurrentlyInActiveBreathingSpace() {
         wireMockServer.stubFor(WireMock.post(urlPathMatching("/breathingSpace"))
                                    .withHeader("IDAMID", containing(IDAMID))
                                    .withHeader("SDTREQUESTID", containing(SDT_REFERENCE))
@@ -248,7 +248,7 @@ class CMCConsumerGatewayIT extends WireMockBaseTest {
     }
 
     @Test
-    public void shouldReturn400IncorrectBreathingSpaceCeasingEventType() {
+    void shouldReturn400IncorrectBreathingSpaceCeasingEventType() {
         wireMockServer.stubFor(WireMock.post(urlPathMatching("/breathingSpace"))
                                    .withHeader("IDAMID", containing(IDAMID))
                                    .withHeader("SDTREQUESTID", containing(SDT_REFERENCE))
@@ -271,7 +271,7 @@ class CMCConsumerGatewayIT extends WireMockBaseTest {
     }
 
     @Test
-    public void shouldReturn400CaseOffline() {
+    void shouldReturn400CaseOffline() {
         wireMockServer.stubFor(WireMock.post(urlPathMatching("/breathingSpace"))
                                    .withHeader("IDAMID", containing(IDAMID))
                                    .withHeader("SDTREQUESTID", containing(SDT_REFERENCE))
@@ -295,7 +295,7 @@ class CMCConsumerGatewayIT extends WireMockBaseTest {
     }
 
     @Test
-    public void shouldReturn400RequestAlreadyProcessed() {
+    void shouldReturn400RequestAlreadyProcessed() {
         wireMockServer.stubFor(WireMock.post(urlPathMatching("/breathingSpace"))
                                    .withHeader("IDAMID", containing(IDAMID))
                                    .withHeader("SDTREQUESTID", containing(SDT_REFERENCE))
@@ -318,7 +318,7 @@ class CMCConsumerGatewayIT extends WireMockBaseTest {
     }
 
     @Test
-    public void shouldReturnSuccessOnClaimStatusUpdate() {
+    void shouldReturnSuccessOnClaimStatusUpdate() {
         IIndividualRequest individualRequest = mock(IIndividualRequest.class);
         String xmlContent = readXmlAsString(CLAIM_STATUS_UPDATE_XML);
         setupMockBehaviour(CLAIM_STATUS_UPDATE, xmlContent, individualRequest);
@@ -327,7 +327,7 @@ class CMCConsumerGatewayIT extends WireMockBaseTest {
     }
 
     @Test
-    public void shouldCreateClaim() {
+    void shouldCreateClaim() {
         IIndividualRequest individualRequest = mock(IIndividualRequest.class);
         String xmlContent = readXmlAsString(CLAIM_XML);
         setupMockBehaviour(CLAIM, xmlContent, individualRequest);
@@ -336,7 +336,7 @@ class CMCConsumerGatewayIT extends WireMockBaseTest {
     }
 
     @Test
-    public void shouldReturnSuccessOnWarrant() {
+    void shouldReturnSuccessOnWarrant() {
         IIndividualRequest individualRequest = mock(IIndividualRequest.class);
         String xmlContent = readXmlAsString(WARRANT_REQUEST_XML);
         setupMockBehaviour(WARRANT, xmlContent, individualRequest);
@@ -345,7 +345,7 @@ class CMCConsumerGatewayIT extends WireMockBaseTest {
     }
 
     @Test
-    public void shouldReturnSuccessOnJudgmentWarrant() {
+    void shouldReturnSuccessOnJudgmentWarrant() {
         IIndividualRequest individualRequest = mock(IIndividualRequest.class);
         String xmlContent = readXmlAsString(JUDGMENT_WARRANT_REQUEST_XML);
         setupMockBehaviour(JUDGMENT_WARRANT, xmlContent, individualRequest);
