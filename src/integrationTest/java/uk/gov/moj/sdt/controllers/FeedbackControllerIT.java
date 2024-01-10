@@ -15,7 +15,7 @@ import javax.inject.Inject;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class FeedbackControllerIT extends WireMockBaseTest {
+class FeedbackControllerIT extends WireMockBaseTest {
 
     private String CLAIM_ERROR = "Claim Error";
 

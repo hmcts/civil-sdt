@@ -35,7 +35,7 @@ import static uk.gov.moj.sdt.utils.cmc.RequestType.JUDGMENT;
 import static uk.gov.moj.sdt.utils.cmc.RequestType.JUDGMENT_WARRANT;
 import static uk.gov.moj.sdt.utils.cmc.RequestType.WARRANT;
 
-public class CMCConsumerGatewayIT extends WireMockBaseTest {
+class CMCConsumerGatewayIT extends WireMockBaseTest {
 
     @Inject
     private WebApplicationContext wac;
