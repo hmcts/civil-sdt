@@ -33,14 +33,14 @@ class FeedbackControllerIT extends WireMockBaseTest {
     private MockMvc mockMvc;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         super.initMock();
         mockMvc = MockMvcBuilders.webAppContextSetup(wac).build();
     }
 
     @Test
     @Sql(scripts = {"classpath:sql/IndividualRequestDaoTest.sql"})
-    public void shouldCreateClaim() throws Exception {
+    void shouldCreateClaim() throws Exception {
         mockMvc.perform(post(POST_CMC_URL)
                             .contentType(JSON_CONTENT_TYPE)
                             .content(MAPPER.writeValueAsBytes(createCmcFeedback()))
