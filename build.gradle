@@ -7,7 +7,7 @@ plugins {
   id 'java'
   id "io.freefair.lombok" version "8.4"
   id 'io.spring.dependency-management' version '1.1.4'
-  id 'com.github.ben-manes.versions' version '0.50.0'
+  id 'com.github.ben-manes.versions' version '0.51.0'
   id 'org.springframework.boot' version '2.7.18'
   id 'org.owasp.dependencycheck' version '9.0.9'
   id 'com.github.kt3k.coveralls' version '2.12.2'
@@ -165,7 +165,7 @@ ext {
   tomcatVersion = '9.0.85'
   cxfVersion = '3.6.2'
   jaxwsVersion = "2.3.1"
-  testcontainers = '1.19.3'
+  testcontainers = '1.19.4'
   sdtCommonVersion = '2.1.0'
   limits = [
     'instruction': 99,
@@ -315,7 +315,7 @@ allprojects {
     testImplementation group: 'org.jdom', name: 'jdom2', version: '2.0.6.1'
     testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: junitVersion
     testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-params', version: junitVersion
-    testImplementation group: 'org.mockito', name: 'mockito-inline', version: '3.12.4'
+    testImplementation group: 'org.mockito', name: 'mockito-inline', version: '5.2.0'
     testImplementation group: 'org.postgresql', name: 'postgresql', version: postgresqlVersion
     testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-activemq'
     testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', {
