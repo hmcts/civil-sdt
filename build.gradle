@@ -166,7 +166,7 @@ ext {
   cxfVersion = '3.6.2'
   jaxwsVersion = "2.3.1"
   testcontainers = '1.19.4'
-  sdtCommonVersion = '2.0.0'
+  sdtCommonVersion = '2.1.0'
   limits = [
     'instruction': 99,
     'branch'     : 99,
@@ -249,7 +249,6 @@ allprojects {
     implementation group: 'org.apache.cxf', name: 'cxf-spring-boot-starter-jaxws', version: cxfVersion
     implementation group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.14'
     implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: log4jVersion
-    implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: log4jVersion
     implementation group: 'org.apache.logging.log4j', name: 'log4j-to-slf4j', version: log4jVersion
     implementation group: 'org.apache.tomcat.embed', name: 'tomcat-embed-core', version: tomcatVersion
     implementation group: 'org.apache.tomcat.embed', name: 'tomcat-embed-el', version: tomcatVersion
