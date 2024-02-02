@@ -47,7 +47,7 @@ SELECT
     b_s.sdt_bulk_reference || ',' ||
     b_s.number_of_requests || ',' ||
     COUNT(1) || ',' ||
-    DECODE(b_s.number_of_requests, count(1), 'TRUE', 'FALSE')
+    DECODE(b_s.number_of_requests, count(1), 't', 'f')
 FROM
     sdt_owner.bulk_submissions    b_s,
     sdt_owner.individual_requests i_r
@@ -56,7 +56,7 @@ WHERE
 GROUP BY
     b_s.sdt_bulk_reference,
     b_s.number_of_requests
-ORDER BY 
+ORDER BY
     b_s.sdt_bulk_reference;
 SPOOL OFF;
 
