@@ -4,34 +4,24 @@
   <!--Please add all the false positives under the below section-->
   <suppress>
     <notes>False Positives
-      CVE-2016-3094 - affected class is PlainSaslServer.java, which qpid-jms-client does not have
       CVE-2022-1471 - SnakeYaml's Constructor() class does not restrict types which can be instantiated during deserialization, spring uses SafeConstructor which is the recommended workaround
-      CVE-2022-40705 - see https://github.com/jeremylong/DependencyCheck/issues/5543
-      CVE-2022-45688 - A stack overflow in the XML.toJSONObject component of hutool-json, hutool is not in the dependencies list when ./gradlew dependencies is run
-      CVE-2023-34411
       CVE-2023-35116 - Not believed to be a valid vulnerability - see https://github.com/FasterXML/jackson-databind/issues/3972
+      CVE-2023-36414 - This CVE only refers to the .NET Azure Identity SDK up to version 1.10.2. DependencyCheck appears to be matching incorrectly against azure-identity-extensions and ignoring the language version - see https://github.com/jeremylong/DependencyCheck/issues/6334
+      CVE-2023-36415 - This CVE only refers to the Azure Identity SDK and only up to version 1.10.2 of the Java version of it. DependencyCheck appears to be matching incorrectly against azure-identity-extensions and incorrectly flagging azure-identity as being affected, even though a non-vulnerable version is being used - see https://github.com/jeremylong/DependencyCheck/issues/5992
     </notes>
-    <cve>CVE-2016-3094</cve>
     <cve>CVE-2022-1471</cve>
-    <cve>CVE-2022-40705</cve>
-    <cve>CVE-2022-45688</cve>
-    <cve>CVE-2023-34411</cve>
     <cve>CVE-2023-35116</cve>
+    <cve>CVE-2023-36414</cve>
+    <cve>CVE-2023-36415</cve>
   </suppress>
   <!--End of false positives section -->
 
   <!--Please add all the temporary suppression under the below section-->
   <suppress>
     <notes>Temporary Suppressions
-      CVE-2023-4586
       CVE-2023-36052
-      CVE-2023-36414 - Still flagged despite azure-identity-extensions dependency constraint
-      CVE-2023-36415 - Still flagged despite azure-identity-extensions dependency constraint
     </notes>
-    <cve>CVE-2023-4586</cve>
     <cve>CVE-2023-36052</cve>
-    <cve>CVE-2023-36414</cve>
-    <cve>CVE-2023-36415</cve>
   </suppress>
   <!--End of temporary suppression section -->
 

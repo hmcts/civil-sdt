@@ -180,7 +180,7 @@ class IndividualRequestDaoTest extends AbstractIntegrationTest {
         final List<IIndividualRequest> individualRequests = individualRequestDao.getStaleIndividualRequests(720);
 
         assertNotNull(individualRequests);
-        assertEquals(2, individualRequests.size(), "The individual requests size is not correct");
+        assertEquals(3, individualRequests.size(), "The individual requests size is not correct");
     }
 
     /**

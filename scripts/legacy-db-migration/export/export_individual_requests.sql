@@ -1,4 +1,4 @@
-SET LINESIZE 1000;
+SET LINESIZE 5000;
 SET TRIMSPOOL ON;
 SET HEADING OFF;
 SET PAGESIZE 0;
@@ -19,7 +19,7 @@ SELECT      ir.individual_request_id || ','
          || TO_CHAR(ir.completed_date, 'YYYY-MM-DD HH24:MI:SS.FF') || ','
          || ir.forwarding_attempts || ','
          || DECODE(ir.dead_letter, NULL, '', '"' || REPLACE(ir.dead_letter, '"', '""') || '"') || ','
-         || DECODE(ir.internal_system_error, NULL, '', '"' || REPLACE(ir.internal_system_error, '"', '""') || '"') || ','
+         || DECODE(ir.internal_system_error, NULL, '', '"' || REPLACE(REPLACE(ir.internal_system_error, CHR(10), ' '), '"', '""') || '"') || ','
          || DECODE(ir.request_type, NULL, '', '"' || REPLACE(ir.request_type, '"', '""') || '"') || ','
          || ir.version_number || ','
          || ',' -- Exclude individual_payload BLOB column
