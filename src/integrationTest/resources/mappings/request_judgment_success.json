@@ -1,0 +1,14 @@
+{
+  "request": {
+    "method": "POST",
+    "url": "/requestJudgment"
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "jsonBody": {
+    }
+  }
+}
