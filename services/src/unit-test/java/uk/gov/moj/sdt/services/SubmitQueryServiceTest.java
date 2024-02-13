@@ -417,6 +417,7 @@ class SubmitQueryServiceTest extends AbstractSdtUnitTestBase {
         cmcClaimDefencesResults.add(cmcClaimDefencesResult);
         SubmitQueryResponse cmcSubmitQueryResponse = new SubmitQueryResponse();
         cmcSubmitQueryResponse.setClaimDefencesResults(cmcClaimDefencesResults);
+        cmcSubmitQueryResponse.setClaimDefencesResultsCount(cmcClaimDefencesResults.size());
 
         when(mockCmcConsumerGateway.submitQuery(submitQueryRequest, 1000, 12000))
             .thenReturn(cmcSubmitQueryResponse);
@@ -490,6 +491,7 @@ class SubmitQueryServiceTest extends AbstractSdtUnitTestBase {
         SubmitQueryResponse noCmcClaimDefencesResponse = new SubmitQueryResponse();
         List<ClaimDefencesResult> claimDefencesResults = new ArrayList<>();
         noCmcClaimDefencesResponse.setClaimDefencesResults(claimDefencesResults);
+        noCmcClaimDefencesResponse.setClaimDefencesResultsCount(claimDefencesResults.size());
 
         return Stream.of(
             arguments(nullCmcClaimDefencesResponse),
