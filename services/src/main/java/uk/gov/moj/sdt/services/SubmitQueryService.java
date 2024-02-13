@@ -442,7 +442,7 @@ public class SubmitQueryService implements ISubmitQueryService {
             if (null != cmcSubmitQueryResponse && null != cmcSubmitQueryResponse.getClaimDefencesResults() &&
                 !cmcSubmitQueryResponse.getClaimDefencesResults().isEmpty()) {
                 submitQueryRequest.setResultCount(submitQueryRequest.getResultCount()
-                                                      + cmcSubmitQueryResponse.getClaimDefencesResults().size());
+                                                      + cmcSubmitQueryResponse.getClaimDefencesResultsCount());
                 summaryResultsXML =
                     responsesSummaryUtil.getSummaryResults(mcolSubmitQueryResponse,
                                                            cmcSubmitQueryResponse.getClaimDefencesResults());

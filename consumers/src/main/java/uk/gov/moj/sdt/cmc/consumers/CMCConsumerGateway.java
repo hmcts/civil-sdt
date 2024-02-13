@@ -1,7 +1,6 @@
 package uk.gov.moj.sdt.cmc.consumers;
 
-import java.nio.charset.StandardCharsets;
-
+import feign.FeignException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +30,8 @@ import uk.gov.moj.sdt.cmc.consumers.response.judgement.JudgementResponse;
 import uk.gov.moj.sdt.consumers.api.IConsumerGateway;
 import uk.gov.moj.sdt.consumers.exception.OutageException;
 import uk.gov.moj.sdt.consumers.exception.TimeoutException;
+import uk.gov.moj.sdt.domain.ErrorLog;
+import uk.gov.moj.sdt.domain.api.IErrorLog;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.domain.api.ISubmitQueryRequest;
 import uk.gov.moj.sdt.idam.IdamRepository;
@@ -41,6 +42,9 @@ import uk.gov.moj.sdt.utils.cmc.RequestType;
 import uk.gov.moj.sdt.utils.cmc.exception.CMCException;
 import uk.gov.moj.sdt.utils.cmc.exception.CaseOffLineException;
 import uk.gov.moj.sdt.utils.cmc.xml.XmlElementValueReader;
+import uk.gov.moj.sdt.ws._2013.sdt.baseschema.StatusCodeType;
+
+import java.nio.charset.StandardCharsets;
 
 import static uk.gov.moj.sdt.utils.cmc.exception.CMCExceptionMessages.CASE_OFF_LINE;
 
@@ -164,15 +168,21 @@ public class CMCConsumerGateway implements IConsumerGateway {
         String xmlContent = SdtContext.getContext().getRawOutXml();
         String fromDate = xmlElementValueReader.getElementValue(xmlContent, FROM_DATE);
         String toDate = xmlElementValueReader.getElementValue(xmlContent, TO_DATE);
-        ClaimDefencesResponse response = claimDefences.claimDefences(idamRepository.getSdtSystemUserAccessToken(),
-                                                                     s2SRepository.getS2SToken(),
-                                                                     SdtContext.getContext().getCustomerIdamId(),
-                                                                     fromDate,
-                                                                     toDate);
-
         SubmitQueryResponse submitQueryResponse = new SubmitQueryResponse();
-        submitQueryResponse.setClaimDefencesResults(response.getResults());
-        submitQueryResponse.setClaimDefencesResultsCount(response.getResultCount());
+        try {
+            ClaimDefencesResponse response = claimDefences.claimDefences(idamRepository.getSdtSystemUserAccessToken(),
+                                                                         s2SRepository.getS2SToken(),
+                                                                         SdtContext.getContext().getCustomerIdamId(),
+                                                                         fromDate,
+                                                                         toDate);
+            submitQueryResponse.setClaimDefencesResults(response.getResults());
+            submitQueryResponse.setClaimDefencesResultsCount(response.getResultCount());
+            submitQueryRequest.setErrorLog(null);
+            submitQueryRequest.setStatus(StatusCodeType.OK.value());
+        } catch (FeignException e) {
+            final IErrorLog errorLog = new ErrorLog(String.valueOf(e.status()), e.getMessage());
+            submitQueryRequest.reject(errorLog);
+        }
 
         return submitQueryResponse;
     }
