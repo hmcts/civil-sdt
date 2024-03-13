@@ -433,7 +433,8 @@ public class SubmitQueryService implements ISubmitQueryService {
         SubmitQueryResponse mcolSubmitQueryResponse =
             requestConsumer.submitQuery(submitQueryRequest, connectionTimeOut, requestTimeOut);
 
-        if (Boolean.TRUE.equals(submitQueryRequest.getBulkCustomer().getReadyForAlternateService())) {
+        if (!maximumResultCountReached(submitQueryRequest)
+            && Boolean.TRUE.equals(submitQueryRequest.getBulkCustomer().getReadyForAlternateService())) {
             SubmitQueryResponse cmcSubmitQueryResponse =
                 cmcRequestConsumer.submitQuery(submitQueryRequest, connectionTimeOut, requestTimeOut);
 
@@ -451,6 +452,11 @@ public class SubmitQueryService implements ISubmitQueryService {
                 SdtContext.getContext().setClaimDefencesSummaryResultsXml(summaryResultsXML);
             }
         }
+    }
+
+    private boolean maximumResultCountReached(ISubmitQueryRequest submitQueryRequest) {
+        return submitQueryRequest.hasError()
+            && submitQueryRequest.getErrorLog().getErrorCode().equalsIgnoreCase("78");
     }
 
     /**
