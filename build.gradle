@@ -257,7 +257,7 @@ allprojects {
     implementation group: 'org.glassfish', name: 'jakarta.el', version: '4.0.2'
     implementation group: 'org.hibernate', name: 'hibernate-validator', version: '7.0.5.Final'
     implementation group: 'org.postgresql', name: 'postgresql', version: postgresqlVersion
-    implementation group: 'org.springdoc', name: 'springdoc-openapi-ui', version: '1.7.0'
+    implementation group: 'org.springdoc', name: 'springdoc-openapi-ui', version: '1.8.0'
     implementation group: 'org.springframework', name: 'spring-jms'
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-actuator'
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-aop'
