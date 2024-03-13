@@ -163,7 +163,7 @@ ext {
   restAssuredVersion = '4.3.0!!'
   springCloudVersion = '2021.0.9'
   tomcatVersion = '9.0.86'
-  cxfVersion = '3.6.2'
+  cxfVersion = '3.6.3'
   jaxwsVersion = "2.3.1"
   testcontainers = '1.19.7'
   sdtCommonVersion = '2.1.1'
