@@ -1,16 +1,7 @@
 package uk.gov.moj.sdt.cmc.consumers;
 
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Locale;
-
 import com.google.common.collect.Lists;
+import feign.FeignException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -40,6 +31,7 @@ import uk.gov.moj.sdt.cmc.consumers.response.ProcessingStatus;
 import uk.gov.moj.sdt.cmc.consumers.response.WarrantResponse;
 import uk.gov.moj.sdt.cmc.consumers.response.judgement.JudgementResponse;
 import uk.gov.moj.sdt.domain.IndividualRequest;
+import uk.gov.moj.sdt.domain.SubmitQueryRequest;
 import uk.gov.moj.sdt.domain.api.IBulkCustomer;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.domain.api.ISubmitQueryRequest;
@@ -51,6 +43,18 @@ import uk.gov.moj.sdt.utils.cmc.RequestType;
 import uk.gov.moj.sdt.utils.cmc.exception.CMCException;
 import uk.gov.moj.sdt.utils.cmc.exception.CaseOffLineException;
 import uk.gov.moj.sdt.utils.cmc.xml.XmlElementValueReader;
+import uk.gov.moj.sdt.ws._2013.sdt.baseschema.StatusCodeType;
+
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
+import javax.xml.soap.SOAPException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -369,6 +373,36 @@ class CMCConsumerGatewayTest {
 
         verify(xmlToObject).convertXmlToObject("", BreathingSpaceRequest.class);
         verify(breathingSpace).breathingSpace(null, SDT_REFERENCE, breathingSpaceRequest);
+    }
+
+    /**
+     * Test to verify submit query consumer does throw Feign exception.
+     * But returns response with status code and error message from Feign Exception
+     *
+     * @throws feign.FeignException exception
+     */
+    @Test
+    void shouldGetResponseWithHttpStatusAndExceptionMessageWhenFeignExceptionThrown() throws SOAPException {
+        ISubmitQueryRequest submitQueryRequest = new SubmitQueryRequest();
+        ITargetApplication targetApplication = mock(ITargetApplication.class);
+        submitQueryRequest.setTargetApplication(targetApplication);
+        IBulkCustomer iBulkCustomer = mock(IBulkCustomer.class);
+        submitQueryRequest.setBulkCustomer(iBulkCustomer);
+        when(iBulkCustomer.getSdtCustomerId()).thenReturn(123567L);
+        when(targetApplication.getTargetApplicationCode()).thenReturn("Code");
+        when(xmlElementValueReader.getElementValue(any(), any())).thenReturn("2021-01-22");
+
+        FeignException feignException = mock(FeignException.class);
+        when(feignException.status()).thenReturn(400);
+        when(feignException.getMessage()).thenReturn("Error Processing Claim Defences Query");
+        when(claimDefences.claimDefences(any(), any(), any(), anyString(), anyString())).thenThrow(feignException);
+        SubmitQueryResponse submitQueryResponse =
+            cmcConsumerGateway.submitQuery(submitQueryRequest, 1000, 1000);
+
+        assertNotNull(submitQueryResponse);
+        assertEquals(StatusCodeType.ERROR.value(), submitQueryRequest.getStatus());
+        assertEquals(String.valueOf(400), submitQueryRequest.getErrorLog().getErrorCode());
+        assertEquals("Error Processing Claim Defences Query", submitQueryRequest.getErrorLog().getErrorText());
     }
 
     private Date formattedDate() throws ParseException {
