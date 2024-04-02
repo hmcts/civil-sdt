@@ -231,7 +231,7 @@ allprojects {
     implementation group: 'com.vladmihalcea', name: 'hibernate-types-52', version: '2.21.1'
     implementation group: 'com.zaxxer', name: 'HikariCP', version: '4.0.3'
     implementation group: 'commons-collections', name: 'commons-collections', version: '3.2.2'
-    implementation group: 'commons-io', name: 'commons-io', version: '2.15.1'
+    implementation group: 'commons-io', name: 'commons-io', version: '2.16.0'
     implementation(group: 'io.rest-assured', name: 'rest-assured') {
       exclude group: 'com.github.tomakehurst', module: 'wiremock-standalone'
       exclude group: 'commons-beanutils', module: 'commons-beanutils'
