@@ -36,7 +36,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import uk.gov.moj.sdt.response.SubmitQueryResponse;
 import uk.gov.moj.sdt.cmc.consumers.util.ResponsesSummaryUtil;
 import uk.gov.moj.sdt.consumers.api.IConsumerGateway;
 import uk.gov.moj.sdt.consumers.exception.OutageException;
@@ -51,6 +50,7 @@ import uk.gov.moj.sdt.domain.api.IErrorMessage;
 import uk.gov.moj.sdt.domain.api.IGlobalParameter;
 import uk.gov.moj.sdt.domain.api.ISubmitQueryRequest;
 import uk.gov.moj.sdt.domain.cache.api.ICacheable;
+import uk.gov.moj.sdt.response.SubmitQueryResponse;
 import uk.gov.moj.sdt.services.api.ISubmitQueryService;
 import uk.gov.moj.sdt.services.utils.GenericXmlParser;
 import uk.gov.moj.sdt.utils.SdtContext;
@@ -433,30 +433,22 @@ public class SubmitQueryService implements ISubmitQueryService {
         SubmitQueryResponse mcolSubmitQueryResponse =
             requestConsumer.submitQuery(submitQueryRequest, connectionTimeOut, requestTimeOut);
 
-        if (!maximumResultCountReached(submitQueryRequest)
-            && Boolean.TRUE.equals(submitQueryRequest.getBulkCustomer().getReadyForAlternateService())) {
-            SubmitQueryResponse cmcSubmitQueryResponse =
-                cmcRequestConsumer.submitQuery(submitQueryRequest, connectionTimeOut, requestTimeOut);
+        SubmitQueryResponse cmcSubmitQueryResponse =
+            cmcRequestConsumer.submitQuery(submitQueryRequest, connectionTimeOut, requestTimeOut);
 
-            // adjust results count
-            String summaryResultsXML = "";
-            if (null != cmcSubmitQueryResponse && null != cmcSubmitQueryResponse.getClaimDefencesResults() &&
-                !cmcSubmitQueryResponse.getClaimDefencesResults().isEmpty()) {
-                submitQueryRequest.setResultCount(submitQueryRequest.getResultCount()
-                                                      + cmcSubmitQueryResponse.getClaimDefencesResultsCount());
-                summaryResultsXML =
-                    responsesSummaryUtil.getSummaryResults(mcolSubmitQueryResponse,
-                                                           cmcSubmitQueryResponse.getClaimDefencesResults());
+        // adjust results count
+        String summaryResultsXML = "";
+        if (null != cmcSubmitQueryResponse && null != cmcSubmitQueryResponse.getClaimDefencesResults() &&
+            !cmcSubmitQueryResponse.getClaimDefencesResults().isEmpty()) {
+            submitQueryRequest.setResultCount(submitQueryRequest.getResultCount()
+                                                  + cmcSubmitQueryResponse.getClaimDefencesResultsCount());
+            summaryResultsXML =
+                responsesSummaryUtil.getSummaryResults(mcolSubmitQueryResponse,
+                                                       cmcSubmitQueryResponse.getClaimDefencesResults());
 
-                // Set summary results XML to be picked up later
-                SdtContext.getContext().setClaimDefencesSummaryResultsXml(summaryResultsXML);
-            }
+            // Set summary results XML to be picked up later
+            SdtContext.getContext().setClaimDefencesSummaryResultsXml(summaryResultsXML);
         }
-    }
-
-    private boolean maximumResultCountReached(ISubmitQueryRequest submitQueryRequest) {
-        return submitQueryRequest.hasError()
-            && submitQueryRequest.getErrorLog().getErrorCode().equalsIgnoreCase("78");
     }
 
     /**

@@ -55,6 +55,7 @@ public class CMCConsumerGateway implements IConsumerGateway {
     private static final Logger LOGGER = LoggerFactory.getLogger(CMCConsumerGateway.class);
     public static final String FROM_DATE = "fromDate";
     public static final String TO_DATE = "toDate";
+    public static final String MAX_RESULTS = "78";
 
     private IBreathingSpaceService breathingSpace;
     private IClaimStatusUpdateService claimStatusUpdate;
@@ -175,16 +176,29 @@ public class CMCConsumerGateway implements IConsumerGateway {
                                                                          SdtContext.getContext().getCustomerIdamId(),
                                                                          fromDate,
                                                                          toDate);
-            submitQueryResponse.setClaimDefencesResults(response.getResults());
-            submitQueryResponse.setClaimDefencesResultsCount(response.getResultCount());
-            submitQueryRequest.setErrorLog(null);
-            submitQueryRequest.setStatus(StatusCodeType.OK.value());
+            updateResponseStatus(submitQueryRequest, submitQueryResponse, response);
         } catch (FeignException e) {
             final IErrorLog errorLog = new ErrorLog(String.valueOf(e.status()), e.getMessage());
             submitQueryRequest.reject(errorLog);
         }
 
         return submitQueryResponse;
+    }
+
+    private void updateResponseStatus(ISubmitQueryRequest submitQueryRequest,
+                                      SubmitQueryResponse submitQueryResponse,
+                                      ClaimDefencesResponse response) {
+        submitQueryResponse.setClaimDefencesResults(response.getResults());
+        if (!maximumResultCountReached(submitQueryRequest)) {
+            submitQueryResponse.setClaimDefencesResultsCount(response.getResultCount());
+            submitQueryRequest.setErrorLog(null);
+            submitQueryRequest.setStatus(StatusCodeType.OK.value());
+        }
+    }
+
+    private boolean maximumResultCountReached(ISubmitQueryRequest submitQueryRequest) {
+        return submitQueryRequest.hasError()
+            && submitQueryRequest.getErrorLog().getErrorCode().equalsIgnoreCase(MAX_RESULTS);
     }
 
 }

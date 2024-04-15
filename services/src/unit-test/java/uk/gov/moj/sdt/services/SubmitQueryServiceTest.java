@@ -531,7 +531,7 @@ class SubmitQueryServiceTest extends AbstractSdtUnitTestBase {
         verify(mockGlobalParamCache).getValue(IGlobalParameter.class, TARGET_APP_TIMEOUT);
         verify(mockGlobalParamCache).getValue(IGlobalParameter.class, TARGET_APP_RESP_TIMEOUT);
         verify(mockConsumerGateway).submitQuery(submitQueryRequest, 1000, 12000);
-        verify(mockCmcConsumerGateway, times(0)).submitQuery(submitQueryRequest, 1000, 12000);
+        verify(mockCmcConsumerGateway).submitQuery(submitQueryRequest, 1000, 12000);
         verify(mockResponsesSummaryUtil, never()).getSummaryResults(any(), any());
     }
 
