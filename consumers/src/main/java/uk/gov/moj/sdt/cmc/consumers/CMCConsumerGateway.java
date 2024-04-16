@@ -55,7 +55,9 @@ public class CMCConsumerGateway implements IConsumerGateway {
     private static final Logger LOGGER = LoggerFactory.getLogger(CMCConsumerGateway.class);
     public static final String FROM_DATE = "fromDate";
     public static final String TO_DATE = "toDate";
-    public static final String MAX_RESULTS = "78";
+    private static final String MAX_RESULTS = "78";
+    private static final int NO_DATA = 77;
+    private static final int NOT_FOUND = 404;
 
     private IBreathingSpaceService breathingSpace;
     private IClaimStatusUpdateService claimStatusUpdate;
@@ -178,8 +180,11 @@ public class CMCConsumerGateway implements IConsumerGateway {
                                                                          toDate);
             updateResponseStatus(submitQueryRequest, submitQueryResponse, response);
         } catch (FeignException e) {
-            final IErrorLog errorLog = new ErrorLog(String.valueOf(e.status()), e.getMessage());
-            submitQueryRequest.reject(errorLog);
+            boolean noResults = NO_DATA == e.status() || NOT_FOUND == e.status();
+            if (!noResults) {
+                final IErrorLog errorLog = new ErrorLog(String.valueOf(e.status()), e.getMessage());
+                submitQueryRequest.reject(errorLog);
+            }
         }
 
         return submitQueryResponse;

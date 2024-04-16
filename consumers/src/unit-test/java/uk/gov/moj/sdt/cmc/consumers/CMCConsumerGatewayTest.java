@@ -463,6 +463,53 @@ class CMCConsumerGatewayTest {
         assertEquals(StatusCodeType.OK.value(), submitQueryRequest.getStatus());
     }
 
+    @Test
+    void shouldNotUpdateErrorStatusWhenNoResultsReturned() {
+        ISubmitQueryRequest submitQueryRequest = new SubmitQueryRequest();
+        ITargetApplication targetApplication = mock(ITargetApplication.class);
+        submitQueryRequest.setTargetApplication(targetApplication);
+        IBulkCustomer iBulkCustomer = mock(IBulkCustomer.class);
+        submitQueryRequest.setBulkCustomer(iBulkCustomer);
+        submitQueryRequest.setErrorLog(null);
+        when(iBulkCustomer.getSdtCustomerId()).thenReturn(123567L);
+        when(targetApplication.getTargetApplicationCode()).thenReturn("Code");
+        when(xmlElementValueReader.getElementValue(any(), any())).thenReturn("2021-01-22");
+
+        FeignException feignException = mock(FeignException.class);
+        when(feignException.status()).thenReturn(77);
+        when(claimDefences.claimDefences(any(), any(), any(), anyString(), anyString())).thenThrow(feignException);
+        SubmitQueryResponse submitQueryResponse =
+            cmcConsumerGateway.submitQuery(submitQueryRequest, 1000, 1000);
+
+        assertNotNull(submitQueryResponse);
+        assertNull(submitQueryRequest.getErrorLog());
+    }
+
+    @Test
+    void shouldUpdateStatusWhenResultsReturned() {
+        ISubmitQueryRequest submitQueryRequest = new SubmitQueryRequest();
+        ITargetApplication targetApplication = mock(ITargetApplication.class);
+        submitQueryRequest.setTargetApplication(targetApplication);
+        IBulkCustomer iBulkCustomer = mock(IBulkCustomer.class);
+        submitQueryRequest.setBulkCustomer(iBulkCustomer);
+        submitQueryRequest.setErrorLog(null);
+        when(iBulkCustomer.getSdtCustomerId()).thenReturn(123567L);
+        when(targetApplication.getTargetApplicationCode()).thenReturn("Code");
+        when(xmlElementValueReader.getElementValue(any(), any())).thenReturn("2021-01-22");
+
+        FeignException feignException = mock(FeignException.class);
+        when(feignException.status()).thenReturn(400);
+        when(feignException.getMessage()).thenReturn("Error processing claim request");
+        when(claimDefences.claimDefences(any(), any(), any(), anyString(), anyString())).thenThrow(feignException);
+        SubmitQueryResponse submitQueryResponse =
+            cmcConsumerGateway.submitQuery(submitQueryRequest, 1000, 1000);
+
+        assertNotNull(submitQueryResponse);
+        assertNotNull(submitQueryRequest.getErrorLog());
+        assertEquals("400", submitQueryRequest.getErrorLog().getErrorCode());
+        assertEquals("Error processing claim request", submitQueryRequest.getErrorLog().getErrorText());
+    }
+
     private Date formattedDate() throws ParseException {
         SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy", Locale.ENGLISH);
         String date = formatter.format(Calendar.getInstance().getTime());
