@@ -201,15 +201,7 @@ dependencyManagement {
     mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
   }
   dependencies {
-    // CVE-2023-24998
-    dependencySet(group: 'commons-fileupload', version: '1.5') {
-      entry 'commons-fileupload'
-    }
-    dependencySet(group: 'org.apache.tomcat.embed', version: tomcatVersion) {
-      entry 'tomcat-embed-core'
-      entry 'tomcat-embed-el'
-      entry 'tomcat-embed-websocket'
-    }
+
   }
 }
 
@@ -375,22 +367,7 @@ subprojects { subproject ->
   apply plugin: 'uk.gov.hmcts.java'
   apply plugin: 'io.freefair.lombok'
 
-  dependencyManagement {
-    imports {
-      mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
-    }
-    dependencies {
-      // CVE-2023-24998
-      dependencySet(group: 'commons-fileupload', version: '1.5') {
-        entry 'commons-fileupload'
-      }
-      dependencySet(group: 'org.apache.tomcat.embed', version: tomcatVersion) {
-        entry 'tomcat-embed-core'
-        entry 'tomcat-embed-el'
-        entry 'tomcat-embed-websocket'
-      }
-    }
-  }
+
 
   dependencies {
     implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign'
