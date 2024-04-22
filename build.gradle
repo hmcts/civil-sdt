@@ -196,22 +196,6 @@ ext['logback.version'] = '1.2.13'
 ext['hibernate-validator.version'] = '6.0.20.Final'
 ext['activemq.version'] = '5.18.3'
 
-dependencyManagement {
-  imports {
-    mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
-  }
-  dependencies {
-    // CVE-2023-24998
-    dependencySet(group: 'commons-fileupload', version: '1.5') {
-      entry 'commons-fileupload'
-    }
-    dependencySet(group: 'org.apache.tomcat.embed', version: tomcatVersion) {
-      entry 'tomcat-embed-core'
-      entry 'tomcat-embed-el'
-      entry 'tomcat-embed-websocket'
-    }
-  }
-}
 
 allprojects {
   group 'uk.gov.hmcts.civil.sdt'
@@ -378,17 +362,6 @@ subprojects { subproject ->
   dependencyManagement {
     imports {
       mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
-    }
-    dependencies {
-      // CVE-2023-24998
-      dependencySet(group: 'commons-fileupload', version: '1.5') {
-        entry 'commons-fileupload'
-      }
-      dependencySet(group: 'org.apache.tomcat.embed', version: tomcatVersion) {
-        entry 'tomcat-embed-core'
-        entry 'tomcat-embed-el'
-        entry 'tomcat-embed-websocket'
-      }
     }
   }
 
