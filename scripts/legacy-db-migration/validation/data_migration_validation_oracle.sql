@@ -66,8 +66,8 @@ SELECT
     b_c.bulk_customer_id || ',' ||
     COUNT(1)
 FROM
-   sdt_owner.bulk_submissions b_s,
-   sdt_owner.bulk_customers   b_c
+    sdt_owner.bulk_submissions b_s,
+    sdt_owner.bulk_customers   b_c
 WHERE
     b_c.bulk_customer_id = b_s.bulk_customer_id
 GROUP BY
@@ -82,7 +82,7 @@ SELECT
     b_c.bulk_customer_id || ',' ||
     COUNT(1)
 FROM
-   sdt_owner.bulk_customer_applications   b_c_a,
+    sdt_owner.bulk_customer_applications   b_c_a,
     sdt_owner.bulk_customers               b_c
 WHERE
     b_c.bulk_customer_id = b_c_a.bulk_customer_id
@@ -154,4 +154,42 @@ GROUP BY
     t_a.target_application_id
 ORDER BY
     t_a.target_application_id;
+SPOOL OFF;
+
+-----------------------------------------
+-- COMPARE ERROR LOG IDS
+-----------------------------------------
+SPOOL 'validation_ir_error_log_id_oracle.csv';
+SELECT
+    ir.individual_request_id || ',' ||
+    MAX(el.error_log_id)
+FROM
+    sdt_owner.individual_requests ir,
+    sdt_owner.error_logs el
+WHERE
+    ir.individual_request_id = el.individual_request_id
+GROUP BY
+    ir.individual_request_id
+ORDER BY
+    ir.individual_request_id;
+SPOOL OFF;
+
+-----------------------------------------
+-- COMPARE SEQUENCE VALUES
+-----------------------------------------
+SPOOL 'validation_sequences_oracle.txt';
+SELECT
+(SELECT 'BULK_CUST_APP_SEQ' || ',' || s.last_number FROM all_sequences s WHERE s.sequence_owner = 'SDT_OWNER' AND s.sequence_name = 'BULK_CUST_APP_SEQ'),
+(SELECT 'BULK_CUST_SEQ' || ',' || s.last_number FROM all_sequences s WHERE s.sequence_owner = 'SDT_OWNER' AND s.sequence_name = 'BULK_CUST_SEQ'),
+(SELECT 'BULK_SUB_SEQ' || ',' || s.last_number FROM all_sequences s WHERE s.sequence_owner = 'SDT_OWNER' AND s.sequence_name = 'BULK_SUB_SEQ'),
+(SELECT 'ERR_LOG_SEQ' || ',' || s.last_number FROM all_sequences s WHERE s.sequence_owner = 'SDT_OWNER' AND s.sequence_name = 'ERR_LOG_SEQ'),
+(SELECT 'ERR_MESG_SEQ' || ',' || s.last_number FROM all_sequences s WHERE s.sequence_owner = 'SDT_OWNER' AND s.sequence_name = 'ERR_MESG_SEQ'),
+(SELECT 'GLB_PAR_SEQ' || ',' || s.last_number FROM all_sequences s WHERE s.sequence_owner = 'SDT_OWNER' AND s.sequence_name = 'GLB_PAR_SEQ'),
+(SELECT 'IND_REQ_SEQ' || ',' || s.last_number FROM all_sequences s WHERE s.sequence_owner = 'SDT_OWNER' AND s.sequence_name = 'IND_REQ_SEQ'),
+(SELECT 'SDT_REF_SEQ' || ',' || s.last_number FROM all_sequences s WHERE s.sequence_owner = 'SDT_OWNER' AND s.sequence_name = 'SDT_REF_SEQ'),
+(SELECT 'SER_ROU_SEQ' || ',' || s.last_number FROM all_sequences s WHERE s.sequence_owner = 'SDT_OWNER' AND s.sequence_name = 'SER_ROU_SEQ'),
+(SELECT 'SER_TYP_SEQ' || ',' || s.last_number FROM all_sequences s WHERE s.sequence_owner = 'SDT_OWNER' AND s.sequence_name = 'SER_TYP_SEQ'),
+(SELECT 'SRV_REQ_SEQ' || ',' || s.last_number FROM all_sequences s WHERE s.sequence_owner = 'SDT_OWNER' AND s.sequence_name = 'SRV_REQ_SEQ'),
+(SELECT 'TAR_APP_SEQ' || ',' || s.last_number FROM all_sequences s WHERE s.sequence_owner = 'SDT_OWNER' AND s.sequence_name = 'TAR_APP_SEQ')
+FROM DUAL;
 SPOOL OFF;
