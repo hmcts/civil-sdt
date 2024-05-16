@@ -183,13 +183,8 @@ SELECT
 (SELECT 'BULK_CUST_SEQ' || ',' || s.last_number FROM all_sequences s WHERE s.sequence_owner = 'SDT_OWNER' AND s.sequence_name = 'BULK_CUST_SEQ'),
 (SELECT 'BULK_SUB_SEQ' || ',' || s.last_number FROM all_sequences s WHERE s.sequence_owner = 'SDT_OWNER' AND s.sequence_name = 'BULK_SUB_SEQ'),
 (SELECT 'ERR_LOG_SEQ' || ',' || s.last_number FROM all_sequences s WHERE s.sequence_owner = 'SDT_OWNER' AND s.sequence_name = 'ERR_LOG_SEQ'),
-(SELECT 'ERR_MESG_SEQ' || ',' || s.last_number FROM all_sequences s WHERE s.sequence_owner = 'SDT_OWNER' AND s.sequence_name = 'ERR_MESG_SEQ'),
-(SELECT 'GLB_PAR_SEQ' || ',' || s.last_number FROM all_sequences s WHERE s.sequence_owner = 'SDT_OWNER' AND s.sequence_name = 'GLB_PAR_SEQ'),
 (SELECT 'IND_REQ_SEQ' || ',' || s.last_number FROM all_sequences s WHERE s.sequence_owner = 'SDT_OWNER' AND s.sequence_name = 'IND_REQ_SEQ'),
 (SELECT 'SDT_REF_SEQ' || ',' || s.last_number FROM all_sequences s WHERE s.sequence_owner = 'SDT_OWNER' AND s.sequence_name = 'SDT_REF_SEQ'),
-(SELECT 'SER_ROU_SEQ' || ',' || s.last_number FROM all_sequences s WHERE s.sequence_owner = 'SDT_OWNER' AND s.sequence_name = 'SER_ROU_SEQ'),
-(SELECT 'SER_TYP_SEQ' || ',' || s.last_number FROM all_sequences s WHERE s.sequence_owner = 'SDT_OWNER' AND s.sequence_name = 'SER_TYP_SEQ'),
-(SELECT 'SRV_REQ_SEQ' || ',' || s.last_number FROM all_sequences s WHERE s.sequence_owner = 'SDT_OWNER' AND s.sequence_name = 'SRV_REQ_SEQ'),
-(SELECT 'TAR_APP_SEQ' || ',' || s.last_number FROM all_sequences s WHERE s.sequence_owner = 'SDT_OWNER' AND s.sequence_name = 'TAR_APP_SEQ')
+(SELECT 'SRV_REQ_SEQ' || ',' || s.last_number FROM all_sequences s WHERE s.sequence_owner = 'SDT_OWNER' AND s.sequence_name = 'SRV_REQ_SEQ')
 FROM DUAL;
 SPOOL OFF;
