@@ -29,3 +29,13 @@
 
 -- Compare amount of service routings with each target application
 \copy (SELECT t_a.target_application_id, COUNT(1) FROM public.service_routings s_r, public.target_applications t_a WHERE t_a.target_application_id = s_r.target_application_id GROUP BY t_a.target_application_id ORDER BY t_a.target_application_id) to 'validation_sr_count_target_app.csv' csv;
+
+-----------------------------------------
+-- COMPARE ERROR LOG IDS
+-----------------------------------------
+\copy (SELECT ir.individual_request_id, ir.error_log_id FROM individual_requests ir WHERE ir.error_log_id IS NOT NULL ORDER BY ir.individual_request_id) to 'validation_ir_error_log_id.csv' csv;
+
+-----------------------------------------
+-- COMPARE SEQUENCE VALUES
+-----------------------------------------
+\copy (SELECT (SELECT 'BULK_CUST_APP_SEQ' || ',' || last_value FROM bulk_cust_app_seq), (SELECT 'BULK_CUST_SEQ' || ',' || last_value FROM bulk_cust_seq), (SELECT 'BULK_SUB_SEQ' || ',' || last_value FROM bulk_sub_seq), (SELECT 'ERR_LOG_SEQ' || ',' || last_value FROM err_log_seq), (SELECT 'IND_REQ_SEQ' || ',' || last_value FROM ind_req_seq), (SELECT 'SDT_REF_SEQ' || ',' || last_value FROM sdt_ref_seq), (SELECT 'SRV_REQ_SEQ' || ',' || last_value FROM srv_req_seq)) to 'validation_sequences.txt';
