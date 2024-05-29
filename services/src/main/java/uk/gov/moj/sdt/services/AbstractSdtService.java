@@ -34,7 +34,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import uk.gov.moj.sdt.dao.api.IBulkSubmissionDao;
-import uk.gov.moj.sdt.dao.api.IBulkSubmissionDao;
 import uk.gov.moj.sdt.dao.api.IIndividualRequestDao;
 import uk.gov.moj.sdt.domain.IndividualRequest;
 import uk.gov.moj.sdt.domain.api.IBulkSubmission;
@@ -42,14 +41,14 @@ import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.services.utils.GenericXmlParser;
 import uk.gov.moj.sdt.utils.cmc.RequestTypeXmlNodeValidator;
 
-import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
-import java.util.List;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+import java.util.List;
 
 import static uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus.ACCEPTED;
 import static uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus.REJECTED;
@@ -217,7 +216,7 @@ public abstract class AbstractSdtService {
         Predicate[] predicates = new Predicate[2];
         predicates[0] = criteriaBuilder.equal(root.get("sdtBulkReference"), sdtBulkReference);
         Expression<String> requestStatusExpression = root.get("requestStatus");
-        predicates[1] = requestStatusExpression.in(completeRequestStatus);
+        predicates[1] = requestStatusExpression.in(completeRequestStatus).not();
         return criteriaQuery.select(root).where(predicates);
     }
 }
