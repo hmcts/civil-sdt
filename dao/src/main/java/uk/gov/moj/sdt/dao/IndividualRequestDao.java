@@ -97,16 +97,16 @@ public class IndividualRequestDao extends GenericDao<IndividualRequest> implemen
                                                    final int dataRetention) throws DataAccessException {
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("Get individual request matching the bulk customer[{}], customer reference[{}] "
-                             + "and data retention period[{}]",
+                             + "and the data retention period[{}]",
                          bulkCustomer, customerReference, dataRetention);
         }
 
         Predicate sdtCustomerPredicate =
             criteriaBuilder.equal(root.get("bulkSubmission").get("bulkCustomer").get("sdtCustomerId"),
-                                                               bulkCustomer.getSdtCustomerId());
+                                  bulkCustomer.getSdtCustomerId());
         Predicate customerReferencePredicate =
             criteriaBuilder.equal(criteriaBuilder.lower(root.get("customerRequestReference")),
-                                                                     customerReference.toLowerCase());
+                                  customerReference.toLowerCase());
         TypedQuery<IndividualRequest> typedQuery =
             getEntityManager().createQuery(criteriaQuery.select(root)
                                                .where(sdtCustomerPredicate,
@@ -208,5 +208,4 @@ public class IndividualRequestDao extends GenericDao<IndividualRequest> implemen
         predicates[2] = criteriaBuilder.ge(root.get(FORWARDING_ATTEMPTS), maxAllowedAttempts);
         return predicates;
     }
-
 }
