@@ -180,7 +180,18 @@ class IndividualRequestDaoTest extends AbstractIntegrationTest {
         final List<IIndividualRequest> individualRequests = individualRequestDao.getStaleIndividualRequests(720);
 
         assertNotNull(individualRequests);
-        assertEquals(3, individualRequests.size(), "The individual requests size is not correct");
+        assertEquals(4, individualRequests.size(), "The individual requests size is not correct");
+    }
+
+    /**
+     * Test that stale individual requests count match expected value
+     */
+    @Test
+    void testCountStaleIndividualRequests() {
+        // Get requests that have been updated more than 12 hrs ago.
+        final long requestCount = individualRequestDao.countStaleIndividualRequests(720);
+
+        assertEquals(2, requestCount, "The individual requests size is not correct");
     }
 
     /**
