@@ -1,0 +1,16 @@
+{
+  "request": {
+    "method": "POST",
+    "url": "/claimDefences"
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "jsonBody": {
+      "result_count": "0",
+      "results": []
+    }
+  }
+}

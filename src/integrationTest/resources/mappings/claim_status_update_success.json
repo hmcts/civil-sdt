@@ -1,0 +1,15 @@
+{
+  "request": {
+    "method": "POST",
+    "url": "/claimStatusUpdate"
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "jsonBody": {
+      "processingStatus": "PROCESSED"
+    }
+  }
+}

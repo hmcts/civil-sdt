@@ -9,7 +9,9 @@ spring:
     servicebus:
       internal:
         targetAppQueue:
-          MCOL: ${CIVIL_SDT_QUEUE}
+          MCOL: ${CIVIL_SDT_QUEUE:McolQueue}
+          MCOLS: ${CIVIL_SDT_QUEUE:McolsQueue}
+          TEST1: ${CIVIL_SDT_QUEUE:Test1Queue}
       connection-string: ${CIVIL_SDT_SERVICEBUS_CONNECTION_STRING:Endpoint=sb://destination1.servicebus.windows.net;SharedAccessKeyName=[KEYNAME];SharedAccessKey=[KEY]}
       enabled: false
 
@@ -25,9 +27,13 @@ spring:
     password: ${SDT_DB_PASSWORD:test}
   jpa:
     open-in-view: false
+    show-sql: true
     database: postgresql
+    hibernate:
+      ddl-auto: create-drop
   flyway:
     enabled: false
+    ignore-migration-patterns: true
 sdt:
   tx-timeout:
     default:  1000
@@ -39,3 +45,21 @@ sdt:
       idleTaskExecutionLimit:  ${IDLE_TASK_EXECUTION_LIMIT:10}
       idleConsumerLimit:  ${IDLE_CONSUMER_LIMIT:5}
       queue_delay: ${QUEUE_DELAY:500}
+  purge:
+    cron: ${PURGE_SCHEDULE_CRON:0 10 5 * * ?}
+    commitInterval: ${PURGE_COMMIT_INTERVAL:1000}
+  retry-send:
+    cron: ${RETRY_SEND_CRON:0 0 * * * ?}
+idam:
+  s2s-auth:
+    microservice: civil_sdt
+    totp_secret: ${CIVIL_SDT_S2S_KEY:AAAAAAAAAAAAAAAA}
+    url: ${IDAM_S2S_URL:http://localhost:${wiremock.server.port:4502}/s2s}
+  sdt:
+    username: ${IDAM_SDT_USERNAME:master.sdt@gmail.com}
+    password: ${IDAM_SDT_PASSWORD:Pa55word11}
+  api:
+    url: ${IDAM_API_URL:http://localhost:${wiremock.server.port:5000}}
+civil:
+  api:
+    url: ${CIVIL_API_URL:http://localhost:${wiremock.server.port:5000}}
