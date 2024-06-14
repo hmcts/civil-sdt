@@ -105,7 +105,9 @@ public class MessageWriter implements IMessageWriter {
         } catch (final IllegalStateException e) {
             LOGGER.error("Error sending message to queue using jms template {}", e.getMessage());
             String message = e.getMessage();
-            if (message != null && message.contains("MessageProducer was closed")) {
+            if (message != null &&
+                (message.contains("MessageProducer was closed") || message.contains("Session was closed"))
+            ) {
                 // Link to queue timed out due to idle period expiring, reset and try again.
                 // No need to update queue metrics as message was not queued.
                 resetConnectionAndQueueMessage(sdtMessage, queueName);
