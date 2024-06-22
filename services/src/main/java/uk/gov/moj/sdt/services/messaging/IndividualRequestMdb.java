@@ -108,6 +108,7 @@ public class IndividualRequestMdb implements IMessageDrivenBean {
 
             try {
                 this.getTargetAppSubmissionService().processRequestToSubmit(sdtReference, caseOffLine);
+                LOGGER.debug("readMessage(): After processRequestToSubmit() [{}]", sdtReference);
             }
             // CHECKSTYLE:OFF
             catch (final RuntimeException e) {
@@ -120,6 +121,10 @@ public class IndividualRequestMdb implements IMessageDrivenBean {
                 SdtMetricsMBean.getMetrics().upRequestQueueLength();
 
                 // Rethrow it.
+                throw e;
+            }
+            catch (final Exception e) {
+                LOGGER.error("readMessage(): Unhandled exception:", e);
                 throw e;
             }
         } else {
