@@ -32,9 +32,3 @@ resource "azurerm_key_vault_secret" "servicebus_primary_shared_access_key" {
   value        = module.servicebus-namespace.primary_send_and_listen_shared_access_key
   key_vault_id = module.civil_sdt_key_vault.key_vault_id
 }
-
-resource "azurerm_key_vault_secret" "servicebus-pricing-tier" {
-  name         = "civil-sdt-servicebus-pricing-tier"
-  value        = var.sku
-  key_vault_id = module.civil_sdt_key_vault.key_vault_id
-}
