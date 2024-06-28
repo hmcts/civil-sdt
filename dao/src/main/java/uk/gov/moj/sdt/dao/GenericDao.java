@@ -261,8 +261,6 @@ public class GenericDao<T extends IDomainObject> implements IGenericDao {
 
         TypedQuery<D> query = getEntityManager().createQuery(criteriaQuerySupplier.get());
 
-        LOGGER.debug("queryAsCount(): After createQuery");
-
         // Get unique result from JPA.
         final Number countOfObjects = query.getResultList().size();
 
@@ -270,8 +268,6 @@ public class GenericDao<T extends IDomainObject> implements IGenericDao {
         final long endTime = new GregorianCalendar().getTimeInMillis();
         SdtMetricsMBean.getMetrics().addDatabaseReadsTime(endTime - startTime);
         SdtMetricsMBean.getMetrics().upDatabaseReadsCount();
-
-        LOGGER.debug("queryAsCount(): Before return");
 
         return countOfObjects != null ? countOfObjects.longValue() : 0;
     }
