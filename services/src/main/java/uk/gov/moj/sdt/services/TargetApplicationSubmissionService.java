@@ -136,9 +136,6 @@ public class TargetApplicationSubmissionService extends AbstractSdtService imple
                 this.sendRequestToTargetApp(individualRequest, caseOffLine);
 
                 this.updateCompletedRequest(individualRequest, !isCMCRequestType(individualRequest));
-
-                LOGGER.debug("processRequestToSubmit(): After updateCompletedRequest() [{}]",
-                             individualRequest.getSdtRequestReference());
             } catch (final TimeoutException e) {
                 LOGGER.error("Timeout exception for SDT reference [{}]", individualRequest.getSdtRequestReference());
 

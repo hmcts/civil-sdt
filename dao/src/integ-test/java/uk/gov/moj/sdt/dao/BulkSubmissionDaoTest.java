@@ -52,15 +52,14 @@ import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.test.utils.AbstractIntegrationTest;
 import uk.gov.moj.sdt.test.utils.TestConfig;
 
-import javax.persistence.NoResultException;
 import javax.transaction.Transactional;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * Test class for the Bulk Submissions Dao.
@@ -78,17 +77,21 @@ class BulkSubmissionDaoTest extends AbstractIntegrationTest {
      */
     private static final Logger LOGGER = LoggerFactory.getLogger(BulkSubmissionDaoTest.class);
 
+    private static final long BULK_CUSTOMER_ID = 10711L;
+    private static final long TARGET_APPLICATION_ID = 10713L;
+    private static final int DATA_RETENTION_PERIOD = 90;
+
+    private static final String BULK_SUBMISSION_NULL = "Bulk submission should not be null";
+    private static final String UNEXPECTED_CUSTOMER_REF = "Bulk submission has unexpected customer ref";
+
     /**
      * Bulk Submission DAO.
      */
-    @Autowired
-    private IBulkSubmissionDao bulkSubmissionDao;
+    private final IBulkSubmissionDao bulkSubmissionDao;
 
-    @Autowired
-    private IBulkCustomerDao bulkCustomerDao;
+    private final IBulkCustomerDao bulkCustomerDao;
 
-    @Autowired
-    private ITargetApplicationDao targetApplicationDao;
+    private final ITargetApplicationDao targetApplicationDao;
 
     /**
      * Bulk Customer to use for the test.
@@ -100,24 +103,22 @@ class BulkSubmissionDaoTest extends AbstractIntegrationTest {
      */
     private TargetApplication targetApplication;
 
-    /**
-     * Data retention period.
-     */
-    private int dataRetentionPeriod;
+    @Autowired
+    public BulkSubmissionDaoTest(IBulkSubmissionDao bulkSubmissionDao,
+                                 IBulkCustomerDao bulkCustomerDao,
+                                 ITargetApplicationDao targetApplicationDao) {
+        this.bulkSubmissionDao = bulkSubmissionDao;
+        this.bulkCustomerDao = bulkCustomerDao;
+        this.targetApplicationDao = targetApplicationDao;
+    }
 
     /**
-     * SDT Bulk Reference.
+     * Setup the test.
      */
-    private String sdtBulkReference;
-        /**
-         * Setup the test.
-         */
     @BeforeEach
     public void setUp() {
-        bulkCustomer = bulkCustomerDao.fetch(BulkCustomer.class, 10711);
-        targetApplication = targetApplicationDao.fetch(TargetApplication.class, 10713L);
-        dataRetentionPeriod = 90;
-        sdtBulkReference = "MCOL-10012013010101-100000009";
+        bulkCustomer = bulkCustomerDao.fetch(BulkCustomer.class, BULK_CUSTOMER_ID);
+        targetApplication = targetApplicationDao.fetch(TargetApplication.class, TARGET_APPLICATION_ID);
     }
 
     /**
@@ -125,31 +126,25 @@ class BulkSubmissionDaoTest extends AbstractIntegrationTest {
      */
     @Test
     void testInsert() {
-        final IBulkSubmission bulkSubmission = new BulkSubmission();
+        String sdtBulkRef = "MCOL-20240627120000-000000001";
+        String customerRef = "REF1";
 
-        bulkSubmission.setBulkCustomer(bulkCustomer);
+        createBulkSubmission(customerRef, LocalDateTime.now(), sdtBulkRef);
 
-        bulkSubmission.setTargetApplication(targetApplication);
+        final IBulkSubmission bulkSubmission =
+            bulkSubmissionDao.getBulkSubmissionBySdtRef(bulkCustomer, sdtBulkRef, DATA_RETENTION_PERIOD);
 
-        bulkSubmission.setCreatedDate(LocalDateTime.now());
-        bulkSubmission.setCustomerReference("REF1");
-        bulkSubmission.setNumberOfRequest(1);
-        final String xmlToLoad = "<Payload>2</Payload>";
-        bulkSubmission.setPayload(xmlToLoad.getBytes());
-        bulkSubmission.setSdtBulkReference(sdtBulkReference);
-        bulkSubmission.setSubmissionStatus(IBulkSubmission.BulkRequestStatus.UPLOADED.getStatus());
+        assertNotNull(bulkSubmission, BULK_SUBMISSION_NULL);
 
-        bulkSubmissionDao.persist(bulkSubmission);
+        assertEquals(sdtBulkRef,
+                     bulkSubmission.getSdtBulkReference(),
+                     "Bulk submission has unexpected SDT bulk reference");
 
-        final IBulkSubmission submission =
-                bulkSubmissionDao.getBulkSubmissionBySdtRef(bulkCustomer, sdtBulkReference, dataRetentionPeriod);
-
-        assertNotNull(submission);
-
-        String response = new String(submission.getPayload(), StandardCharsets.UTF_8);
+        String response = new String(bulkSubmission.getPayload(), StandardCharsets.UTF_8);
         LOGGER.debug("payload for bulk submission is {}", response);
-        assertEquals(response, xmlToLoad);
-        assertEquals("REF1", submission.getCustomerReference());
+        assertEquals(response, "<Payload>2</Payload>", "Bulk submission has unexpected payload");
+
+        assertEquals(customerRef, bulkSubmission.getCustomerReference(), UNEXPECTED_CUSTOMER_REF);
     }
 
     /**
@@ -157,20 +152,31 @@ class BulkSubmissionDaoTest extends AbstractIntegrationTest {
      */
     @Test
     void testGetBulkSubmissionBySdtBulkRef() {
-        final String sbr = "MCOL-10012013010101-100099999";
+        final String sdtBulkRef = "MCOL-10012013010101-100099999";
 
-        final IBulkSubmission submission =
-                bulkSubmissionDao.getBulkSubmissionBySdtRef(bulkCustomer, sbr, dataRetentionPeriod);
+        final IBulkSubmission bulkSubmission =
+            bulkSubmissionDao.getBulkSubmissionBySdtRef(bulkCustomer, sdtBulkRef, DATA_RETENTION_PERIOD);
 
-        assertNotNull(submission);
-        assertEquals(submission.getSdtBulkReference(), sbr);
+        assertNotNull(bulkSubmission, BULK_SUBMISSION_NULL);
+        assertEquals(bulkSubmission.getSdtBulkReference(),
+                     sdtBulkRef,
+                     "Bulk submission has unexpected SDT bulk reference");
 
-        assertEquals(1, submission.getIndividualRequests().size(), "Check individual request count");
+        List<IIndividualRequest> individualRequests = bulkSubmission.getIndividualRequests();
 
-        for (IIndividualRequest req : submission.getIndividualRequests()) {
-            assertEquals(5, req.getId().longValue());
+        assertNotNull(individualRequests, "Individual requests should not be null");
+        assertEquals(4, individualRequests.size(), "Unexpected number of individual requests");
+
+        int expectedLineNumber = 1;
+        for (IIndividualRequest individualRequest : individualRequests) {
+            assertEquals(expectedLineNumber,
+                         individualRequest.getLineNumber().intValue(),
+                         "Individual requests in unexpected order.  Expected line number " + expectedLineNumber);
+            assertEquals(sdtBulkRef + String.format("-%07d", expectedLineNumber),
+                         individualRequest.getSdtRequestReference(),
+                         "Individual request has unexpected SDT request reference");
+            expectedLineNumber++;
         }
-
     }
 
     /**
@@ -179,7 +185,11 @@ class BulkSubmissionDaoTest extends AbstractIntegrationTest {
     @Test
     void testGetBulkSubmissionBySdtBulkRefNotFound() {
         final String sbr = "NO_SUCH_ID";
-        assertNull(bulkSubmissionDao.getBulkSubmissionBySdtRef(bulkCustomer, sbr, dataRetentionPeriod));
+
+        final IBulkSubmission bulkSubmission =
+            bulkSubmissionDao.getBulkSubmissionBySdtRef(bulkCustomer, sbr, DATA_RETENTION_PERIOD);
+
+        assertNull(bulkSubmission, "Bulk submission should be null");
     }
 
     /**
@@ -188,12 +198,13 @@ class BulkSubmissionDaoTest extends AbstractIntegrationTest {
     @Test
     void testGetBulkSubmissionUpper() {
         final String customerReference = "customer reference 1";
-        createBulkSubmission(customerReference, LocalDateTime.now(), sdtBulkReference);
-        final IBulkSubmission bulkSubmission =
-                bulkSubmissionDao.getBulkSubmission(bulkCustomer, customerReference, dataRetentionPeriod);
-        assertNotNull(bulkSubmission);
-        assertEquals(bulkSubmission.getCustomerReference(), customerReference);
+        createBulkSubmission(customerReference, LocalDateTime.now(), "MCOL-20240627120000-000000002");
 
+        final IBulkSubmission bulkSubmission =
+            bulkSubmissionDao.getBulkSubmission(bulkCustomer, customerReference, DATA_RETENTION_PERIOD);
+
+        assertNotNull(bulkSubmission, BULK_SUBMISSION_NULL);
+        assertEquals(bulkSubmission.getCustomerReference(), customerReference, UNEXPECTED_CUSTOMER_REF);
     }
 
     /**
@@ -202,14 +213,17 @@ class BulkSubmissionDaoTest extends AbstractIntegrationTest {
     @Test
     void testGetBulkSubmissionLower() {
         final String customerReference = "customer reference 2";
+
         // Set the created date to be 90 days ago
+        createBulkSubmission(customerReference,
+                             LocalDateTime.now().minusDays(DATA_RETENTION_PERIOD),
+                             "MCOL-20240627120000-000000003");
 
-        createBulkSubmission(customerReference, LocalDateTime.now().minusDays(dataRetentionPeriod), sdtBulkReference);
         final IBulkSubmission bulkSubmission =
-                bulkSubmissionDao.getBulkSubmission(bulkCustomer, customerReference, dataRetentionPeriod);
-        assertNotNull(bulkSubmission);
-        assertEquals(bulkSubmission.getCustomerReference(), customerReference);
+            bulkSubmissionDao.getBulkSubmission(bulkCustomer, customerReference, DATA_RETENTION_PERIOD);
 
+        assertNotNull(bulkSubmission, BULK_SUBMISSION_NULL);
+        assertEquals(bulkSubmission.getCustomerReference(), customerReference, UNEXPECTED_CUSTOMER_REF);
     }
 
     /**
@@ -217,13 +231,17 @@ class BulkSubmissionDaoTest extends AbstractIntegrationTest {
      */
     @Test
     void testGetBulkSubmissionPastRetention() {
-        final String customerReference = "customer reference 1";
-        // Set the created date to be 91 days ago
+        final String customerReference = "customer reference 3";
 
+        // Set the created date to be 91 days ago
         createBulkSubmission(customerReference,
-                             LocalDateTime.now().minusDays(dataRetentionPeriod + 1L),
-                             sdtBulkReference);
-        assertNull(bulkSubmissionDao.getBulkSubmission(bulkCustomer, customerReference, dataRetentionPeriod));
+                             LocalDateTime.now().minusDays(DATA_RETENTION_PERIOD + 1L),
+                             "MCOL-20240627120000-000000004");
+
+        final IBulkSubmission bulkSubmission =
+            bulkSubmissionDao.getBulkSubmission(bulkCustomer, customerReference, DATA_RETENTION_PERIOD);
+
+        assertNull(bulkSubmission, "Bulk submission should be null");
     }
 
     /**
