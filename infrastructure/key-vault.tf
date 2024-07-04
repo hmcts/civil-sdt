@@ -41,11 +41,11 @@ data "azuread_service_principal" "dts_prod_db_reporting" {
 }
 
 resource "azurerm_key_vault_access_policy" "dts_prod_db_reporting_policy" {
-  count              = var.env == "prod" ? 1 : 0
+  count = var.env == "prod" ? 1 : 0
 
-  key_vault_id       = module.civil_sdt_key_vault.key_vault_id
-  tenant_id          = data.azurerm_client_config.current.tenant_id
-  object_id          = data.azuread_service_principal.dts_prod_db_reporting.object_id
+  key_vault_id = module.civil_sdt_key_vault.key_vault_id
+  tenant_id    = data.azurerm_client_config.current.tenant_id
+  object_id    = data.azuread_service_principal.dts_prod_db_reporting.object_id
 
   secret_permissions = [
     "Get",
