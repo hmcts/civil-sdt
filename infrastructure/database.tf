@@ -7,11 +7,11 @@ module "postgresql" {
     azurerm.postgres_network = azurerm.private_endpoint
   }
 
-  admin_user_object_id  = var.jenkins_AAD_objectId
-  business_area         = "cft"
-  common_tags           = local.tags
-  component             = var.component
-  env                   = var.env
+  admin_user_object_id = var.jenkins_AAD_objectId
+  business_area        = "cft"
+  common_tags          = local.tags
+  component            = var.component
+  env                  = var.env
   pgsql_databases = [
     {
       name = "civil_sdt"
@@ -19,7 +19,7 @@ module "postgresql" {
   ]
   pgsql_version         = "11"
   product               = var.product
-  backup_retention_days = "${var.database_backup_retention_days}"
+  backup_retention_days = var.database_backup_retention_days
 }
 
 # Create secret for database user
@@ -51,11 +51,11 @@ module "postgresql-v15" {
     azurerm.postgres_network = azurerm.private_endpoint
   }
 
-  admin_user_object_id  = var.jenkins_AAD_objectId
-  business_area         = "cft"
-  common_tags           = local.tags
-  component             = var.component
-  env                   = var.env
+  admin_user_object_id = var.jenkins_AAD_objectId
+  business_area        = "cft"
+  common_tags          = local.tags
+  component            = var.component
+  env                  = var.env
   pgsql_databases = [
     {
       name = "civil_sdt"
@@ -64,7 +64,7 @@ module "postgresql-v15" {
   pgsql_version         = "15"
   product               = var.product
   name                  = join("-", [var.product, var.component, "v15"])
-  backup_retention_days = "${var.database_backup_retention_days}"
+  backup_retention_days = var.database_backup_retention_days
 }
 
 # Create secret for database user
