@@ -138,8 +138,6 @@ public abstract class AbstractSdtService {
             )
         );
 
-        LOGGER.debug("updateCompletedRequest(): After queryAsCount [{}]", individualRequest.getSdtRequestReference());
-
         if (requestsCount == 0) {
 
             LOGGER.debug("All individual requests for bulk submission [{}] have been processed now. Marking the bulk " +
@@ -149,8 +147,6 @@ public abstract class AbstractSdtService {
 
             bulkSubmissionDao.persist(bulkSubmission);
         }
-
-        LOGGER.debug("updateCompletedRequest(): End [{}]", individualRequest.getSdtRequestReference());
     }
 
     /**
