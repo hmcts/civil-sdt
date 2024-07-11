@@ -33,7 +33,7 @@ import static org.mockito.Mockito.when;
  */
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-class ResponseSummaryUtilTest extends BaseXmlTest {
+class ResponsesSummaryUtilTest extends BaseXmlTest {
 
     private ResponsesSummaryUtil responsesSummaryUtil;
     private McolDefenceDetailTypeUtil mcolDefenceDetailTypeUtil;
