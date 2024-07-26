@@ -77,19 +77,17 @@ public class IndividualRequestMdb implements IMessageDrivenBean {
     @Override
     @Transactional(propagation = Propagation.REQUIRED)
     public void readMessage(final Message message) {
-        LOGGER.debug("Received message {}, is object message ",  message, message instanceof ObjectMessage);
+        LOGGER.debug("Received message {}, is object message {}",  message, message instanceof ObjectMessage);
         // All expected messages are object messages written by the message writer.
         if (message instanceof ObjectMessage) {
             final ObjectMessage objectMessage = (ObjectMessage) message;
             String sdtReference = null;
-            Boolean caseOffLine = null;
 
             ISdtMessage sdtMessage = null;
 
             try {
                 sdtMessage = (ISdtMessage) objectMessage.getObject();
                 sdtReference = sdtMessage.getSdtRequestReference();
-                caseOffLine = sdtMessage.isCaseOffLine();
 
                 // Update statistics.
                 SdtMetricsMBean.getMetrics().addRequestQueueTime(sdtMessage.getMessageSentTimestamp());
@@ -107,7 +105,7 @@ public class IndividualRequestMdb implements IMessageDrivenBean {
             SdtContext.getContext().getLoggingContext().setMinorLoggingId(LoggingContext.getNextLoggingId());
 
             try {
-                this.getTargetAppSubmissionService().processRequestToSubmit(sdtReference, caseOffLine);
+                this.getTargetAppSubmissionService().processRequestToSubmit(sdtReference);
             }
             // CHECKSTYLE:OFF
             catch (final RuntimeException e) {

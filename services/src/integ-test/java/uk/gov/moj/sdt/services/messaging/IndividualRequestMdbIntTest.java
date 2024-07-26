@@ -101,8 +101,8 @@ public class IndividualRequestMdbIntTest extends AbstractIntegrationTest {
         ObjectMessage objectMessage = mock(ObjectMessage.class);
         when(objectMessage.getObject()).thenReturn(sdtMessage);
         individualRequestMdb.readMessage(objectMessage);
-        verify(targetApplicationSubmissionService).processRequestToSubmit("SDT_REQ_TEST_1", null);
-        assertTrue(true, "Submission read successfully.");
+        verify(targetApplicationSubmissionService).processRequestToSubmit("SDT_REQ_TEST_1");
+        assertTrue(true, "Submission read successfully");
     }
 
     /**
