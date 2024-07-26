@@ -260,6 +260,7 @@ public class GenericDao<T extends IDomainObject> implements IGenericDao {
         LOGGER.debug("queryAsCount(): domainType={}", domainType);
 
         TypedQuery<D> query = getEntityManager().createQuery(criteriaQuerySupplier.get());
+
         // Get unique result from JPA.
         final Number countOfObjects = query.getResultList().size();
 

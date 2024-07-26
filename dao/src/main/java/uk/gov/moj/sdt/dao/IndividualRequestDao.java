@@ -96,21 +96,22 @@ public class IndividualRequestDao extends GenericDao<IndividualRequest> implemen
     public IIndividualRequest getIndividualRequest(final IBulkCustomer bulkCustomer, final String customerReference,
                                                    final int dataRetention) throws DataAccessException {
         if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Get individual request matching the bulk customer[" + bulkCustomer + "], " +
-                    "customer reference[" + customerReference + "] and the data retention period[" + dataRetention +
-                    "]");
+            LOGGER.debug("Get individual request matching the bulk customer[{}], customer reference[{}] "
+                             + "and the data retention period[{}]",
+                         bulkCustomer, customerReference, dataRetention);
         }
 
-        Predicate sdtCustomerPredicate = criteriaBuilder.equal(root.get("bulkSubmission").get("bulkCustomer").get("sdtCustomerId"),
-                                                               bulkCustomer.getSdtCustomerId());
-        Predicate customerReferencePredicate = criteriaBuilder.equal(criteriaBuilder.lower(root.get("customerRequestReference")),
-                                                                     customerReference.toLowerCase());
-        TypedQuery<IndividualRequest> typedQuery = getEntityManager().createQuery(criteriaQuery.select(root)
-                                                                                   .where(
-                                                                                       sdtCustomerPredicate,
-                                                                                       customerReferencePredicate,
-                                                                                       createDatePredicate(criteriaBuilder, root, dataRetention)
-                                                                                   ));
+        Predicate sdtCustomerPredicate =
+            criteriaBuilder.equal(root.get("bulkSubmission").get("bulkCustomer").get("sdtCustomerId"),
+                                  bulkCustomer.getSdtCustomerId());
+        Predicate customerReferencePredicate =
+            criteriaBuilder.equal(criteriaBuilder.lower(root.get("customerRequestReference")),
+                                  customerReference.toLowerCase());
+        TypedQuery<IndividualRequest> typedQuery =
+            getEntityManager().createQuery(criteriaQuery.select(root)
+                                               .where(sdtCustomerPredicate,
+                                                      customerReferencePredicate,
+                                                      createDatePredicate(criteriaBuilder, root, dataRetention)));
         final List<IndividualRequest> individualRequests = typedQuery.getResultList();
 
         // Return null or the first individual request
@@ -124,7 +125,7 @@ public class IndividualRequestDao extends GenericDao<IndividualRequest> implemen
     @Override
     public IIndividualRequest getRequestBySdtReference(final String sdtReferenceId) throws DataAccessException {
         if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Get individual request matching the SDT reference id[" + sdtReferenceId + "]");
+            LOGGER.debug("Get individual request matching the SDT reference id[{}]", sdtReferenceId);
         }
 
         // Call the generic dao to do this query.
@@ -159,8 +160,7 @@ public class IndividualRequestDao extends GenericDao<IndividualRequest> implemen
     public List<IIndividualRequest> getStaleIndividualRequests(final int minimumAgeInMinutes)
             throws DataAccessException {
         if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("Get unforwarded individual requests created more than " + minimumAgeInMinutes +
-                    " minutes ago");
+            LOGGER.debug("Get unforwarded individual requests created more than {} minutes ago", minimumAgeInMinutes);
         }
 
         final LocalDateTime now = LocalDateTime.now();
@@ -172,13 +172,32 @@ public class IndividualRequestDao extends GenericDao<IndividualRequest> implemen
         return new ArrayList<>(queryList);
     }
 
+    @Override
+    public long countStaleIndividualRequests(final int minimumAgeInMinutes) throws DataAccessException {
+        CriteriaQuery<Long> countQuery = criteriaBuilder.createQuery(Long.class);
+        Root<IndividualRequest> countRoot = countQuery.from(IndividualRequest.class);
+
+        final LocalDateTime latestTime = LocalDateTime.now().minusMinutes(minimumAgeInMinutes);
+
+        Predicate[] predicates = new Predicate[2];
+        predicates[0] = criteriaBuilder.in(countRoot.get(REQUEST_STATUS))
+            .value(FORWARDED.getStatus())
+            .value(RECEIVED.getStatus());
+        predicates[1] = criteriaBuilder.lessThan(countRoot.get(UPDATED_DATE), latestTime);
+
+        countQuery.select(criteriaBuilder.count(countRoot)).where(predicates);
+
+        return getEntityManager().createQuery(countQuery).getSingleResult();
+    }
+
     private Predicate[] createIndividualRequestPredicate(LocalDateTime latestTime) {
         Predicate[] predicates = new Predicate[2];
         predicates[0] = criteriaBuilder.or(criteriaBuilder.equal(root.get(REQUEST_STATUS), RECEIVED.getStatus()),
                                            criteriaBuilder.equal(root.get(REQUEST_STATUS), QUEUED.getStatus()),
                                            criteriaBuilder.equal(root.get(REQUEST_STATUS), FAILED_QUEUE.getStatus()),
                                            criteriaBuilder.equal(root.get(REQUEST_STATUS), FORWARDED.getStatus()));
-        predicates[1] = criteriaBuilder.or(criteriaBuilder.lessThan(root.get(UPDATED_DATE), latestTime), criteriaBuilder.isNull(root.get(UPDATED_DATE)));
+        predicates[1] = criteriaBuilder.or(criteriaBuilder.lessThan(root.get(UPDATED_DATE), latestTime),
+                                           criteriaBuilder.isNull(root.get(UPDATED_DATE)));
         return predicates;
     }
 

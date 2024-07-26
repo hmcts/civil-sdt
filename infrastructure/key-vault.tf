@@ -31,3 +31,24 @@ resource "azurerm_key_vault_secret" "s2s" {
   value        = data.azurerm_key_vault_secret.key_from_vault.value
   key_vault_id = module.civil_sdt_key_vault.key_vault_id
 }
+
+# Set up prod key vault access for DTS Production DB Reporting principle.
+# This is required for AM Dashboard Daily Updates Azure pipeline.
+data "azurerm_client_config" "current" {}
+
+data "azuread_service_principal" "dts_prod_db_reporting" {
+  display_name = "DTS Production DB Reporting"
+}
+
+resource "azurerm_key_vault_access_policy" "dts_prod_db_reporting_policy" {
+  count = var.env == "prod" ? 1 : 0
+
+  key_vault_id = module.civil_sdt_key_vault.key_vault_id
+  tenant_id    = data.azurerm_client_config.current.tenant_id
+  object_id    = data.azuread_service_principal.dts_prod_db_reporting.object_id
+
+  secret_permissions = [
+    "Get",
+    "List"
+  ]
+}

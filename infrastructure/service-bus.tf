@@ -33,8 +33,12 @@ resource "azurerm_key_vault_secret" "servicebus_primary_shared_access_key" {
   key_vault_id = module.civil_sdt_key_vault.key_vault_id
 }
 
+# Create secret used for setting spring.jms.servicebus.pricing-tier property.
+# Set value to "Standard" for all environments, even those that have a Premium tier service bus.
+# This is a work around for an issue where SDT does not read messages from a Premium tier service
+# bus in a timely fashion.
 resource "azurerm_key_vault_secret" "servicebus-pricing-tier" {
   name         = "civil-sdt-servicebus-pricing-tier"
-  value        = var.sku
+  value        = "Standard"
   key_vault_id = module.civil_sdt_key_vault.key_vault_id
 }

@@ -20,8 +20,10 @@
   <suppress>
     <notes>Temporary Suppressions
       CVE-2023-36052
+      CVE-2024-35255
     </notes>
     <cve>CVE-2023-36052</cve>
+    <cve>CVE-2024-35255</cve>
   </suppress>
   <!--End of temporary suppression section -->
 
