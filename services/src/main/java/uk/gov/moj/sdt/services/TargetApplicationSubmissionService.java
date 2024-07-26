@@ -32,6 +32,7 @@ import uk.gov.moj.sdt.services.utils.GenericXmlParser;
 import uk.gov.moj.sdt.utils.SdtContext;
 import uk.gov.moj.sdt.utils.cmc.RequestTypeXmlNodeValidator;
 import uk.gov.moj.sdt.utils.cmc.exception.CMCException;
+import uk.gov.moj.sdt.utils.cmc.exception.CaseOffLineException;
 import uk.gov.moj.sdt.utils.mbeans.SdtMetricsMBean;
 
 import static uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus.FORWARDED;
@@ -116,7 +117,7 @@ public class TargetApplicationSubmissionService extends AbstractSdtService imple
     }
 
     @Override
-    public void processRequestToSubmit(final String sdtRequestReference) {
+    public void processRequestToSubmit(final String sdtRequestReference, Boolean caseOffLine) {
         // Look for the individual request matching this unique request reference.
         final IIndividualRequest individualRequest = this.getIndRequestBySdtReference(sdtRequestReference);
 
@@ -132,7 +133,7 @@ public class TargetApplicationSubmissionService extends AbstractSdtService imple
 
             // Make call to consumer to submit the request to target application.
             try {
-                this.sendRequestToTargetApp(individualRequest);
+                this.sendRequestToTargetApp(individualRequest, caseOffLine);
 
                 this.updateCompletedRequest(individualRequest, !isCMCRequestType(individualRequest));
             } catch (final TimeoutException e) {
@@ -161,6 +162,12 @@ public class TargetApplicationSubmissionService extends AbstractSdtService imple
 
                 updateRequestRejected(individualRequest);
                 updateCompletedRequest(individualRequest, !isCMCRequestType(individualRequest));
+            } catch (final CaseOffLineException ce) {
+                String errorMessage = String.format("Case is Offline for Reference [ %s ] - %s - ReQueue Request",
+                                                    individualRequest.getSdtRequestReference(),
+                                                    ce.getMessage());
+                LOGGER.warn(errorMessage);
+                this.reQueueRequest(individualRequest, true);
             }
         } else {
             LOGGER.error("SDT Reference {} read from message queue not found in database for individual request.",
@@ -290,10 +297,11 @@ public class TargetApplicationSubmissionService extends AbstractSdtService imple
      * Send the individual request to target application for submission.
      *
      * @param individualRequest the individual request to be sent to target application.
+     * @param caseOffLine       when case is offLine, then invoke mcol service
      * @throws OutageException  when the target web service is not responding.
      * @throws TimeoutException when the target web service does not respond back in time.
      */
-    private void sendRequestToTargetApp(final IIndividualRequest individualRequest)
+    private void sendRequestToTargetApp(final IIndividualRequest individualRequest, Boolean caseOffLine)
             throws OutageException, TimeoutException {
         LOGGER.debug("Send individual request [{}] to target application.", individualRequest.getSdtRequestReference());
 
@@ -315,7 +323,7 @@ public class TargetApplicationSubmissionService extends AbstractSdtService imple
             connectionTimeOut = Long.parseLong(connectionTimeOutParam.getValue());
         }
 
-        this.getRequestConsumer(individualRequest).individualRequest(individualRequest, connectionTimeOut, requestTimeOut);
+        this.getRequestConsumer(individualRequest, caseOffLine).individualRequest(individualRequest, connectionTimeOut, requestTimeOut);
     }
 
     /**
@@ -366,8 +374,9 @@ public class TargetApplicationSubmissionService extends AbstractSdtService imple
     /**
      * @return the request consumer.
      */
-    private IConsumerGateway getRequestConsumer(IIndividualRequest individualRequest) {
-        if (isCMCRequestType(individualRequest, true)) {
+    private IConsumerGateway getRequestConsumer(IIndividualRequest individualRequest, Boolean caseOffLine) {
+        if (isCMCRequestType(individualRequest, true)
+            && (caseOffLine == null || !caseOffLine)) {
             return cmcRequestConsumer;
         }
         return requestConsumer;
@@ -443,6 +452,10 @@ public class TargetApplicationSubmissionService extends AbstractSdtService imple
      * @param individualRequest the individual request.
      */
     private void reQueueRequest(final IIndividualRequest individualRequest) {
+        reQueueRequest(individualRequest, false);
+    }
+
+    private void reQueueRequest(final IIndividualRequest individualRequest, Boolean caseOffline) {
         // Check the forwarding attempts has not exceeded the max forwarding attempts count.
         if (this.canRequestBeRequeued(individualRequest)) {
             LOGGER.debug("Re-queuing request for SDT reference [{}]", individualRequest.getSdtRequestReference());
@@ -450,6 +463,7 @@ public class TargetApplicationSubmissionService extends AbstractSdtService imple
             // Create a new message to enqueue.
             final ISdtMessage messageObj = new SdtMessage();
             messageObj.setSdtRequestReference(individualRequest.getSdtRequestReference());
+            messageObj.setCaseOffLine(caseOffline);
 
             SdtMetricsMBean.getMetrics().upRequestRequeues();
 

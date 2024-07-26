@@ -41,7 +41,6 @@ import uk.gov.moj.sdt.cmc.consumers.response.WarrantResponse;
 import uk.gov.moj.sdt.cmc.consumers.response.judgement.JudgementResponse;
 import uk.gov.moj.sdt.domain.IndividualRequest;
 import uk.gov.moj.sdt.domain.api.IBulkCustomer;
-import uk.gov.moj.sdt.domain.api.IErrorLog;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.domain.api.ISubmitQueryRequest;
 import uk.gov.moj.sdt.domain.api.ITargetApplication;
@@ -50,6 +49,7 @@ import uk.gov.moj.sdt.idam.S2SRepository;
 import uk.gov.moj.sdt.response.SubmitQueryResponse;
 import uk.gov.moj.sdt.utils.cmc.RequestType;
 import uk.gov.moj.sdt.utils.cmc.exception.CMCException;
+import uk.gov.moj.sdt.utils.cmc.exception.CaseOffLineException;
 import uk.gov.moj.sdt.utils.cmc.xml.XmlElementValueReader;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -283,7 +283,7 @@ class CMCConsumerGatewayTest {
     }
 
     @Test
-    void shouldAddCaseOffLineErrorWhenInvokingJudgementRequest() throws Exception {
+    void shouldThrowCaseOffLineWhenInvokingJudgementRequest() throws Exception {
         JudgementResponse response = new JudgementResponse();
         Date date = formattedDate();
         response.setJudgmentEnteredDate(date);
@@ -291,14 +291,14 @@ class CMCConsumerGatewayTest {
         RuntimeException exception = new RuntimeException(CASE_OFF_LINE);
         doThrow(exception).when(judgementService).requestJudgment(any(), any(), any());
 
-        IIndividualRequest individualRequest = new IndividualRequest();
-        individualRequest.setRequestType(JUDGMENT.getType());
+        IIndividualRequest individualRequest = mock(IIndividualRequest.class);
+        setupMockBehaviour(JUDGMENT, individualRequest);
 
-        cmcConsumerGateway.individualRequest(individualRequest, CONNECTION_TIME_OUT, RECEIVE_TIME_OUT);
-        IErrorLog errorLog = individualRequest.getErrorLog();
-        assertNotNull(errorLog, "Error log should not be null");
-        assertEquals("200", errorLog.getErrorCode(), "Unexpected error code");
-        assertEquals("Case is offline", errorLog.getErrorText(), "Unexpected error text");
+        try {
+            cmcConsumerGateway.individualRequest(individualRequest, CONNECTION_TIME_OUT, RECEIVE_TIME_OUT);
+        } catch (CaseOffLineException coe) {
+            assertEquals(CASE_OFF_LINE, coe.getMessage());
+        }
     }
 
     @Test

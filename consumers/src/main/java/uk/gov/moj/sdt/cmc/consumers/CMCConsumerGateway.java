@@ -31,8 +31,6 @@ import uk.gov.moj.sdt.cmc.consumers.response.judgement.JudgementResponse;
 import uk.gov.moj.sdt.consumers.api.IConsumerGateway;
 import uk.gov.moj.sdt.consumers.exception.OutageException;
 import uk.gov.moj.sdt.consumers.exception.TimeoutException;
-import uk.gov.moj.sdt.domain.ErrorLog;
-import uk.gov.moj.sdt.domain.api.IErrorLog;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.domain.api.ISubmitQueryRequest;
 import uk.gov.moj.sdt.idam.IdamRepository;
@@ -41,6 +39,7 @@ import uk.gov.moj.sdt.response.SubmitQueryResponse;
 import uk.gov.moj.sdt.utils.SdtContext;
 import uk.gov.moj.sdt.utils.cmc.RequestType;
 import uk.gov.moj.sdt.utils.cmc.exception.CMCException;
+import uk.gov.moj.sdt.utils.cmc.exception.CaseOffLineException;
 import uk.gov.moj.sdt.utils.cmc.xml.XmlElementValueReader;
 
 import static uk.gov.moj.sdt.utils.cmc.exception.CMCExceptionMessages.CASE_OFF_LINE;
@@ -148,11 +147,9 @@ public class CMCConsumerGateway implements IConsumerGateway {
         } catch (Exception e) {
             String message = e.getMessage();
             if (message != null && message.contains(CASE_OFF_LINE)) {
-                IErrorLog errorLog = new ErrorLog("200", "Case is offline");
-                individualRequest.markRequestAsRejected(errorLog);
-            } else {
-                throw new CMCException(message, e);
+                throw new CaseOffLineException(message, e);
             }
+            throw new CMCException(message, e);
         }
     }
 
