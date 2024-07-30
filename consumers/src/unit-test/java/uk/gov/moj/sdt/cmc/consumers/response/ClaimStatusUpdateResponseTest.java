@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ClaimStatusUpdateResponseTest {
 
@@ -14,16 +13,20 @@ class ClaimStatusUpdateResponseTest {
     void testEnumSerialisation() throws JsonProcessingException {
         ClaimStatusUpdateResponse response = new ClaimStatusUpdateResponse();
         response.setProcessingStatus(ProcessingStatus.PROCESSED);
+
         String json = new ObjectMapper().writeValueAsString(response);
-        assertNotNull(json);
-        assertTrue(json.contains("PROCESSED"));
+
+        assertNotNull(json, "ClaimStatusUpdateResponse JSON should not be null");
+        assertEquals("{\"processingStatus\":\"processed\"}", json, "ClaimStatusUpdateResponse JSON has unexpected value");
     }
 
     @Test
     void testEnumDeserialization() throws JsonProcessingException {
-        String json = "{\"processingStatus\":\"QUEUED\"}";
+        String json = "{\"processingStatus\":\"queued\"}";
+
         ClaimStatusUpdateResponse response = new ObjectMapper().readValue(json, ClaimStatusUpdateResponse.class);
-        assertNotNull(response);
-        assertEquals(ProcessingStatus.QUEUED, response.getProcessingStatus());
+
+        assertNotNull(response, "ClaimStatusUpdateResponse should not be null");
+        assertEquals(ProcessingStatus.QUEUED, response.getProcessingStatus(), "");
     }
 }
