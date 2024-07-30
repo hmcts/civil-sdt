@@ -17,6 +17,7 @@ module "servicebus-sdt-queue" {
   name                = "${var.product}-${var.component}-in-out-${var.env}"
   namespace_name      = module.servicebus-namespace.name
   resource_group_name = azurerm_resource_group.civil_sdt_rg.name
+  max_message_size_in_kilobytes = var.max_message_size_in_kilobytes
 
   depends_on = [module.servicebus-namespace]
 }
