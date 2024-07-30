@@ -116,7 +116,7 @@ public class MessageWriter implements IMessageWriter {
         } catch (final UncategorizedJmsException e) {
             logQueueConnectFailure(sdtMessage, queueName, e);
         } catch (final Exception e) {
-            LOGGER.debug("jmsTemplate.convertAndSend() exception [{}]", e.getMessage(), e);
+            LOGGER.debug("jmsTemplate.convertAndSend() exception [{}]", e.getMessage());
             throw e;
         }
     }
