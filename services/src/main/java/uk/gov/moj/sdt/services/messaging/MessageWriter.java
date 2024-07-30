@@ -84,6 +84,7 @@ public class MessageWriter implements IMessageWriter {
     }
 
     @Override
+    @SuppressWarnings("java:S2139")
     public void queueMessage(final ISdtMessage sdtMessage, final String targetAppCode) {
 
         // Check the target application code is valid and return queue name.
