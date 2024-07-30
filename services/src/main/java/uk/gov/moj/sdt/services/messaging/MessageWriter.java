@@ -102,6 +102,7 @@ public class MessageWriter implements IMessageWriter {
 
         try {
             this.jmsTemplate.convertAndSend(queueName, sdtMessage);
+            LOGGER.debug("jmsTemplate.convertAndSend() completed for [{}]", sdtMessage.getSdtRequestReference());
         } catch (final IllegalStateException e) {
             LOGGER.error("Error sending message to queue using jms template {}", e.getMessage());
             String message = e.getMessage();
@@ -114,6 +115,9 @@ public class MessageWriter implements IMessageWriter {
             }
         } catch (final UncategorizedJmsException e) {
             logQueueConnectFailure(sdtMessage, queueName, e);
+        } catch (final Exception e) {
+            LOGGER.debug("jmsTemplate.convertAndSend() exception [{}]", e.getMessage(), e);
+            throw e;
         }
     }
 
