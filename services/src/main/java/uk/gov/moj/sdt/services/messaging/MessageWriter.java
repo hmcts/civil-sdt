@@ -110,7 +110,9 @@ public class MessageWriter implements IMessageWriter {
                 LOGGER.debug("Resetting queue connection");
                 CachingConnectionFactory cachingConnectionFactory =
                     (CachingConnectionFactory) this.jmsTemplate.getConnectionFactory();
-                cachingConnectionFactory.resetConnection();
+                if (cachingConnectionFactory != null) {
+                    cachingConnectionFactory.resetConnection();
+                }
             }
             this.jmsTemplate.convertAndSend(queueName, sdtMessage);
             LOGGER.debug("jmsTemplate.convertAndSend() completed for [{}]", sdtMessage.getSdtRequestReference());
