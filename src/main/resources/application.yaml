@@ -16,6 +16,7 @@ springdoc:
 
 enable-jms: ${ENABLE_JMS:false}
 enable-queue-reset: ${ENABLE_QUEUE_RESET:false}
+enable-single-executor: ${ENABLE_SINGLE_EXECUTOR:false}
 
 spring:
   jms:
