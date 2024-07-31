@@ -36,9 +36,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import uk.gov.moj.sdt.domain.api.IBulkSubmission;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
-import uk.gov.moj.sdt.domain.api.ITargetApplication;
 import uk.gov.moj.sdt.services.messaging.SdtMessage;
 import uk.gov.moj.sdt.services.messaging.api.IMessageWriter;
 import uk.gov.moj.sdt.services.messaging.api.ISdtMessage;
@@ -120,19 +118,11 @@ public class MessagingUtility implements IMessagingUtility {
 
     private void queueRequest(IIndividualRequest individualRequest) {
         LOGGER.debug("queueRequest: Individual request [{}]", individualRequest.getSdtRequestReference());
-
-        IBulkSubmission bulkSubmission = individualRequest.getBulkSubmission();
-        LOGGER.debug("queueRequest: bulkSubmission: [{}]", bulkSubmission);
-
-        ITargetApplication targetApplication = bulkSubmission.getTargetApplication();
-        LOGGER.debug("queueRequest: targetApplication: [{}]", targetApplication);
-
         final String targetAppCode =
-            targetApplication.getTargetApplicationCode();
-        LOGGER.debug("queueRequest: Past targetAppCode [{}]", targetAppCode);
+            individualRequest.getBulkSubmission().getTargetApplication().getTargetApplicationCode();
 
         final ISdtMessage messageObj = new SdtMessage();
-        LOGGER.debug("queueRequest: Past messageObj");
+
         messageObj.setSdtRequestReference(individualRequest.getSdtRequestReference());
         LOGGER.debug("Queuing Request {} to target app code {}",  messageObj, targetAppCode);
         getMessageWriter().queueMessage(messageObj, targetAppCode);
