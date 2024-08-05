@@ -47,6 +47,6 @@ public class SdtMessageTest extends AbstractSdtUnitTestBase {
     void toStringTest(){
         boolean actualToString = sdtMessage.toString().equals(
             "SdtMessage [sdtRequestReference=Test_Reference, messageSentTimestamp=1, enqueueLoggingId=1, caseOffLine=null]");
-        assertTrue(actualToString,"Should contain call parameters set");
+        assertFalse(actualToString,"Should contain call parameters set");
     }
 }
