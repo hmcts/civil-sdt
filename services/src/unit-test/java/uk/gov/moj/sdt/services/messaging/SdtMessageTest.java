@@ -8,6 +8,8 @@ import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+
 
 @ExtendWith(MockitoExtension.class)
 public class SdtMessageTest extends AbstractSdtUnitTestBase {
@@ -46,7 +48,7 @@ public class SdtMessageTest extends AbstractSdtUnitTestBase {
     @Test
     void toStringTest(){
         boolean actualToString = sdtMessage.toString().equals(
-            "SdtMessage [sdtRequestReference=Test_Reference, messageSentTimestamp=1, enqueueLoggingId=1, caseOffLine=null]");
-        assertFalse(actualToString,"Should contain call parameters set");
+            "SdtMessage [sdtRequestReference=Test_Reference, messageSentTimestamp=1, enqueueLoggingId=1]");
+        assertTrue(actualToString,"Should contain call parameters set");
     }
 }
