@@ -34,7 +34,6 @@ package uk.gov.moj.sdt.services.messaging;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jms.IllegalStateException;
 import org.springframework.jms.UncategorizedJmsException;
 import org.springframework.jms.connection.CachingConnectionFactory;
@@ -72,9 +71,6 @@ public class MessageWriter implements IMessageWriter {
 
     private final QueueConfig queueConfig;
 
-    @Value("${enable-queue-reset:false}")
-    private boolean enableQueueReset;
-
     /**
      * Creates a message sender with the JmsTemplate.
      *
@@ -106,14 +102,6 @@ public class MessageWriter implements IMessageWriter {
         SdtMetricsMBean.getMetrics().upRequestQueueLength();
 
         try {
-            if (enableQueueReset) {
-                LOGGER.debug("Resetting queue connection");
-                CachingConnectionFactory cachingConnectionFactory =
-                    (CachingConnectionFactory) this.jmsTemplate.getConnectionFactory();
-                if (cachingConnectionFactory != null) {
-                    cachingConnectionFactory.resetConnection();
-                }
-            }
             this.jmsTemplate.convertAndSend(queueName, sdtMessage);
             LOGGER.debug("jmsTemplate.convertAndSend() completed for [{}]", sdtMessage.getSdtRequestReference());
         } catch (final IllegalStateException e) {

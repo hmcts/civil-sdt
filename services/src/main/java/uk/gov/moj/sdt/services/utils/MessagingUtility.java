@@ -66,9 +66,6 @@ public class MessagingUtility implements IMessagingUtility {
     @Value("${sdt.service.config.queue_delay:500}")
     private int queueDelay;
 
-    @Value("${enable-single-executor:false}")
-    private boolean enableSingleExecutor;
-
     private ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
 
     @Autowired
@@ -80,16 +77,7 @@ public class MessagingUtility implements IMessagingUtility {
     @Override
     public void enqueueRequest(final IIndividualRequest individualRequest) {
         LOGGER.debug("enqueueRequest: [{}]", individualRequest.getSdtRequestReference());
-        if (enableSingleExecutor) {
-            executorService.schedule(() -> {
-                LOGGER.debug("enqueueRequests: executorService (single)");
-                queueRequest(individualRequest);
-                }
-                , queueDelay, TimeUnit.MILLISECONDS
-            );
-        } else {
-            queueRequest(individualRequest);
-        }
+        queueRequest(individualRequest);
     }
 
     @Override
