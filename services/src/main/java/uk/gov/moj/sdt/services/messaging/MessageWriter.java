@@ -84,7 +84,6 @@ public class MessageWriter implements IMessageWriter {
     }
 
     @Override
-    @SuppressWarnings("java:S2139")
     public void queueMessage(final ISdtMessage sdtMessage, final String targetAppCode) {
 
         // Check the target application code is valid and return queue name.
@@ -103,7 +102,6 @@ public class MessageWriter implements IMessageWriter {
 
         try {
             this.jmsTemplate.convertAndSend(queueName, sdtMessage);
-            LOGGER.debug("jmsTemplate.convertAndSend() completed for [{}]", sdtMessage.getSdtRequestReference());
         } catch (final IllegalStateException e) {
             LOGGER.error("Error sending message to queue using jms template {}", e.getMessage());
             String message = e.getMessage();
@@ -116,9 +114,6 @@ public class MessageWriter implements IMessageWriter {
             }
         } catch (final UncategorizedJmsException e) {
             logQueueConnectFailure(sdtMessage, queueName, e);
-        } catch (final Exception e) {
-            LOGGER.debug("jmsTemplate.convertAndSend() exception [{}]", e.getMessage());
-            throw e;
         }
     }
 

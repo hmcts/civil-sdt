@@ -76,36 +76,26 @@ public class MessagingUtility implements IMessagingUtility {
 
     @Override
     public void enqueueRequest(final IIndividualRequest individualRequest) {
-        LOGGER.debug("enqueueRequest: [{}]", individualRequest.getSdtRequestReference());
         queueRequest(individualRequest);
     }
 
     @Override
     public void enqueueRequests(List<IIndividualRequest> individualRequests) {
-        LOGGER.debug("enqueueRequests: Number of requests [{}]", individualRequests.size());
-        executorService.schedule(() -> {
-            LOGGER.debug("enqueueRequests: executorService (multiple)");
-            queueRequest(individualRequests);
-            }
-            , queueDelay, TimeUnit.MILLISECONDS
-        );
+        executorService.schedule(() -> queueRequest(individualRequests), queueDelay, TimeUnit.MILLISECONDS);
     }
 
     private void queueRequest(List<IIndividualRequest> individualRequests) {
-        LOGGER.debug("queueRequest: Number of requests [{}]", individualRequests.size());
         for (IIndividualRequest iRequest : individualRequests) {
             boolean enqueueable = iRequest.isEnqueueable();
             LOGGER.debug("Queue IndividualRequestReference {} with BulkReference {} Enqueueable {} ",
                          iRequest.getSdtRequestReference(), iRequest.getSdtBulkReference(), enqueueable);
             if (enqueueable) {
-                LOGGER.debug("queueRequest: Before queueRequest");
                 queueRequest(iRequest);
             }
         }
     }
 
     private void queueRequest(IIndividualRequest individualRequest) {
-        LOGGER.debug("queueRequest: Individual request [{}]", individualRequest.getSdtRequestReference());
         final String targetAppCode =
             individualRequest.getBulkSubmission().getTargetApplication().getTargetApplicationCode();
 
