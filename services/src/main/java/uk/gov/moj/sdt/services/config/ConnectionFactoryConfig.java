@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.qpid.jms.JmsConnectionFactory;
 import org.apache.qpid.jms.policy.JmsDefaultPrefetchPolicy;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jms.connection.CachingConnectionFactory;
@@ -23,6 +24,7 @@ import javax.jms.ConnectionFactory;
 @Getter
 @Setter
 @Slf4j
+@ConditionalOnProperty("enable-new-queue-process")
 public class ConnectionFactoryConfig {
 
     @Value("${spring.jms.servicebus.connection-string}")

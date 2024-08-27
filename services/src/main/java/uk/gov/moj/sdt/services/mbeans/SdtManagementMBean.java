@@ -34,6 +34,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jms.listener.DefaultMessageListenerContainer;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
@@ -42,6 +43,7 @@ import uk.gov.moj.sdt.dao.api.IIndividualRequestDao;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.services.api.ITargetApplicationSubmissionService;
 import uk.gov.moj.sdt.services.utils.RequeueIndividualRequestUtility;
+import uk.gov.moj.sdt.services.utils.api.IMessagingUtility;
 import uk.gov.moj.sdt.utils.mbeans.api.ISdtManagementMBean;
 
 import java.util.HashMap;
@@ -123,6 +125,11 @@ public class SdtManagementMBean implements ISdtManagementMBean {
     private IIndividualRequestDao individualRequestDao;
 
     /**
+     * This variable holding the messaging utility reference.
+     */
+    private IMessagingUtility messagingUtility;
+
+    /**
      * This variable holding the requeue individual request utility reference.
      */
     private RequeueIndividualRequestUtility requeueIndividualRequestUtility;
@@ -132,16 +139,22 @@ public class SdtManagementMBean implements ISdtManagementMBean {
      */
     private ITargetApplicationSubmissionService targetAppSubmissionService;
 
+    @Value("${enable-new-queue-process:false}")
+    private boolean enableNewQueueProcess;
+
     @Autowired
     public SdtManagementMBean(@Qualifier("messageListenerContainer")
                                   DefaultMessageListenerContainer messageListenerContainer,
                               @Qualifier("IndividualRequestDao")
                                   IIndividualRequestDao individualRequestDao,
+                              @Qualifier("MessagingUtility")
+                                  IMessagingUtility messagingUtility,
                               @Qualifier("requeueIndividualRequestUtility")
                                   RequeueIndividualRequestUtility requeueIndividualRequestUtility,
                               @Qualifier("TargetApplicationSubmissionService")
                                   ITargetApplicationSubmissionService targetAppSubmissionService) {
         this.individualRequestDao = individualRequestDao;
+        this.messagingUtility = messagingUtility;
         this.requeueIndividualRequestUtility = requeueIndividualRequestUtility;
         this.targetAppSubmissionService = targetAppSubmissionService;
         setMessageListenerContainer(messageListenerContainer);
@@ -201,11 +214,27 @@ public class SdtManagementMBean implements ISdtManagementMBean {
 
         // Loop through the list of the individual requests found.
         if (!individualRequests.isEmpty()) {
-            for (IIndividualRequest individualRequest : individualRequests) {
-                requeueIndividualRequestUtility.requeueIndividualRequest(individualRequest);
+            if (enableNewQueueProcess) {
+                for (IIndividualRequest individualRequest : individualRequests) {
+                    requeueIndividualRequestUtility.requeueIndividualRequest(individualRequest);
 
-                LOGGER.debug("Now re-queued pending individual request [{}]",
-                             individualRequest.getSdtRequestReference());
+                    LOGGER.debug("Now re-queued pending individual request [{}]",
+                                 individualRequest.getSdtRequestReference());
+                }
+            } else {
+                for (IIndividualRequest individualRequest : individualRequests) {
+                    individualRequest.setDeadLetter(false);
+                    this.messagingUtility.enqueueRequest(individualRequest);
+
+                    // Re-set the forwarding attempts on the individual request.
+                    individualRequest.resetForwardingAttempts();
+
+                    LOGGER.debug("Now re-queued pending individual request [{}]",
+                                     individualRequest.getSdtRequestReference());
+                }
+
+                // Persist the list of individual requests.
+                this.individualRequestDao.persistBulk(individualRequests);
             }
         }
     }

@@ -11,6 +11,7 @@ import uk.gov.moj.sdt.domain.IndividualRequest;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.services.api.ITargetApplicationSubmissionService;
 import uk.gov.moj.sdt.services.utils.RequeueIndividualRequestUtility;
+import uk.gov.moj.sdt.services.utils.api.IMessagingUtility;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 import uk.gov.moj.sdt.utils.mbeans.api.ISdtManagementMBean;
 
@@ -40,6 +41,12 @@ class SdtManagementMBeanTest extends AbstractSdtUnitTestBase {
      */
     @Mock
     private IIndividualRequestDao mockIndividualRequestDao;
+
+    /**
+     * This mock messaging utility reference for testing.
+     */
+    @Mock
+    private IMessagingUtility mockMessagingUtility;
 
     /**
      * This mock variable holding the target application submission service.
@@ -120,6 +127,7 @@ class SdtManagementMBeanTest extends AbstractSdtUnitTestBase {
     protected void setUpLocalTests() {
         sdtManagementMBean = new SdtManagementMBean(messageListenerContainer,
                                                     mockIndividualRequestDao,
+                                                    mockMessagingUtility,
                                                     mockRequeueIndividualRequestUtility,
                                                     mockTargetAppSubmissionService);
     }
@@ -225,7 +233,11 @@ class SdtManagementMBeanTest extends AbstractSdtUnitTestBase {
         this.sdtManagementMBean.requeueOldIndividualRequests(TEST_STALE_DURATION);
 
         verify(mockIndividualRequestDao).getStaleIndividualRequests(TEST_STALE_DURATION);
-        verify(mockRequeueIndividualRequestUtility).requeueIndividualRequest(individualRequest);
+        /*
+         When the enable-new-queue-process feature flag is removed the following verify() will need to be replaced with:
+         verify(mockRequeueIndividualRequestUtility).requeueIndividualRequest(individualRequest);
+         */
+        verify(mockMessagingUtility).enqueueRequest(individualRequest);
 
         assertTrue(true, "All tests passed");
     }
