@@ -14,9 +14,7 @@ management:
 springdoc:
   packagesToScan: uk.gov.moj.sdt.controllers
 
-enable-jms: ${ENABLE_JMS:false}
-enable-queue-reset: ${ENABLE_QUEUE_RESET:false}
-enable-single-executor: ${ENABLE_SINGLE_EXECUTOR:false}
+enable-new-queue-process: ${ENABLE_NEW_QUEUE_PROCESS:false}
 
 spring:
   jms:

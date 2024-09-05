@@ -7,6 +7,9 @@ spring:
       enabled: false
   jms:
     servicebus:
+      idle-timeout: ${QUEUE_TIME_OUT:900000}
+      connection-string: ${CIVIL_SDT_SERVICEBUS_CONNECTION_STRING:Endpoint=sb://destination1.servicebus.windows.net;SharedAccessKeyName=[KEYNAME];SharedAccessKey=[KEY]}
+      pricing-tier: ${CIVIL_SDT_SERVICEBUS_PRICING_TIER:Standard}
       internal:
         targetAppQueue:
           MCOL: ${CIVIL_SDT_QUEUE}
