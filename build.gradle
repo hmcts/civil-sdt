@@ -217,6 +217,14 @@ allprojects {
   group 'uk.gov.hmcts.civil.sdt'
   version '0.0.1-SNAPSHOT'
 
+  repositories {
+    mavenLocal()
+    mavenCentral()
+    maven {
+      url  "https://jitpack.io"
+    }
+  }
+
   apply plugin: 'java'
 
   dependencies {
