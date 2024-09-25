@@ -4,14 +4,3 @@ include 'consumers'
 include 'dao'
 include 'producers'
 include 'services'
-
-dependencyResolutionManagement {
-  repositoriesMode = RepositoriesMode.FAIL_ON_PROJECT_REPOS
-  repositories {
-    mavenLocal()
-    mavenCentral()
-    maven {
-      url 'https://jitpack.io'
-    }
-  }
-}
