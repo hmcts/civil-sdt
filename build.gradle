@@ -165,7 +165,7 @@ ext {
   tomcatVersion = '9.0.95'
   cxfVersion = '3.6.4'
   jaxwsVersion = "2.3.1"
-  testcontainers = '1.20.1'
+  testcontainers = '1.20.2'
   sdtCommonVersion = '3.2.1'
   limits = [
     'instruction': 99,
