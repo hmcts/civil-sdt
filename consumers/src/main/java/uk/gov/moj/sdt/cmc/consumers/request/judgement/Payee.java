@@ -5,39 +5,38 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import uk.gov.moj.sdt.cmc.consumers.request.common.Address;
 
 @ToString
 @Setter
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonPropertyOrder({
+    "name",
     "address",
-    "apacsTransCode",
-    "bankAccountHolder",
+    "telephoneNumber",
+    "dxNumber",
+    "faxNumber",
+    "email",
+    "pcm",
+    "reference",
     "bankAccountNumber",
+    "bankAccountHolder",
+    "bankSortCode",
+    "bankName",
     "bankInfo1",
     "bankInfo2",
-    "bankName",
-    "bankSortCode",
-    "dxNumber",
-    "email",
-    "faxNumber",
+    "slipCodeline1",
+    "slipCodeline2",
     "giroAccountNumber",
     "giroTransCode1",
     "giroTransCode2",
-    "name",
-    "pcm",
-    "reference",
-    "slipCodeline1",
-    "slipCodeline2",
-    "telephoneNumber"
+    "apacsTransCode"
 })
 public class Payee {
 
     private String name;
 
-    private Address address;
+    private PayeeAddress address;
 
     private String telephoneNumber;
 
@@ -79,7 +78,7 @@ public class Payee {
         return name;
     }
 
-    public Address getAddress() {
+    public PayeeAddress getAddress() {
         return address;
     }
 

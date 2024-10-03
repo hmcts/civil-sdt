@@ -1,22 +1,24 @@
 package uk.gov.moj.sdt.cmc.consumers.request.judgement;
 
-import java.util.Date;
-
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.util.Date;
+
 @ToString
 @Setter
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonPropertyOrder({
-    "installmentAmount",
-    "installmentFrequency",
+    "paymentScheduleType",
     "paymentInFullBy",
-    "paymentScheduleType"
+    "installmentFrequency",
+    "installmentAmount"
 })
 public class PaymentSchedule {
 
@@ -35,6 +37,7 @@ public class PaymentSchedule {
         return PaymentScheduleType.IMMEDIATE.getScheduleType();
     }
 
+    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "Europe/London")
     public Date getPaymentInFullBy() {
         return inFullByPayment != null ? inFullByPayment.fullByDate : null;
     }
@@ -47,6 +50,7 @@ public class PaymentSchedule {
         return instalment != null ? instalment.getFrequency() : null;
     }
 
+    @JsonIgnore
     public ImmediatePaymentType getImmediatePayment() {
         return immediatePayment;
     }

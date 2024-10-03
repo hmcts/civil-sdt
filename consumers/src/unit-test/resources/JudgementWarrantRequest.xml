@@ -22,6 +22,18 @@
   </jud:defendant1Address>
   <!--Optional:-->
   <jud:defendant1DateOfBirth>1960-10-10</jud:defendant1DateOfBirth>
+  <!--Optional:-->
+  <jud:defendant2Address>
+    <bas:line1>defendant2Address line1</bas:line1>
+    <bas:line2>defendant2Address line2</bas:line2>
+    <!--Optional:-->
+    <bas:line3>defendant2Address line3</bas:line3>
+    <!--Optional:-->
+    <bas:line4>defendant2Address line4</bas:line4>
+    <bas:postcode>RG42 2DL</bas:postcode>
+  </jud:defendant2Address>
+  <!--Optional:-->
+  <jud:defendant2DateOfBirth>1970-09-01</jud:defendant2DateOfBirth>
   <jud:paymentSchedule>
     <!--You have a CHOICE of the next 3 items at this level-->
     <jud:immediatePayment/>
@@ -32,6 +44,12 @@
   <jud:solicitorCost>5000</jud:solicitorCost>
   <!--Optional:-->
   <jud:deductedAmount>10000000</jud:deductedAmount>
+  <!--Optional:-->
+  <jud:claimAmountAdmitted>100</jud:claimAmountAdmitted>
+  <!--Optional:-->
+  <jud:courtFee>200</jud:courtFee>
+  <!--Optional:-->
+  <jud:legalCosts>300</jud:legalCosts>
   <!--Optional:-->
   <jud:payee>
     <jud:name>payee name</jud:name>
@@ -94,11 +112,11 @@
   <war:defendantId>1</war:defendantId>
   <war:defendantAddress>
     <bas:line1>defendant1Address line1</bas:line1>
-    <bas:line2>defendant1Address line1</bas:line2>
+    <bas:line2>defendant1Address line2</bas:line2>
     <!--Optional:-->
-    <bas:line3>defendant1Address line1</bas:line3>
+    <bas:line3>defendant1Address line3</bas:line3>
     <!--Optional:-->
-    <bas:line4>defendant1Address line1</bas:line4>
+    <bas:line4>defendant1Address line4</bas:line4>
     <bas:postcode>RG42 2DL</bas:postcode>
   </war:defendantAddress>
   <war:balanceOfDebt>50000</war:balanceOfDebt>

@@ -29,7 +29,7 @@ public class ClaimStatusUpdateRequest {
 
     private UpdateType notificationType;
 
-    @JsonFormat(pattern="yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "Europe/London")
     private Date paidInFullDate;
 
     private Boolean section38Compliancy;

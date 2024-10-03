@@ -1,9 +1,9 @@
 package uk.gov.moj.sdt.cmc.consumers.request.judgement;
 
-import java.util.Date;
-
+import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -11,28 +11,30 @@ import lombok.ToString;
 import uk.gov.moj.sdt.cmc.consumers.request.common.Address;
 import uk.gov.moj.sdt.cmc.consumers.request.common.SotSignature;
 
+import java.util.Date;
+
 @ToString
 @Setter
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonPropertyOrder({
     "caseManRef",
-    "claimAmountAdmitted",
-    "courtFee",
-    "deductedAmount",
-    "interest",
     "jointJudgment",
     "judgmentType",
-    "legalCosts",
-    "payee",
-    "paymentSchedule",
+    "sentParticularsSeparately",
     "respondentId",
     "respondent1Address",
     "respondent1DOB",
     "respondent2Address",
     "respondent2DOB",
-    "sentParticularsSeparately",
+    "paymentSchedule",
+    "interest",
     "solicitorCost",
+    "deductedAmount",
+    "claimAmountAdmitted",
+    "courtFee",
+    "legalCosts",
+    "payee",
     "sotName"
 })
 public class JudgementRequest {
@@ -49,12 +51,16 @@ public class JudgementRequest {
 
     private Address defendant1Address;
 
-    @JsonFormat(pattern="yyyy-MM-dd")
+    @JsonProperty(value = "respondent1DOB")
+    @JsonAlias(value = "defendant1DateOfBirth")
+    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "Europe/London")
     private Date defendant1DateOfBirth;
 
     private Address defendant2Address;
 
-    @JsonFormat(pattern="yyyy-MM-dd")
+    @JsonProperty(value = "respondent2DOB")
+    @JsonAlias(value = "defendant2DateOfBirth")
+    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "Europe/London")
     private Date defendant2DateOfBirth;
 
     private PaymentSchedule paymentSchedule;
