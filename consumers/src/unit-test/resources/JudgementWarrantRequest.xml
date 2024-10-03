@@ -18,7 +18,7 @@
     <bas:line3>defendant1Address line3</bas:line3>
     <!--Optional:-->
     <bas:line4>defendant1Address line4</bas:line4>
-    <bas:postcode>RG42 2DL</bas:postcode>
+    <bas:postcode>DD1 1DD</bas:postcode>
   </jud:defendant1Address>
   <!--Optional:-->
   <jud:defendant1DateOfBirth>1960-10-10</jud:defendant1DateOfBirth>
@@ -30,7 +30,7 @@
     <bas:line3>defendant2Address line3</bas:line3>
     <!--Optional:-->
     <bas:line4>defendant2Address line4</bas:line4>
-    <bas:postcode>RG42 2DL</bas:postcode>
+    <bas:postcode>DD2 2DD</bas:postcode>
   </jud:defendant2Address>
   <!--Optional:-->
   <jud:defendant2DateOfBirth>1970-09-01</jud:defendant2DateOfBirth>
@@ -63,7 +63,7 @@
       <!--Optional:-->
       <jud:line5>payee line5</jud:line5>
       <!--Optional:-->
-      <jud:postcode>RG42 2DL</jud:postcode>
+      <jud:postcode>PP1 1PP</jud:postcode>
     </jud:address>
     <!--Optional:-->
     <jud:telephoneNumber>12345678901234</jud:telephoneNumber>
@@ -111,13 +111,13 @@
   <war:claimNumber>9QZ00001</war:claimNumber>
   <war:defendantId>1</war:defendantId>
   <war:defendantAddress>
-    <bas:line1>defendant1Address line1</bas:line1>
-    <bas:line2>defendant1Address line2</bas:line2>
+    <bas:line1>defendantAddress line1</bas:line1>
+    <bas:line2>defendantAddress line2</bas:line2>
     <!--Optional:-->
-    <bas:line3>defendant1Address line3</bas:line3>
+    <bas:line3>defendantAddress line3</bas:line3>
     <!--Optional:-->
-    <bas:line4>defendant1Address line4</bas:line4>
-    <bas:postcode>RG42 2DL</bas:postcode>
+    <bas:line4>defendantAddress line4</bas:line4>
+    <bas:postcode>DD9 9DD</bas:postcode>
   </war:defendantAddress>
   <war:balanceOfDebt>50000</war:balanceOfDebt>
   <war:warrantAmount>10000</war:warrantAmount>

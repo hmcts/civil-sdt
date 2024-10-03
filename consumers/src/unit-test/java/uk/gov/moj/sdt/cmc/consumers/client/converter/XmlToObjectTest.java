@@ -121,13 +121,13 @@ class XmlToObjectTest extends BaseXmlTest {
         assertEquals("1", request.getRespondentId(), "JudgementRequest has unexpected respondent id");
 
         Address respondent1Address = request.getRespondent1Address();
-        assertAddress(respondent1Address, "Respondent1", "defendant1Address", "RG42 2DL");
+        assertAddress(respondent1Address, "Respondent1", "defendant1Address", "DD1 1DD");
         assertEquals(createDate(1960, 10, 10),
                      request.getRespondent1DOB(),
                      "JudgmentRequest respondent1 date of birth has unexpected value");
 
         Address respondent2Address = request.getRespondent2Address();
-        assertAddress(respondent2Address, "Respondent2", "defendant2Address", "RG42 2DL");
+        assertAddress(respondent2Address, "Respondent2", "defendant2Address", "DD2 2DD");
         assertEquals(createDate(1970, 9, 1),
                      request.getRespondent2DOB(),
                      "JudgmentRequest respondent2 date of birth has unexpected value");
@@ -155,7 +155,7 @@ class XmlToObjectTest extends BaseXmlTest {
         assertEquals("1", request.getRespondentId(), "WarrantRequest has unexpected respondent id");
 
         Address respondentAddress = request.getRespondentAddress();
-        assertAddress(respondentAddress, "Respondent", "defendant1Address", "RG42 2DL");
+        assertAddress(respondentAddress, "Respondent", "defendantAddress", "DD9 9DD");
 
         assertEquals(50000L, request.getBalanceOfDebt(), "WarrantRequest has unexpected balance of debt");
         assertEquals(10000L, request.getWarrantAmount(), "WarrantRequest has unexpected warrant amount");
@@ -177,7 +177,7 @@ class XmlToObjectTest extends BaseXmlTest {
         assertEquals("payee line3", address.getAddressLine3(), "Payee address line 3 has unexpected value");
         assertEquals("payee line4", address.getAddressLine4(), "Payee address line 4 has unexpected value");
         assertEquals("payee line5", address.getPostTown(), "Payee address posttown has unexpected value");
-        assertEquals("RG42 2DL", address.getPostcode(), "Payee address postcode has unexpected value");
+        assertEquals("PP1 1PP", address.getPostcode(), "Payee address postcode has unexpected value");
 
         assertEquals("12345678901234", payee.getTelephoneNumber(), "Payee has unexpected telephone number");
         assertEquals("payee dx number", payee.getDxNumber(), "Payee has unexpected DX number");
@@ -232,7 +232,10 @@ class XmlToObjectTest extends BaseXmlTest {
         assertEquals(9999999L, request.getClaimAmount(), "ClaimRequest Claim amount has unexpected value");
         assertEquals(10000L, request.getSolicitorCost(), "ClaimRequest Solicitor cost has unexpected value");
 
-        assertParticulars(request.getParticulars());
+        List<String> expectedParticulars = new ArrayList<>();
+        expectedParticulars.add("particulars1");
+        expectedParticulars.add("particulars2");
+        assertParticulars(expectedParticulars, request.getParticulars());
 
         assertEquals("signature",
                      request.getStatementOfTruthName(),
@@ -253,10 +256,7 @@ class XmlToObjectTest extends BaseXmlTest {
         assertAddress(defendantAddress, messagePrefix, addressPrefix, postcode);
     }
 
-    private void assertParticulars(List<String> particulars) {
-        List<String> expectedParticulars = new ArrayList<>();
-        expectedParticulars.add("particulars1");
-        expectedParticulars.add("particulars2");
+    private void assertParticulars(List<String> expectedParticulars, List<String> particulars) {
 
         assertNotNull(particulars, "ClaimRequest particulars should not be null");
         assertEquals(expectedParticulars.size(),
