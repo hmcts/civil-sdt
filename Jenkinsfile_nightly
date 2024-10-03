@@ -5,7 +5,7 @@ properties([
   pipelineTriggers([cron('H 8 * * 1-5')])
 ])
 
-@Library("Infrastructure@DTSPO-18903/artifactory-jitpack")
+@Library("Infrastructure")
 
 def type = "java"
 def product = "civil"
