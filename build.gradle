@@ -228,7 +228,7 @@ allprojects {
   apply plugin: 'java'
 
   dependencies {
-    annotationProcessor 'org.mapstruct:mapstruct-processor:1.6.0', 'org.projectlombok:lombok-mapstruct-binding:0.2.0'
+    annotationProcessor 'org.mapstruct:mapstruct-processor:1.6.2', 'org.projectlombok:lombok-mapstruct-binding:0.2.0'
     implementation group: 'com.azure', name: 'azure-core', version: '1.52.0'
     implementation group: 'com.azure', name: 'azure-messaging-servicebus', version: '7.15.2'
     implementation group: 'com.fasterxml.jackson.module', name: 'jackson-module-jaxb-annotations', version: '2.18.0'
