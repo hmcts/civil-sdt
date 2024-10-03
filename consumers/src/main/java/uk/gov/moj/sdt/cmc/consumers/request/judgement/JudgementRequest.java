@@ -65,7 +65,7 @@ public class JudgementRequest {
 
     private PaymentSchedule paymentSchedule;
 
-    private Integer interest;
+    private Long interest;
 
     private Long solicitorCost;
 
@@ -121,7 +121,7 @@ public class JudgementRequest {
         return paymentSchedule;
     }
 
-    public Integer getInterest() {
+    public Long getInterest() {
         return interest;
     }
 

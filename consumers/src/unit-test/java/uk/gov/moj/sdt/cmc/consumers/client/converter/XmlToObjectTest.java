@@ -135,7 +135,7 @@ class XmlToObjectTest extends BaseXmlTest {
         assertEquals("immediate",
                      request.getPaymentSchedule().getPaymentScheduleType(),
                      "JudgmentRequest has unexpected payment schedule type");
-        assertEquals(99999, request.getInterest(), "JudgmentRequest has unexpected interest value");
+        assertEquals(99999L, request.getInterest(), "JudgmentRequest has unexpected interest value");
         assertEquals(5000L, request.getSolicitorCost(), "JudgmentRequest has unexpected solicitor cost value");
         assertEquals(10000000L, request.getDeductedAmount(), "JudgmentRequest has unexpected deducted amount value");
         assertEquals(100L, request.getClaimAmountAdmitted(), "JudgmentRequest has unexpected claim amount admitted");
@@ -220,17 +220,17 @@ class XmlToObjectTest extends BaseXmlTest {
         assertTrue(request.getSendParticularsSeparately(), "ClaimRequest SendParticularsSeparately should be true");
         assertTrue(request.getReserveRightToClaimInterest(), "ClaimRequest ReserveRightToClaimInterest should be true");
 
-        assertEquals(1000, request.getInterestDailyAmount(), "Interest daily amount has unexpected value");
+        assertEquals(1000L, request.getInterestDailyAmount(), "Interest daily amount has unexpected value");
         assertEquals(createDate(2013, 8, 15), request.getInterestOwedDate(), "Interest owed date has unexpected value");
         assertEquals(createDate(2013, 8, 16),
                      request.getInterestClaimDate(),
                      "Interest claim date has unexpected value");
-        assertEquals(10,
+        assertEquals(10L,
                      request.getClaimAmountInterestBase(),
                      "Interest claim amount interest base has unexpected value");
 
-        assertEquals(9999999, request.getClaimAmount(), "ClaimRequest Claim amount has unexpected value");
-        assertEquals(10000, request.getSolicitorCost(), "ClaimRequest Solicitor cost has unexpected value");
+        assertEquals(9999999L, request.getClaimAmount(), "ClaimRequest Claim amount has unexpected value");
+        assertEquals(10000L, request.getSolicitorCost(), "ClaimRequest Solicitor cost has unexpected value");
 
         assertParticulars(request.getParticulars());
 

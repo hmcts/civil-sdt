@@ -25,7 +25,7 @@ public class Interest {
 
     @JsonProperty(value = "interestDailyAmount")
     @JsonAlias(value = "dailyAmount")
-    private Double dailyAmount;
+    private Long dailyAmount;
 
     @JsonProperty(value = "interestOwedDate")
     @JsonAlias(value = "owedDate")
@@ -37,5 +37,5 @@ public class Interest {
     @JsonFormat(pattern = "yyyy-MM-dd", timezone = "Europe/London")
     private Date claimDate;
 
-    private Double claimAmountInterestBase;
+    private Long claimAmountInterestBase;
 }

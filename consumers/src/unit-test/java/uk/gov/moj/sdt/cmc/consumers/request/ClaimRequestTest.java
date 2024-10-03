@@ -48,8 +48,8 @@ class ClaimRequestTest extends RequestTestBase {
         claimRequest.setParticulars(particulars);
         claimRequest.setReserveRightToClaimInterest(true);
         claimRequest.setInterest(createInterest());
-        claimRequest.setClaimAmount(100.0);
-        claimRequest.setSolicitorCost(20.0);
+        claimRequest.setClaimAmount(100L);
+        claimRequest.setSolicitorCost(20L);
         claimRequest.setSotSignature(createSotSignature(STATEMENT_OF_TRUTH_NAME));
 
         // Use pretty print to avoid having to declare expected value as one long hard to read string
@@ -92,12 +92,12 @@ class ClaimRequestTest extends RequestTestBase {
               "sendParticularsSeparately" : true,
               "particularsLines" : [ "particulars1", "particulars2" ],
               "claimInterest" : true,
-              "interestDailyAmount" : 10.0,
+              "interestDailyAmount" : 10,
               "interestOwedDate" : "2024-08-01",
               "interestClaimDate" : "2024-08-10",
-              "claimAmountInterestBase" : 5.0,
-              "claimAmount" : 100.0,
-              "solicitorCost" : 20.0,
+              "claimAmountInterestBase" : 5,
+              "claimAmount" : 100,
+              "solicitorCost" : 20,
               "statementOfTruthName" : "signature"
             }""";
         assertExpectedRequestJson(expectedResult, result);
@@ -114,7 +114,7 @@ class ClaimRequestTest extends RequestTestBase {
         claimRequest.setSendParticularsSeparately(true);
         claimRequest.setParticulars(particulars);
         claimRequest.setReserveRightToClaimInterest(false);
-        claimRequest.setClaimAmount(100.0);
+        claimRequest.setClaimAmount(100L);
         claimRequest.setSotSignature(createSotSignature(STATEMENT_OF_TRUTH_NAME));
 
         String result = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(claimRequest);
@@ -142,7 +142,7 @@ class ClaimRequestTest extends RequestTestBase {
               "interestOwedDate" : null,
               "interestClaimDate" : null,
               "claimAmountInterestBase" : null,
-              "claimAmount" : 100.0,
+              "claimAmount" : 100,
               "solicitorCost" : null,
               "statementOfTruthName" : "signature"
             }""";
@@ -197,10 +197,10 @@ class ClaimRequestTest extends RequestTestBase {
     private Interest createInterest() {
         Interest interest = new Interest();
 
-        interest.setDailyAmount(10.0);
+        interest.setDailyAmount(10L);
         interest.setOwedDate(createDate(2024, 8, 1));
         interest.setClaimDate(createDate(2024, 8, 10));
-        interest.setClaimAmountInterestBase(5.0);
+        interest.setClaimAmountInterestBase(5L);
 
         return interest;
     }

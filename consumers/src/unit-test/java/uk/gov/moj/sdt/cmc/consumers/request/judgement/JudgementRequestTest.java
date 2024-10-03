@@ -46,7 +46,7 @@ class JudgementRequestTest extends RequestTestBase {
         judgementRequest.setDefendant2Address(createAddress("defendant2", "DD2 2DD"));
         judgementRequest.setDefendant2DateOfBirth(createDate(2006, 2, 2));
         judgementRequest.setPaymentSchedule(paymentSchedule);
-        judgementRequest.setInterest(2);
+        judgementRequest.setInterest(2L);
         judgementRequest.setSolicitorCost(10L);
         judgementRequest.setDeductedAmount(20L);
         judgementRequest.setClaimAmountAdmitted(30L);

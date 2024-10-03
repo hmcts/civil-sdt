@@ -69,10 +69,10 @@ public class ClaimRequest {
     private Interest interest;
 
     @Getter
-    private Double claimAmount;
+    private Long claimAmount;
 
     @Getter
-    private Double solicitorCost;
+    private Long solicitorCost;
 
     @JsonProperty(value = "particularsLines")
     @Getter
@@ -80,7 +80,7 @@ public class ClaimRequest {
 
     private SotSignature sotSignature;
 
-    public Double getInterestDailyAmount() {
+    public Long getInterestDailyAmount() {
         return interest == null ? null : interest.getDailyAmount();
     }
 
@@ -94,7 +94,7 @@ public class ClaimRequest {
         return interest == null ? null : interest.getClaimDate();
     }
 
-    public Double getClaimAmountInterestBase() {
+    public Long getClaimAmountInterestBase() {
         return interest == null ? null : interest.getClaimAmountInterestBase();
     }
 
