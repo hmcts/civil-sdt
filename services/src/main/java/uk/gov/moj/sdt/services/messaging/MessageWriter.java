@@ -34,6 +34,7 @@ package uk.gov.moj.sdt.services.messaging;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jms.IllegalStateException;
 import org.springframework.jms.UncategorizedJmsException;
 import org.springframework.jms.connection.CachingConnectionFactory;
@@ -71,6 +72,9 @@ public class MessageWriter implements IMessageWriter {
 
     private final QueueConfig queueConfig;
 
+    @Value("${enable-queue-reset:false}")
+    private boolean enableQueueReset;
+
     /**
      * Creates a message sender with the JmsTemplate.
      *
@@ -84,6 +88,7 @@ public class MessageWriter implements IMessageWriter {
     }
 
     @Override
+    @SuppressWarnings("java:S2139")
     public void queueMessage(final ISdtMessage sdtMessage, final String targetAppCode) {
 
         // Check the target application code is valid and return queue name.
@@ -101,7 +106,16 @@ public class MessageWriter implements IMessageWriter {
         SdtMetricsMBean.getMetrics().upRequestQueueLength();
 
         try {
+            if (enableQueueReset) {
+                LOGGER.debug("Resetting queue connection");
+                CachingConnectionFactory cachingConnectionFactory =
+                    (CachingConnectionFactory) this.jmsTemplate.getConnectionFactory();
+                if (cachingConnectionFactory != null) {
+                    cachingConnectionFactory.resetConnection();
+                }
+            }
             this.jmsTemplate.convertAndSend(queueName, sdtMessage);
+            LOGGER.debug("jmsTemplate.convertAndSend() completed for [{}]", sdtMessage.getSdtRequestReference());
         } catch (final IllegalStateException e) {
             LOGGER.error("Error sending message to queue using jms template {}", e.getMessage());
             String message = e.getMessage();
@@ -114,6 +128,9 @@ public class MessageWriter implements IMessageWriter {
             }
         } catch (final UncategorizedJmsException e) {
             logQueueConnectFailure(sdtMessage, queueName, e);
+        } catch (final Exception e) {
+            LOGGER.debug("jmsTemplate.convertAndSend() exception [{}]", e.getMessage());
+            throw e;
         }
     }
 
