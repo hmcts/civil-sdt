@@ -12,10 +12,13 @@ import uk.gov.moj.sdt.cmc.consumers.request.claim.ClaimRequest;
 import uk.gov.moj.sdt.cmc.consumers.request.claim.Claimant;
 import uk.gov.moj.sdt.cmc.consumers.request.claim.Defendant;
 import uk.gov.moj.sdt.cmc.consumers.request.common.Address;
+import uk.gov.moj.sdt.cmc.consumers.request.judgement.InstalmentFrequencyType;
 import uk.gov.moj.sdt.cmc.consumers.request.judgement.JudgementRequest;
 import uk.gov.moj.sdt.cmc.consumers.request.judgement.JudgmentType;
 import uk.gov.moj.sdt.cmc.consumers.request.judgement.Payee;
 import uk.gov.moj.sdt.cmc.consumers.request.judgement.PayeeAddress;
+import uk.gov.moj.sdt.cmc.consumers.request.judgement.PaymentSchedule;
+import uk.gov.moj.sdt.cmc.consumers.request.judgement.PaymentScheduleType;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -27,6 +30,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class XmlToObjectTest extends BaseXmlTest {
@@ -38,6 +42,10 @@ class XmlToObjectTest extends BaseXmlTest {
     private static final String CLAIM_STATUS_UPDATE = "ClaimStatusUpdate.xml";
 
     private static final String JUDGEMENT = "Judgement.xml";
+
+    private static final String JUDGEMENT_PAYSCHEDULE_INSTALMENT = "Judgement_PaySchedule_Instalment.xml";
+
+    private static final String JUDGEMENT_PAYSCHEDULE_IN_FULL_BY = "Judgement_PaySchedule_InFullBy.xml";
 
     private static final String WARRANT_REQUEST = "WarrantRequest.xml";
 
@@ -62,6 +70,32 @@ class XmlToObjectTest extends BaseXmlTest {
         JudgementRequest request = xmlToObject.convertXmlToObject(xmlContent, JudgementRequest.class);
 
         assertJudgementRequest(request);
+    }
+
+    @Test
+    void shouldConvertJudgementRequestPayScheduleInstalment() throws IOException {
+        String xmlContent = readXmlAsString(JUDGEMENT_PAYSCHEDULE_INSTALMENT);
+        JudgementRequest request = xmlToObject.convertXmlToObject(xmlContent, JudgementRequest.class);
+
+        PaymentSchedule paymentSchedule = request.getPaymentSchedule();
+        assertPaymentSchedule(paymentSchedule,
+                              PaymentScheduleType.INSTALLMENT.getScheduleType(),
+                              null,
+                              100L,
+                              InstalmentFrequencyType.W);
+    }
+
+    @Test
+    void shouldConvertJudgmentRequestPayScheduleInFullBy() throws IOException {
+        String xmlContent = readXmlAsString(JUDGEMENT_PAYSCHEDULE_IN_FULL_BY);
+        JudgementRequest request = xmlToObject.convertXmlToObject(xmlContent, JudgementRequest.class);
+
+        PaymentSchedule paymentSchedule = request.getPaymentSchedule();
+        assertPaymentSchedule(paymentSchedule,
+                              PaymentScheduleType.IN_FULL.getScheduleType(),
+                              createDate(2024, 10, 4),
+                              null,
+                              null);
     }
 
     @Test
@@ -132,9 +166,9 @@ class XmlToObjectTest extends BaseXmlTest {
                      request.getRespondent2DOB(),
                      "JudgmentRequest respondent2 date of birth has unexpected value");
 
-        assertEquals("immediate",
-                     request.getPaymentSchedule().getPaymentScheduleType(),
-                     "JudgmentRequest has unexpected payment schedule type");
+        PaymentSchedule paymentSchedule = request.getPaymentSchedule();
+        assertPaymentSchedule(paymentSchedule, PaymentScheduleType.IMMEDIATE.getScheduleType(), null, null, null);
+
         assertEquals(99999L, request.getInterest(), "JudgmentRequest has unexpected interest value");
         assertEquals(5000L, request.getSolicitorCost(), "JudgmentRequest has unexpected solicitor cost value");
         assertEquals(10000000L, request.getDeductedAmount(), "JudgmentRequest has unexpected deducted amount value");
@@ -146,6 +180,44 @@ class XmlToObjectTest extends BaseXmlTest {
         assertPayee(payee);
 
         assertEquals("sotSignature", request.getSotName(), "JudgmentRequest has unexpected statement of truth name");
+    }
+
+    private void assertPaymentSchedule(PaymentSchedule paymentSchedule,
+                                       String expectedScheduleType,
+                                       Date expectedInFullByDate,
+                                       Long expectedInstalmentAmount,
+                                       InstalmentFrequencyType expectedInstalmentFrequencyType) {
+        assertNotNull(paymentSchedule, "JudgmentRequest payment schedule should not be null");
+        assertEquals(expectedScheduleType,
+                     paymentSchedule.getPaymentScheduleType(),
+                     "JudgmentRequest payment schedule has unexpected type");
+
+        if (expectedInFullByDate == null) {
+            assertNull(paymentSchedule.getPaymentInFullBy(),
+                       "JudgmentRequest payment schedule payment in full by date should be null");
+        } else {
+            assertEquals(expectedInFullByDate,
+                         paymentSchedule.getPaymentInFullBy(),
+                         "JudgmentRequest payment schedule has unexpected payment in full by date");
+        }
+
+        if (expectedInstalmentAmount == null) {
+            assertNull(paymentSchedule.getInstallmentAmount(),
+                       "JudgmentRequest payment schedule instalment amount should be null");
+        } else {
+            assertEquals(expectedInstalmentAmount,
+                         paymentSchedule.getInstallmentAmount(),
+                         "JudgmentRequest payment schedule has unexpected instalment amount");
+        }
+
+        if (expectedInstalmentFrequencyType == null) {
+            assertNull(paymentSchedule.getInstallmentFrequency(),
+                       "JudgmentRequest payment schedule instalment frequency should be null");
+        } else {
+            assertEquals(expectedInstalmentFrequencyType,
+                         paymentSchedule.getInstallmentFrequency(),
+                         "JudgmentRequest payment schedule has unexpected instalment frequency");
+        }
     }
 
     private void assertWarrantRequest(WarrantRequest request) {
