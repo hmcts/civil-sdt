@@ -38,6 +38,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import uk.gov.moj.sdt.services.config.ConnectionFactoryTestConfig;
 import uk.gov.moj.sdt.services.config.ServicesTestConfig;
 import uk.gov.moj.sdt.services.messaging.api.ISdtMessage;
 import uk.gov.moj.sdt.test.utils.AbstractIntegrationTest;
@@ -59,7 +60,7 @@ import static org.junit.jupiter.api.Assertions.fail;
  */
 @ActiveProfiles("integ")
 @ExtendWith(SpringExtension.class)
-@SpringBootTest(classes = {TestConfig.class, ServicesTestConfig.class})
+@SpringBootTest(classes = {TestConfig.class, ServicesTestConfig.class, ConnectionFactoryTestConfig.class})
 class MessageWriterIntTest extends AbstractIntegrationTest {
 
     private static final String TARGET_APP_CODE = "TEST1";

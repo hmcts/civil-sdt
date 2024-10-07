@@ -40,6 +40,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import uk.gov.moj.sdt.services.config.ConnectionFactoryTestConfig;
 import uk.gov.moj.sdt.services.config.ServicesTestConfig;
 import uk.gov.moj.sdt.services.messaging.api.ISdtMessage;
 import uk.gov.moj.sdt.test.utils.AbstractIntegrationTest;
@@ -62,7 +63,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 @ActiveProfiles("integ-asb")
 @ExtendWith(SpringExtension.class)
-@SpringBootTest(classes = {TestConfig.class, ServicesTestConfig.class})
+@SpringBootTest(classes = {TestConfig.class, ServicesTestConfig.class, ConnectionFactoryTestConfig.class})
 @Disabled("Preview environments don't support Azure Service bus queues")
 class MessageWriterIntAsbTest extends AbstractIntegrationTest {
 

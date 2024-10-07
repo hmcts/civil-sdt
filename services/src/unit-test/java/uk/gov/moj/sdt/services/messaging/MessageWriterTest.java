@@ -168,8 +168,8 @@ class MessageWriterTest extends AbstractSdtUnitTestBase {
 
         messageWriter.queueMessage(sdtMessage, UNIT_TEST);
 
-        verify(mockJmsTemplate).getConnectionFactory();
-        verify(mockCachingConnectionFactory).resetConnection();
+        verify(mockJmsTemplate, times(2)).getConnectionFactory();
+        verify(mockCachingConnectionFactory, times(2)).resetConnection();
         verify(mockJmsTemplate, times(2)).convertAndSend(UNIT_TEST_QUEUE, sdtMessage);
     }
 
@@ -194,7 +194,7 @@ class MessageWriterTest extends AbstractSdtUnitTestBase {
             assertEquals("JmsTemplate has no connection factory", e.getMessage(), "Unexpected exception message");
         }
 
-        verify(mockJmsTemplate).getConnectionFactory();
+        verify(mockJmsTemplate, times(2)).getConnectionFactory();
         verify(mockJmsTemplate).convertAndSend(UNIT_TEST_QUEUE, sdtMessage);
     }
 
@@ -234,8 +234,8 @@ class MessageWriterTest extends AbstractSdtUnitTestBase {
         listAppender.stop();
         messageWriterLogger.detachAndStopAllAppenders();
 
-        verify(mockJmsTemplate).getConnectionFactory();
-        verify(mockCachingConnectionFactory).resetConnection();
+        verify(mockJmsTemplate, times(2)).getConnectionFactory();
+        verify(mockCachingConnectionFactory, times(2)).resetConnection();
         verify(mockJmsTemplate, times(2)).convertAndSend(UNIT_TEST_QUEUE, sdtMessage);
     }
 
@@ -267,8 +267,8 @@ class MessageWriterTest extends AbstractSdtUnitTestBase {
             // Expected exception thrown, continue with test
         }
 
-        verify(mockJmsTemplate).getConnectionFactory();
-        verify(mockCachingConnectionFactory).resetConnection();
+        verify(mockJmsTemplate, times(2)).getConnectionFactory();
+        verify(mockCachingConnectionFactory, times(2)).resetConnection();
         verify(mockJmsTemplate, times(2)).convertAndSend(UNIT_TEST_QUEUE, sdtMessage);
     }
 

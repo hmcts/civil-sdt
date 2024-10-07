@@ -1,30 +1,30 @@
 package uk.gov.moj.sdt.services.mbeans;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.stubbing.Answer;
 import org.springframework.jms.listener.DefaultMessageListenerContainer;
-import org.springframework.util.ReflectionUtils;
 import uk.gov.moj.sdt.dao.api.IIndividualRequestDao;
 import uk.gov.moj.sdt.domain.IndividualRequest;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.services.api.ITargetApplicationSubmissionService;
+import uk.gov.moj.sdt.services.utils.RequeueIndividualRequestUtility;
 import uk.gov.moj.sdt.services.utils.api.IMessagingUtility;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 import uk.gov.moj.sdt.utils.mbeans.api.ISdtManagementMBean;
 
-import java.lang.reflect.Field;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -118,30 +118,18 @@ class SdtManagementMBeanTest extends AbstractSdtUnitTestBase {
     private DefaultMessageListenerContainer messageListenerContainer;
 
     @Mock
-    private IMessagingUtility messagingUtility;
-
-    @Mock
-    private ITargetApplicationSubmissionService targetAppSubmissionService;
+    private RequeueIndividualRequestUtility mockRequeueIndividualRequestUtility;
 
     /**
      * Method to do any pre-test set-up.
      */
-    @BeforeEach
     @Override
-    public void setUp() {
+    protected void setUpLocalTests() {
         sdtManagementMBean = new SdtManagementMBean(messageListenerContainer,
                                                     mockIndividualRequestDao,
-                                                    messagingUtility,
-                                                    targetAppSubmissionService);
-        // Instantiate all the mocked objects and set them up in the MBean
-        this.setPrivateField(SdtManagementMBean.class, sdtManagementMBean, "individualRequestDao",
-                IIndividualRequestDao.class, mockIndividualRequestDao);
-
-        this.setPrivateField(SdtManagementMBean.class, sdtManagementMBean, "messagingUtility",
-                IMessagingUtility.class, mockMessagingUtility);
-
-        this.setPrivateField(SdtManagementMBean.class, sdtManagementMBean, "targetAppSubmissionService",
-                ITargetApplicationSubmissionService.class, mockTargetAppSubmissionService);
+                                                    mockMessagingUtility,
+                                                    mockRequeueIndividualRequestUtility,
+                                                    mockTargetAppSubmissionService);
     }
 
     /**
@@ -223,6 +211,7 @@ class SdtManagementMBeanTest extends AbstractSdtUnitTestBase {
         this.sdtManagementMBean.requeueOldIndividualRequests(TEST_STALE_DURATION);
 
         verify(mockIndividualRequestDao).getStaleIndividualRequests(TEST_STALE_DURATION);
+        verify(mockRequeueIndividualRequestUtility, never()).requeueIndividualRequest(any(IIndividualRequest.class));
 
         assertTrue(true, "Not expected to call the method to requeue requests");
     }
@@ -239,19 +228,16 @@ class SdtManagementMBeanTest extends AbstractSdtUnitTestBase {
         final List<IIndividualRequest> individualRequests = new ArrayList<>();
         individualRequests.add(individualRequest);
 
-        when(mockIndividualRequestDao.getStaleIndividualRequests(TEST_STALE_DURATION)).thenReturn(
-                individualRequests);
-
-        mockMessagingUtility.enqueueRequest(individualRequest);
-
-        individualRequest.resetForwardingAttempts();
-
-        mockIndividualRequestDao.persistBulk(individualRequests);
+        when(mockIndividualRequestDao.getStaleIndividualRequests(TEST_STALE_DURATION)).thenReturn(individualRequests);
 
         this.sdtManagementMBean.requeueOldIndividualRequests(TEST_STALE_DURATION);
 
         verify(mockIndividualRequestDao).getStaleIndividualRequests(TEST_STALE_DURATION);
-        verify(mockMessagingUtility, atLeastOnce()).enqueueRequest(individualRequest);
+        /*
+         When the enable-new-queue-process feature flag is removed the following verify() will need to be replaced with:
+         verify(mockRequeueIndividualRequestUtility).requeueIndividualRequest(individualRequest);
+         */
+        verify(mockMessagingUtility).enqueueRequest(individualRequest);
 
         assertTrue(true, "All tests passed");
     }
@@ -407,24 +393,4 @@ class SdtManagementMBeanTest extends AbstractSdtUnitTestBase {
 
         assertEquals(OK_MESSAGE, returnVal, "The return value is OK");
     }
-
-    /**
-     * This is a method to modify a private field with no accessor methods.
-     *
-     * @param concreteClazz        this is the class with the field accessor being changed (e.g.
-     *                             MyClazz.class)
-     * @param classInstance        this is the instance with the field state being changed (e.g.
-     *                             myClazz)
-     * @param instanceVariableName this is the field name (e.g. "myString")
-     * @param variableClazz        this is the class of the field's type (e.g. String.class)
-     * @param newFieldState        the new value of the filed (e.g. "a new value")
-     */
-    public void setPrivateField(final Class<?> concreteClazz, final Object classInstance,
-                                final String instanceVariableName, final Class<?> variableClazz,
-                                final Object newFieldState) {
-        final Field field = ReflectionUtils.findField(concreteClazz, instanceVariableName, variableClazz);
-        ReflectionUtils.makeAccessible(field);
-        ReflectionUtils.setField(field, classInstance, newFieldState);
-    }
-
 }

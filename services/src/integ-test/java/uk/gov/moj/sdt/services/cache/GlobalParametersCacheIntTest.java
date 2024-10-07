@@ -42,6 +42,7 @@ import org.springframework.transaction.annotation.Transactional;
 import uk.gov.moj.sdt.dao.GlobalParametersDao;
 import uk.gov.moj.sdt.domain.api.IGlobalParameter;
 import uk.gov.moj.sdt.domain.cache.api.ICacheable;
+import uk.gov.moj.sdt.services.config.ConnectionFactoryTestConfig;
 import uk.gov.moj.sdt.services.config.ServicesTestConfig;
 import uk.gov.moj.sdt.test.utils.AbstractIntegrationTest;
 import uk.gov.moj.sdt.test.utils.TestConfig;
@@ -58,7 +59,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
  */
 @ActiveProfiles("integ")
 @ExtendWith(SpringExtension.class)
-@SpringBootTest(classes = {TestConfig.class, ServicesTestConfig.class})
+@SpringBootTest(classes = {TestConfig.class, ServicesTestConfig.class, ConnectionFactoryTestConfig.class})
 @Sql(scripts = {"classpath:uk/gov/moj/sdt/services/sql/RefData.sql", "classpath:uk/gov/moj/sdt/services/sql/GlobalParametersCacheIntTest.sql"})
 @Transactional
 public class GlobalParametersCacheIntTest extends AbstractIntegrationTest {
