@@ -43,6 +43,7 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 import uk.gov.moj.sdt.services.api.ITargetApplicationSubmissionService;
+import uk.gov.moj.sdt.services.config.ConnectionFactoryTestConfig;
 import uk.gov.moj.sdt.services.config.ServicesTestConfig;
 import uk.gov.moj.sdt.test.utils.AbstractIntegrationTest;
 import uk.gov.moj.sdt.test.utils.TestConfig;
@@ -62,7 +63,7 @@ import static org.mockito.Mockito.when;
  */
 @ActiveProfiles("integ")
 @ExtendWith(SpringExtension.class)
-@SpringBootTest(classes = {TestConfig.class, ServicesTestConfig.class})
+@SpringBootTest(classes = {TestConfig.class, ServicesTestConfig.class, ConnectionFactoryTestConfig.class})
 @Sql(scripts = {"classpath:uk/gov/moj/sdt/services/sql/RefData.sql", "classpath:uk/gov/moj/sdt/services/sql/IndividualRequestMdbIntTest.sql"})
 @Transactional
 public class IndividualRequestMdbIntTest extends AbstractIntegrationTest {

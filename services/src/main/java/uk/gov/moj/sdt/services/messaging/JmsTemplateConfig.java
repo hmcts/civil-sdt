@@ -8,9 +8,8 @@ import org.springframework.jms.core.JmsTemplate;
 import javax.jms.ConnectionFactory;
 import javax.jms.Session;
 
-
 @Configuration
-@ConditionalOnProperty("enable-jms")
+@ConditionalOnProperty("enable-new-queue-process")
 public class JmsTemplateConfig {
 
     @Bean

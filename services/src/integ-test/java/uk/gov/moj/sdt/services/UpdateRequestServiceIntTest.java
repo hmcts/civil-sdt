@@ -18,6 +18,7 @@ import uk.gov.moj.sdt.domain.IndividualRequest;
 import uk.gov.moj.sdt.domain.api.IBulkSubmission;
 import uk.gov.moj.sdt.domain.api.IErrorLog;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
+import uk.gov.moj.sdt.services.config.ConnectionFactoryTestConfig;
 import uk.gov.moj.sdt.services.config.ServicesTestConfig;
 import uk.gov.moj.sdt.test.utils.AbstractIntegrationTest;
 import uk.gov.moj.sdt.test.utils.TestConfig;
@@ -34,7 +35,7 @@ import static org.junit.jupiter.params.provider.Arguments.arguments;
 
 @ActiveProfiles("integ")
 @ExtendWith(SpringExtension.class)
-@SpringBootTest(classes = {TestConfig.class, ServicesTestConfig.class, DaoTestConfig.class})
+@SpringBootTest(classes = {TestConfig.class, ServicesTestConfig.class, DaoTestConfig.class, ConnectionFactoryTestConfig.class})
 @Sql(scripts = {"classpath:uk/gov/moj/sdt/services/sql/RefData.sql",
     "classpath:uk/gov/moj/sdt/services/sql/UpdateRequestServiceIntTest.sql"})
 @Transactional

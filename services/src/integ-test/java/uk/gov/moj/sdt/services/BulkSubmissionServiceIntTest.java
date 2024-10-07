@@ -51,6 +51,7 @@ import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.domain.api.IServiceRouting;
 import uk.gov.moj.sdt.domain.api.IServiceType;
 import uk.gov.moj.sdt.domain.api.ITargetApplication;
+import uk.gov.moj.sdt.services.config.ConnectionFactoryTestConfig;
 import uk.gov.moj.sdt.services.config.ServicesTestConfig;
 import uk.gov.moj.sdt.test.utils.AbstractIntegrationTest;
 import uk.gov.moj.sdt.test.utils.TestConfig;
@@ -79,7 +80,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
  */
 @ActiveProfiles("integ")
 @ExtendWith(SpringExtension.class)
-@SpringBootTest(classes = {TestConfig.class, ServicesTestConfig.class })
+@SpringBootTest(classes = {TestConfig.class, ServicesTestConfig.class, ConnectionFactoryTestConfig.class})
 @Sql(scripts = {"classpath:uk/gov/moj/sdt/services/sql/RefData.sql", "classpath:uk/gov/moj/sdt/services/sql/BulkSubmissionServiceIntTest.sql"})
 @Transactional
 public class BulkSubmissionServiceIntTest extends AbstractIntegrationTest {
