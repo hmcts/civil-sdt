@@ -253,7 +253,7 @@ class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestBase {
         // Setup dummy target response
         SdtContext.getContext().setRawInXml(RESPONSE);
 
-        this.targetAppSubmissionService.processRequestToSubmit(TEST_1, false);
+        this.targetAppSubmissionService.processRequestToSubmit(TEST_1);
 
         List<ILoggingEvent> logList = listAppender.list;
 
@@ -310,7 +310,7 @@ class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestBase {
         // Setup dummy target response
         SdtContext.getContext().setRawInXml(RESPONSE);
 
-        this.targetAppSubmissionService.processRequestToSubmit(TEST_1, false);
+        this.targetAppSubmissionService.processRequestToSubmit(TEST_1);
 
         List<ILoggingEvent> logList = listAppender.list;
 
@@ -362,7 +362,7 @@ class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestBase {
         // Setup dummy target response
         SdtContext.getContext().setRawInXml(RESPONSE);
 
-        this.targetAppSubmissionService.processRequestToSubmit(TEST_1, false);
+        this.targetAppSubmissionService.processRequestToSubmit(TEST_1);
 
         verify(mockIndividualRequestDao, times(2)).persist(individualRequest);
         verify(mockConsumerGateway).individualRequest(individualRequest, 1000, 12000);
@@ -386,7 +386,7 @@ class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestBase {
         listAppender.start();
         logger.addAppender(listAppender);
 
-        this.targetAppSubmissionService.processRequestToSubmit(TEST_1, false);
+        this.targetAppSubmissionService.processRequestToSubmit(TEST_1);
 
         List<ILoggingEvent> logList = listAppender.list;
 
@@ -444,7 +444,7 @@ class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestBase {
         listAppender.start();
         logger.addAppender(listAppender);
 
-        this.targetAppSubmissionService.processRequestToSubmit(TEST_1, false);
+        this.targetAppSubmissionService.processRequestToSubmit(TEST_1);
 
         List<ILoggingEvent> logList = listAppender.list;
 
@@ -513,7 +513,7 @@ class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestBase {
         listAppender.start();
         logger.addAppender(listAppender);
 
-        this.targetAppSubmissionService.processRequestToSubmit(TEST_1, false);
+        this.targetAppSubmissionService.processRequestToSubmit(TEST_1);
 
         List<ILoggingEvent> logList = listAppender.list;
         assertFalse(logList.isEmpty());
@@ -557,7 +557,7 @@ class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestBase {
         listAppender.start();
         logger.addAppender(listAppender);
 
-        this.targetAppSubmissionService.processRequestToSubmit(TEST_1, false);
+        this.targetAppSubmissionService.processRequestToSubmit(TEST_1);
 
         List<ILoggingEvent> logList = listAppender.list;
         assertFalse(logList.isEmpty());
@@ -616,7 +616,7 @@ class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestBase {
         listAppender.start();
         logger.addAppender(listAppender);
 
-        this.targetAppSubmissionService.processRequestToSubmit(TEST_1, false);
+        this.targetAppSubmissionService.processRequestToSubmit(TEST_1);
 
         List<ILoggingEvent> logList = listAppender.list;
         assertFalse(logList.isEmpty());
@@ -821,7 +821,7 @@ class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestBase {
 
         SdtContext.getContext().setRawInXml(RESPONSE);
 
-        this.targetAppSubmissionService.processRequestToSubmit(sdtRequestRef, false);
+        this.targetAppSubmissionService.processRequestToSubmit(sdtRequestRef);
         verify(mockCmcConsumerGateway).individualRequest(any(IIndividualRequest.class), anyLong(), anyLong());
         verify(mockCacheable).getValue(IGlobalParameter.class, TARGET_APP_RESP_TIMEOUT);
         verify(mockCacheable).getValue(IGlobalParameter.class, TARGET_APP_TIMEOUT);
@@ -853,7 +853,7 @@ class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestBase {
         individualRequest.setRequestStatus(IIndividualRequest.IndividualRequestStatus.REJECTED.getStatus());
         when(this.mockIndividualRequestDao.getRequestBySdtReference(sdtRequestRef)).thenReturn(individualRequest);
 
-        this.targetAppSubmissionService.processRequestToSubmit(sdtRequestRef, false);
+        this.targetAppSubmissionService.processRequestToSubmit(sdtRequestRef);
 
         verify(mockConsumerGateway).individualRequest(any(IIndividualRequest.class), anyLong(), anyLong());
     }
@@ -874,7 +874,7 @@ class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestBase {
 
         when(requestTypeXmlNodeValidator.isCMCRequestType(anyString(), anyString(), anyString(), anyBoolean())).thenReturn(true);
 
-        this.targetAppSubmissionService.processRequestToSubmit(TEST_1, false);
+        this.targetAppSubmissionService.processRequestToSubmit(TEST_1);
 
         assertEquals(IIndividualRequest.IndividualRequestStatus.FORWARDED.getStatus(), individualRequest.getRequestStatus());
 
@@ -887,41 +887,6 @@ class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestBase {
         verify(requestTypeXmlNodeValidator, times(2)).isCMCRequestType(anyString(), anyString(), anyString(), anyBoolean());
     }
 
-    @Test
-    void processCCDReferenceRequestFailOnCaseOffLine() {
-        final IIndividualRequest individualRequest = new IndividualRequest();
-
-        individualRequest.setSdtRequestReference(TEST_1);
-        individualRequest.setRequestStatus(RECEIVED);
-        setUpIndividualRequest(individualRequest);
-        individualRequest.setRequestType(JUDGMENT.getType());
-
-        when(this.mockIndividualRequestDao.getRequestBySdtReference(TEST_1)).thenReturn(individualRequest);
-
-        individualRequest.setSdtRequestReference(TEST_1);
-        individualRequest.setRequestStatus(RECEIVED);
-        setUpIndividualRequest(individualRequest);
-        individualRequest.setRequestType(JUDGMENT.getType());
-        individualRequest.setRequestPayload(REQUEST_PAYLOAD.getBytes(StandardCharsets.UTF_8));
-
-        when(this.mockIndividualRequestDao.getRequestBySdtReference(TEST_1)).thenReturn(individualRequest);
-
-        mockGlobalParameterCache(TEN_MILLISECONDS, ONE_THOUSAND_MILLISECONDS, TWELVE_THOUSAND_MILLISECONDS);
-
-        when(requestTypeXmlNodeValidator.isCMCRequestType(anyString(), anyString(), anyString(), anyBoolean())).thenReturn(true);
-
-        this.targetAppSubmissionService.processRequestToSubmit(TEST_1, false);
-
-        assertEquals(IIndividualRequest.IndividualRequestStatus.FORWARDED.getStatus(), individualRequest.getRequestStatus());
-
-        verify(mockCmcConsumerGateway).individualRequest(any(IIndividualRequest.class), anyLong(), anyLong());
-        verify(mockIndividualRequestDao, times(2)).persist(individualRequest);
-        verify(mockCacheable).getValue(IGlobalParameter.class, TARGET_APP_RESP_TIMEOUT);
-        verify(mockCacheable).getValue(IGlobalParameter.class, TARGET_APP_TIMEOUT);
-        verify(mockCacheable).getValue(IGlobalParameter.class, MCOL_INDV_REQ_DELAY);
-        verify(mockIndividualRequestDao).getRequestBySdtReference(TEST_1);
-        verify(requestTypeXmlNodeValidator, times(2)).isCMCRequestType(anyString(), anyString(), anyString(), anyBoolean());
-    }
 
     private void mockGlobalParameterCache(String individualRequestDelay, String targetAppTimeout, String targetAppResponseTimeout) {
         final IGlobalParameter individualReqProcessingDelay = new GlobalParameter();
@@ -971,7 +936,7 @@ class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestBase {
         when(this.mockIndividualRequestDao.getRequestBySdtReference(TEST_1)).thenReturn(individualRequest);
         doCallRealMethod().when(requestTypeXmlNodeValidator).isCMCClaimRequest(CLAIM.getType(), true);
 
-        this.targetAppSubmissionService.processRequestToSubmit(TEST_1, false);
+        this.targetAppSubmissionService.processRequestToSubmit(TEST_1);
 
         verify(mockCmcConsumerGateway).individualRequest(any(IIndividualRequest.class), anyLong(), anyLong());
         verify(requestTypeXmlNodeValidator, times(2)).isCMCClaimRequest(CLAIM.getType(), true);
@@ -1018,7 +983,7 @@ class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestBase {
 
         when(mockIndividualRequestDao.queryAsCount(any(), any())).thenReturn(1L);
 
-        targetAppSubmissionService.processRequestToSubmit(TEST_1, false);
+        targetAppSubmissionService.processRequestToSubmit(TEST_1);
 
         assertEquals(1, individualRequest.getForwardingAttempts(),
                      "Individual request has unexpected number of forwarding attempts");
