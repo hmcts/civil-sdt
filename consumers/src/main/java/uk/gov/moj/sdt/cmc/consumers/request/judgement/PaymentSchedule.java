@@ -22,6 +22,9 @@ import java.util.Date;
 })
 public class PaymentSchedule {
 
+    private static final String DATE_FORMAT = "yyyy-MM-dd";
+    private static final String TIMEZONE_EUROPE_LONDON = "Europe/London";
+
     protected FullPaymentType inFullByPayment;
 
     protected InstalmentPaymentType instalment;
@@ -37,7 +40,7 @@ public class PaymentSchedule {
         return PaymentScheduleType.IMMEDIATE.getScheduleType();
     }
 
-    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "Europe/London")
+    @JsonFormat(pattern = DATE_FORMAT, timezone = TIMEZONE_EUROPE_LONDON)
     public Date getPaymentInFullBy() {
         return inFullByPayment != null ? inFullByPayment.fullByDate : null;
     }

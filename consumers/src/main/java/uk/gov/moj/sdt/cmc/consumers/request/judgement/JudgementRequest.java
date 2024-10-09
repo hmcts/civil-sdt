@@ -39,6 +39,9 @@ import java.util.Date;
 })
 public class JudgementRequest {
 
+    private static final String DATE_FORMAT = "yyyy-MM-dd";
+    private static final String TIMEZONE_EUROPE_LONDON = "Europe/London";
+
     private String claimNumber;
 
     private Boolean jointJudgment;
@@ -53,14 +56,14 @@ public class JudgementRequest {
 
     @JsonProperty(value = "respondent1DOB")
     @JsonAlias(value = "defendant1DateOfBirth")
-    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "Europe/London")
+    @JsonFormat(pattern = DATE_FORMAT, timezone = TIMEZONE_EUROPE_LONDON)
     private Date defendant1DateOfBirth;
 
     private Address defendant2Address;
 
     @JsonProperty(value = "respondent2DOB")
     @JsonAlias(value = "defendant2DateOfBirth")
-    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "Europe/London")
+    @JsonFormat(pattern = DATE_FORMAT, timezone = TIMEZONE_EUROPE_LONDON)
     private Date defendant2DateOfBirth;
 
     private PaymentSchedule paymentSchedule;

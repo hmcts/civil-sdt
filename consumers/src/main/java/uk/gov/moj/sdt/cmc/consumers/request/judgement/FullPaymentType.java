@@ -14,6 +14,9 @@ import java.util.Date;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class FullPaymentType {
 
-    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "Europe/London")
+    private static final String DATE_FORMAT = "yyyy-MM-dd";
+    private static final String TIMEZONE_EUROPE_LONDON = "Europe/London";
+
+    @JsonFormat(pattern = DATE_FORMAT, timezone = TIMEZONE_EUROPE_LONDON)
     protected Date fullByDate;
 }

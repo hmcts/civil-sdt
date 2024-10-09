@@ -23,18 +23,21 @@ import lombok.ToString;
 })
 public class Interest {
 
+    private static final String DATE_FORMAT = "yyyy-MM-dd";
+    private static final String TIMEZONE_EUROPE_LONDON = "Europe/London";
+
     @JsonProperty(value = "interestDailyAmount")
     @JsonAlias(value = "dailyAmount")
     private Long dailyAmount;
 
     @JsonProperty(value = "interestOwedDate")
     @JsonAlias(value = "owedDate")
-    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "Europe/London")
+    @JsonFormat(pattern = DATE_FORMAT, timezone = TIMEZONE_EUROPE_LONDON)
     private Date owedDate;
 
     @JsonProperty(value = "interestClaimDate")
     @JsonAlias(value = "claimDate")
-    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "Europe/London")
+    @JsonFormat(pattern = DATE_FORMAT, timezone = TIMEZONE_EUROPE_LONDON)
     private Date claimDate;
 
     private Long claimAmountInterestBase;
