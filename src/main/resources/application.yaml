@@ -14,6 +14,8 @@ management:
 springdoc:
   packagesToScan: uk.gov.moj.sdt.controllers
 
+enable-new-queue-process: ${ENABLE_NEW_QUEUE_PROCESS:false}
+
 spring:
   jms:
     servicebus:

@@ -47,11 +47,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import java.util.List;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
-
 /**
  * Implementation of the IMessagingUtility interface providing methods
  * to do the tasks related to message queueing.
@@ -102,7 +97,7 @@ public class MessagingUtility implements IMessagingUtility {
 
     private void queueRequest(IIndividualRequest individualRequest) {
         final String targetAppCode =
-                individualRequest.getBulkSubmission().getTargetApplication().getTargetApplicationCode();
+            individualRequest.getBulkSubmission().getTargetApplication().getTargetApplicationCode();
 
         final ISdtMessage messageObj = new SdtMessage();
 

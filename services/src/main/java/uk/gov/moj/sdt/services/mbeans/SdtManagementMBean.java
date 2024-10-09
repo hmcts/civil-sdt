@@ -34,6 +34,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jms.listener.DefaultMessageListenerContainer;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
@@ -41,7 +42,7 @@ import org.springframework.transaction.annotation.Transactional;
 import uk.gov.moj.sdt.dao.api.IIndividualRequestDao;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.services.api.ITargetApplicationSubmissionService;
-import uk.gov.moj.sdt.services.messaging.api.IMessageWriter;
+import uk.gov.moj.sdt.services.utils.RequeueIndividualRequestUtility;
 import uk.gov.moj.sdt.services.utils.api.IMessagingUtility;
 import uk.gov.moj.sdt.utils.mbeans.api.ISdtManagementMBean;
 
@@ -129,9 +130,17 @@ public class SdtManagementMBean implements ISdtManagementMBean {
     private IMessagingUtility messagingUtility;
 
     /**
+     * This variable holding the requeue individual request utility reference.
+     */
+    private RequeueIndividualRequestUtility requeueIndividualRequestUtility;
+
+    /**
      * This variable holding the target application submission service.
      */
     private ITargetApplicationSubmissionService targetAppSubmissionService;
+
+    @Value("${enable-new-queue-process:false}")
+    private boolean enableNewQueueProcess;
 
     @Autowired
     public SdtManagementMBean(@Qualifier("messageListenerContainer")
@@ -140,10 +149,13 @@ public class SdtManagementMBean implements ISdtManagementMBean {
                                   IIndividualRequestDao individualRequestDao,
                               @Qualifier("MessagingUtility")
                                   IMessagingUtility messagingUtility,
+                              @Qualifier("requeueIndividualRequestUtility")
+                                  RequeueIndividualRequestUtility requeueIndividualRequestUtility,
                               @Qualifier("TargetApplicationSubmissionService")
                                   ITargetApplicationSubmissionService targetAppSubmissionService) {
         this.individualRequestDao = individualRequestDao;
         this.messagingUtility = messagingUtility;
+        this.requeueIndividualRequestUtility = requeueIndividualRequestUtility;
         this.targetAppSubmissionService = targetAppSubmissionService;
         setMessageListenerContainer(messageListenerContainer);
     }
@@ -162,19 +174,19 @@ public class SdtManagementMBean implements ISdtManagementMBean {
     public void uncache() {
         this.cacheResetControl++;
 
-        LOGGER.info("Uncaching all cacheable items, cacheResetControl=" + cacheResetControl);
+        LOGGER.info("Uncaching all cacheable items, cacheResetControl={}", cacheResetControl);
     }
 
     @Override
     public String setMdbPoolSize(final String queueName, final int poolSize) {
         if (!containerMap.containsKey(queueName)) {
-            LOGGER.error("mdb pool [" + queueName + "] not found.");
+            LOGGER.error("mdb pool [{}] not found.", queueName);
             return "mdb pool [" + queueName + "] not found";
         }
 
         // Validate new pool size.
         if (poolSize < 1 || poolSize > MAX_POOL_SIZE) {
-            LOGGER.error("MDB pool size can only be set between 1 and " + MAX_POOL_SIZE + ".");
+            LOGGER.error("MDB pool size can only be set between 1 and {}.", MAX_POOL_SIZE);
             return "MDB pool size can only be set between 1 and " + MAX_POOL_SIZE + ".";
         }
 
@@ -185,7 +197,7 @@ public class SdtManagementMBean implements ISdtManagementMBean {
         final int oldPoolSize = messageListenerContainer.getMaxConcurrentConsumers();
         messageListenerContainer.setMaxConcurrentConsumers(poolSize);
 
-        LOGGER.info("mdb pool [" + queueName + "] size changed from " + oldPoolSize + " to " + poolSize);
+        LOGGER.info("mdb pool [{}] size changed from {} to {}", queueName, oldPoolSize, poolSize);
         return "mdb pool [" + queueName + "] size changed from " + oldPoolSize + " to " + poolSize;
     }
 
@@ -196,24 +208,34 @@ public class SdtManagementMBean implements ISdtManagementMBean {
         final List<IIndividualRequest> individualRequests =
                 this.individualRequestDao.getStaleIndividualRequests(minimumAgeInMinutes);
 
-        LOGGER.info("Requeue " + individualRequests.size() + " rejected messages older than " + minimumAgeInMinutes +
-                " minutes");
+        LOGGER.info("Requeue {} rejected messages older than {} minutes",
+                    individualRequests.size(),
+                    minimumAgeInMinutes);
 
         // Loop through the list of the individual requests found.
         if (!individualRequests.isEmpty()) {
-            for (IIndividualRequest individualRequest : individualRequests) {
-                individualRequest.setDeadLetter(false);
-                this.messagingUtility.enqueueRequest(individualRequest);
+            if (enableNewQueueProcess) {
+                for (IIndividualRequest individualRequest : individualRequests) {
+                    requeueIndividualRequestUtility.requeueIndividualRequest(individualRequest);
 
-                // Re-set the forwarding attempts on the individual request.
-                individualRequest.resetForwardingAttempts();
+                    LOGGER.debug("Now re-queued pending individual request [{}]",
+                                 individualRequest.getSdtRequestReference());
+                }
+            } else {
+                for (IIndividualRequest individualRequest : individualRequests) {
+                    individualRequest.setDeadLetter(false);
+                    this.messagingUtility.enqueueRequest(individualRequest);
 
-                LOGGER.debug("Now re-queued pending individual request [" +
-                        individualRequest.getSdtRequestReference() + "]");
+                    // Re-set the forwarding attempts on the individual request.
+                    individualRequest.resetForwardingAttempts();
+
+                    LOGGER.debug("Now re-queued pending individual request [{}]",
+                                     individualRequest.getSdtRequestReference());
+                }
+
+                // Persist the list of individual requests.
+                this.individualRequestDao.persistBulk(individualRequests);
             }
-
-            // Persist the list of individual requests.
-            this.individualRequestDao.persistBulk(individualRequests);
         }
     }
 
@@ -260,17 +282,8 @@ public class SdtManagementMBean implements ISdtManagementMBean {
         this.individualRequestDao = individualRequestDao;
     }
 
-    /**
-     * @param messageWriter the message writer instance.
-     */
-    public void setMessageWriter(final IMessageWriter messageWriter) {
-    }
-
-    /**
-     * @param messagingUtility the messagingUtility instance.
-     */
-    public void setMessagingUtility(final IMessagingUtility messagingUtility) {
-        this.messagingUtility = messagingUtility;
+    public void setRequeueIndividualRequestUtility(final RequeueIndividualRequestUtility requeueIndReqUtility) {
+        this.requeueIndividualRequestUtility = requeueIndReqUtility;
     }
 
     /**

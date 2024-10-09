@@ -54,3 +54,9 @@ variable "database_backup_retention_days" {
   description = "Backup retention period in days for the PGSql instance. Valid values are between 7 & 35 days"
 }
 
+variable "max_message_size_in_kilobytes" {
+  type        = string
+  description = "Integer value which controls the maximum size of a message allowed on the queue for Premium SKU"
+  default     = null
+}
+
