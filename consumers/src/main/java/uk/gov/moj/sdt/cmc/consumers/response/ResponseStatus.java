@@ -2,14 +2,15 @@ package uk.gov.moj.sdt.cmc.consumers.response;
 
 import com.fasterxml.jackson.annotation.JsonValue;
 
-public enum ProcessingStatus {
+public enum ResponseStatus {
 
-    QUEUED("queued"),
-    PROCESSED("processed");
+    ACCEPTED("Accepted"),
+    INITIALLY_ACCEPTED("Initially Accepted"),
+    REJECTED("Rejected");
 
     private final String status;
 
-    ProcessingStatus(String status) {
+    ResponseStatus(String status) {
         this.status = status;
     }
 
@@ -17,4 +18,5 @@ public enum ProcessingStatus {
     String getStatus() {
         return status;
     }
+
 }

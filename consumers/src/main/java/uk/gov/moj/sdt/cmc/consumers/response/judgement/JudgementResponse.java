@@ -1,21 +1,18 @@
 package uk.gov.moj.sdt.cmc.consumers.response.judgement;
 
-import java.util.Date;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
+import uk.gov.moj.sdt.cmc.consumers.response.ResponseStatus;
 
 @Data
-@ToString
 @NoArgsConstructor
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class JudgementResponse {
 
-    @JsonFormat(pattern="yyyy-MM-dd")
-    private Date firstPaymentDate;
+    private ResponseStatus responseStatus;
 
-    @JsonFormat(pattern="yyyy-MM-dd")
-    private Date judgmentEnteredDate;
-
+    @JacksonXmlProperty(localName = "mcolResponseDetail")
+    private JudgementResponseDetail judgementResponseDetail;
 }

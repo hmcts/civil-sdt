@@ -1,34 +1,27 @@
 package uk.gov.moj.sdt.cmc.consumers.response;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static uk.gov.moj.sdt.cmc.consumers.response.ResponseStatus.INITIALLY_ACCEPTED;
 
-class BreathingSpaceResponseTest {
-
-    @Test
-    void testEnumSerialisation() throws JsonProcessingException {
-        BreathingSpaceResponse response = new BreathingSpaceResponse();
-        response.setProcessingStatus(ProcessingStatus.PROCESSED);
-
-        String json = new ObjectMapper().writeValueAsString(response);
-
-        assertNotNull(json, "BreathingSpaceResponse JSON should not be null");
-        assertEquals("{\"processingStatus\":\"processed\"}", json, "BreathingSpaceResponse JSON has unexpected value");
-    }
+class BreathingSpaceResponseTest extends ResponseTestBase {
 
     @Test
-    void testEnumDeserialization() throws JsonProcessingException {
-        String json = "{\"processingStatus\":\"queued\"}";
+    void testConvertToObject() throws JsonProcessingException {
+        String responseJson = """
+            {
+              "responseStatus" : "Initially Accepted"
+            }""";
 
-        BreathingSpaceResponse response = new ObjectMapper().readValue(json, BreathingSpaceResponse.class);
+        BreathingSpaceResponse breathingSpaceResponse =
+            objectMapper.readValue(responseJson, BreathingSpaceResponse.class);
 
-        assertNotNull(response, "BreathingSpaceResponse should not be null");
-        assertEquals(ProcessingStatus.QUEUED,
-                     response.getProcessingStatus(),
-                     "BreathingSpaceResponse has unexpected processing status");
+        assertNotNull(breathingSpaceResponse, "BreathingSpaceResponse should not be null");
+        assertEquals(INITIALLY_ACCEPTED,
+                     breathingSpaceResponse.getResponseStatus(),
+                     "BreathingSpaceResponse has unexpected response status");
     }
 }

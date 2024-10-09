@@ -1,32 +1,27 @@
 package uk.gov.moj.sdt.cmc.consumers.response;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static uk.gov.moj.sdt.cmc.consumers.response.ResponseStatus.INITIALLY_ACCEPTED;
 
-class ClaimStatusUpdateResponseTest {
-
-    @Test
-    void testEnumSerialisation() throws JsonProcessingException {
-        ClaimStatusUpdateResponse response = new ClaimStatusUpdateResponse();
-        response.setProcessingStatus(ProcessingStatus.PROCESSED);
-
-        String json = new ObjectMapper().writeValueAsString(response);
-
-        assertNotNull(json, "ClaimStatusUpdateResponse JSON should not be null");
-        assertEquals("{\"processingStatus\":\"processed\"}", json, "ClaimStatusUpdateResponse JSON has unexpected value");
-    }
+class ClaimStatusUpdateResponseTest extends ResponseTestBase {
 
     @Test
-    void testEnumDeserialization() throws JsonProcessingException {
-        String json = "{\"processingStatus\":\"queued\"}";
+    void testConvertToObject() throws JsonProcessingException {
+        String responseJson = """
+            {
+              "responseStatus" : "Initially Accepted"
+            }""";
 
-        ClaimStatusUpdateResponse response = new ObjectMapper().readValue(json, ClaimStatusUpdateResponse.class);
+        ClaimStatusUpdateResponse claimStatusUpdateResponse =
+            objectMapper.readValue(responseJson, ClaimStatusUpdateResponse.class);
 
-        assertNotNull(response, "ClaimStatusUpdateResponse should not be null");
-        assertEquals(ProcessingStatus.QUEUED, response.getProcessingStatus(), "");
+        assertNotNull(claimStatusUpdateResponse, "ClaimStatusUpdateResponse should not be null");
+        assertEquals(INITIALLY_ACCEPTED,
+                     claimStatusUpdateResponse.getResponseStatus(),
+                     "ClaimStatusUpdateResponse response status has unexpected value");
     }
 }
