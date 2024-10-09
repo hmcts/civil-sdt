@@ -4,6 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import uk.gov.moj.sdt.cmc.consumers.request.judgement.JudgementRequest;
 import uk.gov.moj.sdt.cmc.consumers.response.judgement.JudgementResponse;
+import uk.gov.moj.sdt.cmc.consumers.response.judgement.JudgementResponseDetail;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.mock;
@@ -24,9 +25,14 @@ class MockJudgementRequestServiceTest {
     @Test
     void shouldReturnJudgementResponse() {
         JudgementRequest judgementRequest = mock(JudgementRequest.class);
-        JudgementResponse judgementResponse = mockJudgmentRequestService.requestJudgment(IDAM_ID, SDT_REQUEST_ID, judgementRequest);
+        JudgementResponse judgementResponse =
+            mockJudgmentRequestService.requestJudgment(IDAM_ID, SDT_REQUEST_ID, judgementRequest);
         assertNotNull(judgementResponse);
-        assertNotNull(judgementResponse.getFirstPaymentDate());
-        assertNotNull(judgementResponse.getJudgmentEnteredDate());
+        assertNotNull(judgementResponse.getResponseStatus());
+
+        JudgementResponseDetail judgementResponseDetail = judgementResponse.getJudgementResponseDetail();
+        assertNotNull(judgementResponseDetail);
+        assertNotNull(judgementResponseDetail.getFirstPaymentDate());
+        assertNotNull(judgementResponseDetail.getJudgmentEnteredDate());
     }
 }

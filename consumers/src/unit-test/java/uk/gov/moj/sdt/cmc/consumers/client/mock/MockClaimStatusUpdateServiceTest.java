@@ -6,7 +6,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.moj.sdt.cmc.consumers.request.ClaimStatusUpdateRequest;
 import uk.gov.moj.sdt.cmc.consumers.response.ClaimStatusUpdateResponse;
-import uk.gov.moj.sdt.cmc.consumers.response.ProcessingStatus;
+import uk.gov.moj.sdt.cmc.consumers.response.ResponseStatus;
 import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -16,9 +16,9 @@ import static org.mockito.Mockito.mock;
 @ExtendWith(MockitoExtension.class)
 class MockClaimStatusUpdateServiceTest extends AbstractSdtUnitTestBase {
 
-    String IDAM_ID_HEADER = "IDAMID";
+    private static final String IDAM_ID_HEADER = "IDAMID";
 
-    String SDT_REQUEST_ID = "SDTREQUESTID";
+    private static final String SDT_REQUEST_ID = "SDTREQUESTID";
 
     private MockClaimStatusUpdateService mockClaimStatusUpdateService;
 
@@ -35,6 +35,6 @@ class MockClaimStatusUpdateServiceTest extends AbstractSdtUnitTestBase {
                                                                                             SDT_REQUEST_ID ,
                                                                                             claimStatusUpdateRequest);
         assertNotNull(response);
-        assertEquals(ProcessingStatus.QUEUED, response.getProcessingStatus());
+        assertEquals(ResponseStatus.INITIALLY_ACCEPTED, response.getResponseStatus());
     }
 }
