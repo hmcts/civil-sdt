@@ -24,8 +24,7 @@ import static com.google.common.net.HttpHeaders.AUTHORIZATION;
 
 @FeignClient(name = "civil-api",
     url = "${civil.api.url}",
-    configuration = CMCConfig.class,
-    fallback = CMCApiFallback.class)
+    configuration = CMCConfig.class)
 public interface CMCApi {
 
     String IDAM_ID_HEADER = "IDAMID";
