@@ -14,9 +14,8 @@ import lombok.ToString;
     "addressLine1",
     "addressLine2",
     "addressLine3",
-    "addressLine4",
-    "postCode",
-    "postTown"
+    "postTown",
+    "postCode"
 })
 public class Address {
 
@@ -41,11 +40,7 @@ public class Address {
     }
 
     public String getAddressLine3() {
-        return line3;
-    }
-
-    public String getAddressLine4() {
-        return line4;
+        return isFieldEmpty(line4) ? null : line3;
     }
 
     public String getPostcode() {
@@ -53,6 +48,10 @@ public class Address {
     }
 
     public String getPosttown() {
-        return posttown;
+        return isFieldEmpty(line4) ? line3 : line4;
+    }
+
+    private boolean isFieldEmpty(String field) {
+        return field == null || field.isEmpty();
     }
 }

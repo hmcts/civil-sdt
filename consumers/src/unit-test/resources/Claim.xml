@@ -1,0 +1,65 @@
+<bul:mcolClaim xmlns:bul="http://ws.sdt.moj.gov.uk/2013/sdt/BulkRequestSchema" xmlns:cla="http://ws.sdt.moj.gov.uk/2013/mcol/ClaimSchema" xmlns:bas="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema">
+  <!--Optional:-->
+  <cla:claimantReference>claimRef</cla:claimantReference>
+  <!--Optional:-->
+  <cla:claimant>
+    <cla:name>claimantForename claimantSurname</cla:name>
+    <cla:address>
+      <cla:line1>claimantAddress line1</cla:line1>
+      <cla:line2>claimantAddress line2</cla:line2>
+      <cla:line3>claimantAddress line3</cla:line3>
+      <cla:line4>claimantAddress line4</cla:line4>
+      <cla:postcode>CC1 1CC</cla:postcode>
+    </cla:address>
+  </cla:claimant>
+  <!--Optional:-->
+  <cla:claimantCorrespondence>
+    <cla:name>correspondenceForename correspondenceSurname</cla:name>
+    <cla:address>
+      <cla:line1>correspondence line1</cla:line1>
+      <cla:line2>correspondence line2</cla:line2>
+      <cla:postcode>CC2 2CC</cla:postcode>
+    </cla:address>
+  </cla:claimantCorrespondence>
+  <!--Optional:-->
+  <cla:defendant1>
+    <cla:name>defendant1Forename defendant1Surname</cla:name>
+    <cla:address>
+      <bas:line1>defendant1Address line1</bas:line1>
+      <bas:line2>defendant1Address line2</bas:line2>
+      <bas:line3>defendant1Address line3</bas:line3>
+      <bas:line4>defendant1Address line4</bas:line4>
+      <bas:postcode>DD1 1DD</bas:postcode>
+    </cla:address>
+  </cla:defendant1>
+  <!--Optional:-->
+  <cla:defendant2>
+    <cla:name>defendant2Forename defendant2Surname</cla:name>
+    <cla:address>
+      <bas:line1>defendant2Address line1</bas:line1>
+      <bas:line2>defendant2Address line2</bas:line2>
+      <bas:line3>defendant2Address line3</bas:line3>
+      <bas:line4>defendant2Address line4</bas:line4>
+      <bas:postcode>DD2 2DD</bas:postcode>
+    </cla:address>
+  </cla:defendant2>
+  <cla:sendParticularsSeparately>true</cla:sendParticularsSeparately>
+  <cla:reserveRightToClaimInterest>true</cla:reserveRightToClaimInterest>
+  <!--Optional:-->
+  <cla:interest>
+    <cla:dailyAmount>1000</cla:dailyAmount>
+    <cla:owedDate>2013-08-15</cla:owedDate>
+    <cla:claimDate>2013-08-16</cla:claimDate>
+    <cla:claimAmountInterestBase>10</cla:claimAmountInterestBase>
+  </cla:interest>
+  <cla:claimAmount>9999999</cla:claimAmount>
+  <!--Optional:-->
+  <cla:solicitorCost>10000</cla:solicitorCost>
+  <!--1 to 24 repetitions:-->
+  <cla:particulars>particulars1</cla:particulars>
+  <cla:particulars>particulars2</cla:particulars>
+  <cla:sotSignature>
+    <bas:flag>true</bas:flag>
+    <bas:name>signature</bas:name>
+  </cla:sotSignature>
+</bul:mcolClaim>

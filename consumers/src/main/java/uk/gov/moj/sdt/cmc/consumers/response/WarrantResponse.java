@@ -1,16 +1,17 @@
 package uk.gov.moj.sdt.cmc.consumers.response;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 
 @Data
-@ToString
 @NoArgsConstructor
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class WarrantResponse {
 
-    private String warrantNumber;
-    private String enforcingCourtCode;
-    private String enforcingCourtName;
-    private Long fee;
+    private ResponseStatus responseStatus;
+
+    @JacksonXmlProperty(localName = "mcolResponseDetail")
+    private WarrantResponseDetail warrantResponseDetail;
 }

@@ -1,0 +1,20 @@
+<bul:mcolJudgment
+  xmlns:bul="http://ws.sdt.moj.gov.uk/2013/sdt/BulkRequestSchema"
+  xmlns:bas="http://ws.sdt.moj.gov.uk/2013/sdt/BaseSchema"
+  xmlns:jud="http://ws.sdt.moj.gov.uk/2013/mcol/JudgmentSchema">
+  <jud:claimNumber>9QZ00007</jud:claimNumber>
+  <jud:jointJudgment>false</jud:jointJudgment>
+  <jud:judgmentType>D</jud:judgmentType>
+  <!--Optional:-->
+  <jud:sentParticularsSeparately>true</jud:sentParticularsSeparately>
+  <jud:paymentSchedule>
+    <!--You have a CHOICE of the next 3 items at this level-->
+    <jud:inFullByPayment>
+      <jud:fullByDate>2024-10-04</jud:fullByDate>
+    </jud:inFullByPayment>
+  </jud:paymentSchedule>
+  <jud:sotSignature>
+    <bas:flag>true</bas:flag>
+    <bas:name>sotSignature</bas:name>
+  </jud:sotSignature>
+</bul:mcolJudgment>

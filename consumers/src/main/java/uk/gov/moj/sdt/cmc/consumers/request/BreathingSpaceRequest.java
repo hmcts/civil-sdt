@@ -9,9 +9,9 @@ import lombok.ToString;
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonPropertyOrder({
-    "bsType",
     "caseManRef",
-    "respondentId"
+    "respondentId",
+    "bsType"
 })
 public class BreathingSpaceRequest {
 
