@@ -164,9 +164,12 @@ public class CMCConsumerGateway implements IConsumerGateway {
                                  IIndividualRequest individualRequest) throws IOException {
         JudgementRequest request = xmlToObject.convertXmlToObject(requestPayload, JudgementRequest.class);
         JudgementResponse response = judgementService.requestJudgment(idamId, sdtRequestRef, request);
-        byte[] targetAppResponse =
-            xmlToObject.convertObjectToXml(response.getJudgementResponseDetail()).getBytes(StandardCharsets.UTF_8);
-        individualRequest.setTargetApplicationResponse(targetAppResponse);
+
+        if (response.getJudgementResponseDetail() != null) {
+            byte[] targetAppResponse =
+                xmlToObject.convertObjectToXml(response.getJudgementResponseDetail()).getBytes(StandardCharsets.UTF_8);
+            individualRequest.setTargetApplicationResponse(targetAppResponse);
+        }
         setIndividualRequestStatus(individualRequest, response.getResponseStatus());
     }
 
@@ -176,6 +179,7 @@ public class CMCConsumerGateway implements IConsumerGateway {
                                 IIndividualRequest individualRequest) throws IOException {
         BreathingSpaceRequest request = xmlToObject.convertXmlToObject(requestPayload, BreathingSpaceRequest.class);
         BreathingSpaceResponse response = breathingSpace.breathingSpace(idamId, sdtRequestRef, request);
+
         setIndividualRequestStatus(individualRequest, response.getResponseStatus());
     }
 
@@ -186,6 +190,7 @@ public class CMCConsumerGateway implements IConsumerGateway {
         ClaimStatusUpdateRequest request =
             xmlToObject.convertXmlToObject(requestPayload, ClaimStatusUpdateRequest.class);
         ClaimStatusUpdateResponse response = claimStatusUpdate.claimStatusUpdate(idamId, sdtRequestRef, request);
+
         setIndividualRequestStatus(individualRequest, response.getResponseStatus());
     }
 
@@ -197,9 +202,12 @@ public class CMCConsumerGateway implements IConsumerGateway {
         request.setBulkCustomerId(String.valueOf(individualRequest.getBulkSubmission()
                                                      .getBulkCustomer().getSdtCustomerId()));
         ClaimResponse response = claimRequestService.claimRequest(idamId, sdtRequestRef, request);
-        byte[] targetAppResponse =
-            xmlToObject.convertObjectToXml(response.getClaimResponseDetail()).getBytes(StandardCharsets.UTF_8);
-        individualRequest.setTargetApplicationResponse(targetAppResponse);
+
+        if (response.getClaimResponseDetail() != null) {
+            byte[] targetAppResponse =
+                xmlToObject.convertObjectToXml(response.getClaimResponseDetail()).getBytes(StandardCharsets.UTF_8);
+            individualRequest.setTargetApplicationResponse(targetAppResponse);
+        }
         setIndividualRequestStatus(individualRequest, response.getResponseStatus());
     }
 
@@ -212,9 +220,12 @@ public class CMCConsumerGateway implements IConsumerGateway {
         WarrantRequest request = xmlToObject.convertXmlToObject(requestPayload, WarrantRequest.class);
         WarrantResponse response =
             warrantService.warrantRequest(sdtSystemUserAuthToken, serviceAuthToken, idamId, sdtRequestRef, request);
-        byte[] targetAppResponse =
-            xmlToObject.convertObjectToXml(response.getWarrantResponseDetail()).getBytes(StandardCharsets.UTF_8);
-        individualRequest.setTargetApplicationResponse(targetAppResponse);
+
+        if (response.getWarrantResponseDetail() != null) {
+            byte[] targetAppResponse =
+                xmlToObject.convertObjectToXml(response.getWarrantResponseDetail()).getBytes(StandardCharsets.UTF_8);
+            individualRequest.setTargetApplicationResponse(targetAppResponse);
+        }
         setIndividualRequestStatus(individualRequest, response.getResponseStatus());
     }
 
@@ -231,10 +242,13 @@ public class CMCConsumerGateway implements IConsumerGateway {
                                                             idamId,
                                                             sdtRequestRef,
                                                             request);
-        byte[] targetAppResponse =
-            xmlToObject.convertObjectToXml(response.getJudgementWarrantResponseDetail())
-                .getBytes(StandardCharsets.UTF_8);
-        individualRequest.setTargetApplicationResponse(targetAppResponse);
+
+        if (response.getJudgementWarrantResponseDetail() != null) {
+            byte[] targetAppResponse =
+                xmlToObject.convertObjectToXml(response.getJudgementWarrantResponseDetail())
+                    .getBytes(StandardCharsets.UTF_8);
+            individualRequest.setTargetApplicationResponse(targetAppResponse);
+        }
         setIndividualRequestStatus(individualRequest, response.getResponseStatus());
     }
 

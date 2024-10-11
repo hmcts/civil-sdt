@@ -28,7 +28,7 @@ public abstract class RequestTestBase extends AbstractSdtUnitTestBase {
 
     public Date createDate(int year, int month, int day) {
         LocalDate date = LocalDate.of(year, month, day);
-        return Date.from(date.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
+        return Date.from(date.atStartOfDay().atZone(ZoneId.of("Europe/London")).toInstant());
     }
 
     public Address createAddress(String prefix, String postcode) {

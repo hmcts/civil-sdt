@@ -29,8 +29,10 @@ import uk.gov.moj.sdt.cmc.consumers.response.ClaimResponse;
 import uk.gov.moj.sdt.cmc.consumers.response.ClaimResponseDetail;
 import uk.gov.moj.sdt.cmc.consumers.response.ClaimStatusUpdateResponse;
 import uk.gov.moj.sdt.cmc.consumers.response.JudgementWarrantResponse;
+import uk.gov.moj.sdt.cmc.consumers.response.JudgementWarrantResponseDetail;
 import uk.gov.moj.sdt.cmc.consumers.response.ResponseStatus;
 import uk.gov.moj.sdt.cmc.consumers.response.WarrantResponse;
+import uk.gov.moj.sdt.cmc.consumers.response.WarrantResponseDetail;
 import uk.gov.moj.sdt.cmc.consumers.response.judgement.JudgementResponse;
 import uk.gov.moj.sdt.cmc.consumers.response.judgement.JudgementResponseDetail;
 import uk.gov.moj.sdt.consumers.exception.TimeoutException;
@@ -233,7 +235,7 @@ class CMCConsumerGatewayTest {
         Date date = formattedDate();
         claimResponseDetail.setIssueDate(date);
         claimResponseDetail.setServiceDate(date);
-        claimResponseDetail.setClaimNumber("MCOL-0000001");
+        claimResponseDetail.setClaimNumber("0000-0000-0000-0001");
         response.setClaimResponseDetail(claimResponseDetail);
 
         when(xmlToObject.convertObjectToXml(any())).thenReturn("");
@@ -268,6 +270,8 @@ class CMCConsumerGatewayTest {
         IIndividualRequest individualRequest = mock(IIndividualRequest.class);
         setupMockBehaviour(WARRANT, individualRequest);
         WarrantResponse response = new WarrantResponse();
+        WarrantResponseDetail responseDetail = new WarrantResponseDetail();
+        response.setWarrantResponseDetail(responseDetail);
 
         when(xmlToObject.convertObjectToXml(any())).thenReturn("");
         when(warrantService.warrantRequest(anyString(), anyString(), any(), anyString(), any())).thenReturn(response);
@@ -286,6 +290,8 @@ class CMCConsumerGatewayTest {
         IIndividualRequest individualRequest = mock(IIndividualRequest.class);
         setupMockBehaviour(JUDGMENT_WARRANT, individualRequest);
         JudgementWarrantResponse response = new JudgementWarrantResponse();
+        JudgementWarrantResponseDetail responseDetail = new JudgementWarrantResponseDetail();
+        response.setJudgementWarrantResponseDetail(responseDetail);
 
         when(xmlToObject.convertObjectToXml(any())).thenReturn("");
         when(judgementWarrantService.judgementWarrantRequest(anyString(), anyString(), any(), anyString(), any()))
