@@ -9,6 +9,5 @@ import lombok.ToString;
 @NoArgsConstructor
 public class ClaimStatusUpdateResponse {
 
-    private ProcessingStatus processingStatus;
+    private ResponseStatus responseStatus;
 }
-

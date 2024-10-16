@@ -1,48 +1,17 @@
 package uk.gov.moj.sdt.cmc.consumers.response;
 
-import java.util.Date;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 
 @Data
-@ToString
 @NoArgsConstructor
-@JsonPropertyOrder({
-    "firstPaymentDate",
-    "judgmentEnteredDate",
-    "issueDate",
-    "warrantNumber",
-    "enforcingCourtCode",
-    "enforcingCourtName",
-    "fee",
-    "judgmentWarrantStatus",
-})
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class JudgementWarrantResponse {
 
-    @JsonFormat(pattern="yyyy-MM-dd")
-    private Date firstPaymentDate;
+    private ResponseStatus responseStatus;
 
-    @JsonFormat(pattern="yyyy-MM-dd")
-    private Date judgmentEnteredDate;
-
-    @JsonFormat(pattern="yyyy-MM-dd")
-    private Date issueDate;
-
-    private String warrantNumber;
-
-    private String enforcingCourtCode;
-
-    private String enforcingCourtName;
-
-    private Long fee;
-
-    private JudgmentWarrantStatus judgmentWarrantStatus;
-
-    public String getJudgmentWarrantStatus() {
-        return judgmentWarrantStatus == null ? null : judgmentWarrantStatus.getMessage();
-    }
+    @JacksonXmlProperty(localName = "mcolResponseDetail")
+    private JudgementWarrantResponseDetail judgementWarrantResponseDetail;
 }

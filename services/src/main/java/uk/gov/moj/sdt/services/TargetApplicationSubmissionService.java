@@ -35,6 +35,7 @@ import uk.gov.moj.sdt.utils.cmc.exception.CMCException;
 import uk.gov.moj.sdt.utils.mbeans.SdtMetricsMBean;
 
 import static uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus.FORWARDED;
+import static uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus.RECEIVED;
 import static uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus.REJECTED;
 
 /**
@@ -122,45 +123,51 @@ public class TargetApplicationSubmissionService extends AbstractSdtService imple
 
         // Proceed ahead if the Individual Request is found.
         if (individualRequest != null) {
-            LOGGER.debug("Process individual request [{}].", individualRequest.getSdtRequestReference());
 
-            // Check the configurable delay from system parameter and delay the consumer call for that time.
-            this.delayRequestProcessing(individualRequest);
+            String status = individualRequest.getRequestStatus();
+            if (FORWARDED.getStatus().equals(status) || RECEIVED.getStatus().equals(status)) {
+                LOGGER.debug("Process individual request [{}].", individualRequest.getSdtRequestReference());
 
-            // Update the status of the requested to Forwarded before calling the consumer
-            this.updateForwardingRequest(individualRequest);
+                // Check the configurable delay from system parameter and delay the consumer call for that time.
+                this.delayRequestProcessing(individualRequest);
 
-            // Make call to consumer to submit the request to target application.
-            try {
-                this.sendRequestToTargetApp(individualRequest);
+                // Update the status of the requested to Forwarded before calling the consumer
+                this.updateForwardingRequest(individualRequest);
 
-                this.updateCompletedRequest(individualRequest, !isCMCRequestType(individualRequest));
-            } catch (final TimeoutException e) {
-                LOGGER.error("Timeout exception for SDT reference [{}]", individualRequest.getSdtRequestReference());
+                // Make call to consumer to submit the request to target application.
+                try {
+                    this.sendRequestToTargetApp(individualRequest);
 
-                // Update the individual request with the reason code for error REQ_NOT_ACK
-                this.updateRequestTimeOut(individualRequest);
+                    this.updateCompletedRequest(individualRequest, !isCMCRequestType(individualRequest));
+                } catch (final TimeoutException e) {
+                    LOGGER.error("Timeout exception for SDT reference [{}]", individualRequest.getSdtRequestReference());
 
-                // Re-queue message again
-                this.reQueueRequest(individualRequest);
-            } catch (final SoapFaultException e) {
-                // Update the individual request with the soap fault reason
-                this.handleSoapFaultAndWebServiceException(individualRequest, e.getMessage());
-            } catch (final WebServiceException e) {
+                    // Update the individual request with the reason code for error REQ_NOT_ACK
+                    this.updateRequestTimeOut(individualRequest);
 
-                LOGGER.error("Exception calling target application for SDT reference [{}] - {}",
-                        individualRequest.getSdtRequestReference(), e.getMessage());
+                    // Re-queue message again
+                    this.reQueueRequest(individualRequest);
+                } catch (final SoapFaultException e) {
+                    // Update the individual request with the soap fault reason
+                    this.handleSoapFaultAndWebServiceException(individualRequest, e.getMessage());
+                } catch (final WebServiceException e) {
 
-                this.handleSoapFaultAndWebServiceException(individualRequest, e.getMessage());
+                    LOGGER.error("Exception calling target application for SDT reference [{}] - {}",
+                            individualRequest.getSdtRequestReference(), e.getMessage());
 
-            } catch (final CMCException irte) {
-                String errorMessage = String.format("%s [ %s ] - %s", "Exception calling target application for SDT reference",
-                                                    individualRequest.getSdtRequestReference(),
-                                                    irte.getMessage());
-                LOGGER.error(errorMessage);
+                    this.handleSoapFaultAndWebServiceException(individualRequest, e.getMessage());
 
-                updateRequestRejected(individualRequest);
-                updateCompletedRequest(individualRequest, !isCMCRequestType(individualRequest));
+                } catch (final CMCException irte) {
+                    String errorMessage = String.format("%s [ %s ] - %s", "Exception calling target application for SDT reference",
+                                                        individualRequest.getSdtRequestReference(),
+                                                        irte.getMessage());
+                    LOGGER.error(errorMessage);
+
+                    updateRequestRejected(individualRequest);
+                    updateCompletedRequest(individualRequest, !isCMCRequestType(individualRequest));
+                }
+            } else {
+                LOGGER.info("SDT Reference {} already processed", sdtRequestReference);
             }
         } else {
             LOGGER.error("SDT Reference {} read from message queue not found in database for individual request.",

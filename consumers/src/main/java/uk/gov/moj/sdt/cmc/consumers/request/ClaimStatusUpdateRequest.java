@@ -23,13 +23,16 @@ import lombok.ToString;
 })
 public class ClaimStatusUpdateRequest {
 
+    private static final String DATE_FORMAT = "yyyy-MM-dd";
+    private static final String TIMEZONE_EUROPE_LONDON = "Europe/London";
+
     private String claimNumber;
 
     private String defendantId;
 
     private UpdateType notificationType;
 
-    @JsonFormat(pattern="yyyy-MM-dd")
+    @JsonFormat(pattern = DATE_FORMAT, timezone = TIMEZONE_EUROPE_LONDON)
     private Date paidInFullDate;
 
     private Boolean section38Compliancy;

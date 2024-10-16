@@ -48,11 +48,6 @@ public class WarrantRequest {
         return defendantId;
     }
 
-    @SuppressWarnings("java:S4144")
-    public String getDefendantId() {
-        return defendantId;
-    }
-
     public Long getBalanceOfDebt() {
         return balanceOfDebt;
     }

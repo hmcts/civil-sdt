@@ -1,25 +1,18 @@
 package uk.gov.moj.sdt.cmc.consumers.response;
 
-import java.util.Date;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 
 @Data
-@ToString
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ClaimResponse {
 
-    private String claimNumber;
+    private ResponseStatus responseStatus;
 
-    @JsonFormat(pattern="yyyy-MM-dd")
-    private Date issueDate;
+    @JacksonXmlProperty(localName = "mcolResponseDetail")
+    private ClaimResponseDetail claimResponseDetail;
 
-    @JsonFormat(pattern="yyyy-MM-dd")
-    private Date serviceDate;
 }
-

@@ -1,7 +1,10 @@
 package uk.gov.moj.sdt.cmc.consumers;
 
+import java.io.IOException;
+import java.net.SocketTimeoutException;
 import java.nio.charset.StandardCharsets;
 
+import feign.RetryableException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +29,7 @@ import uk.gov.moj.sdt.cmc.consumers.response.BreathingSpaceResponse;
 import uk.gov.moj.sdt.cmc.consumers.response.ClaimResponse;
 import uk.gov.moj.sdt.cmc.consumers.response.ClaimStatusUpdateResponse;
 import uk.gov.moj.sdt.cmc.consumers.response.JudgementWarrantResponse;
+import uk.gov.moj.sdt.cmc.consumers.response.ResponseStatus;
 import uk.gov.moj.sdt.cmc.consumers.response.WarrantResponse;
 import uk.gov.moj.sdt.cmc.consumers.response.judgement.JudgementResponse;
 import uk.gov.moj.sdt.consumers.api.IConsumerGateway;
@@ -103,6 +107,7 @@ public class CMCConsumerGateway implements IConsumerGateway {
                                   long connectionTimeOut,
                                   long receiveTimeOut) throws OutageException, TimeoutException {
         LOGGER.debug("Invoke cmc target application service for individual request");
+
         String sdtRequestReference = individualRequest.getSdtRequestReference();
         String requestType = individualRequest.getRequestType();
         String idamId = SdtContext.getContext().getCustomerIdamId();
@@ -110,40 +115,37 @@ public class CMCConsumerGateway implements IConsumerGateway {
         String serviceAuthToken = s2SRepository.getS2SToken();
         String requestPayload = null == individualRequest.getRequestPayload() ? "" :
             new String(individualRequest.getRequestPayload(), StandardCharsets.UTF_8);
+
         try {
             if (RequestType.JUDGMENT.getType().equals(requestType)) {
-                JudgementRequest judgementRequest = xmlToObject.convertXmlToObject(requestPayload,
-                                                                                   JudgementRequest.class);
-
-                JudgementResponse judgementResponse = judgementService.requestJudgment(idamId,
-                                                                                       sdtRequestReference,
-                                                                                       judgementRequest);
-                individualRequest.setTargetApplicationResponse(xmlToObject.convertObjectToXml(judgementResponse).getBytes(StandardCharsets.UTF_8));
+                requestJudgment(requestPayload, idamId, sdtRequestReference, individualRequest);
             } else if (RequestType.BREATHING_SPACE.getType().equals(requestType)) {
-                BreathingSpaceRequest request = xmlToObject.convertXmlToObject(requestPayload, BreathingSpaceRequest.class);
-                BreathingSpaceResponse response = breathingSpace.breathingSpace(idamId, sdtRequestReference, request);
-                individualRequest.setRequestStatus(response.getProcessingStatus().name());
+                breathingSpace(requestPayload, idamId, sdtRequestReference, individualRequest);
             } else if (RequestType.CLAIM_STATUS_UPDATE.getType().equals(requestType)) {
-                ClaimStatusUpdateRequest request = xmlToObject.convertXmlToObject(requestPayload, ClaimStatusUpdateRequest.class);
-                ClaimStatusUpdateResponse response = claimStatusUpdate.claimStatusUpdate(idamId, sdtRequestReference, request);
-                individualRequest.setRequestStatus(response.getProcessingStatus().name());
+                claimStatusUpdate(requestPayload, idamId, sdtRequestReference, individualRequest);
             } else if (RequestType.CLAIM.getType().equals(requestType)) {
-                ClaimRequest request = xmlToObject.convertXmlToObject(requestPayload, ClaimRequest.class);
-                ClaimResponse response = claimRequestService.claimRequest(idamId, sdtRequestReference, request);
-                individualRequest.setTargetApplicationResponse(xmlToObject.convertObjectToXml(response).getBytes(StandardCharsets.UTF_8));
+                claimRequest(requestPayload, idamId, sdtRequestReference, individualRequest);
             } else if (RequestType.WARRANT.getType().equals(requestType)) {
-                WarrantRequest request = xmlToObject.convertXmlToObject(requestPayload, WarrantRequest.class);
-                WarrantResponse response = warrantService.warrantRequest(sdtSystemUserAuthToken, serviceAuthToken,
-                                                                         idamId, sdtRequestReference, request);
-                individualRequest.setTargetApplicationResponse(xmlToObject.convertObjectToXml(response).getBytes(StandardCharsets.UTF_8));
+                warrantRequest(requestPayload,
+                               sdtSystemUserAuthToken,
+                               serviceAuthToken,
+                               idamId,
+                               sdtRequestReference,
+                               individualRequest);
             } else if (RequestType.JUDGMENT_WARRANT.getType().equals(requestType)) {
-                JudgementWarrantRequest request = xmlToObject.convertXmlToObject(requestPayload, JudgementWarrantRequest.class);
-                JudgementWarrantResponse response = judgementWarrantService.judgementWarrantRequest(sdtSystemUserAuthToken,
-                                                                                                    serviceAuthToken,
-                                                                                                    idamId,
-                                                                                                    sdtRequestReference,
-                                                                                                    request);
-                individualRequest.setTargetApplicationResponse(xmlToObject.convertObjectToXml(response).getBytes(StandardCharsets.UTF_8));
+                judgementWarrantRequest(requestPayload,
+                                        sdtSystemUserAuthToken,
+                                        serviceAuthToken,
+                                        idamId,
+                                        sdtRequestReference,
+                                        individualRequest);
+            }
+        } catch (RetryableException e) {
+            if (e.getCause() instanceof SocketTimeoutException) {
+                throw new TimeoutException("TIMEOUT_ERROR",
+                                           "Read time out error sending [" + sdtRequestReference + "] to CMC");
+            } else {
+                throw e;
             }
         } catch (Exception e) {
             String message = e.getMessage();
@@ -153,6 +155,108 @@ public class CMCConsumerGateway implements IConsumerGateway {
             } else {
                 throw new CMCException(message, e);
             }
+        }
+    }
+
+    private void requestJudgment(String requestPayload,
+                                 String idamId,
+                                 String sdtRequestRef,
+                                 IIndividualRequest individualRequest) throws IOException {
+        JudgementRequest request = xmlToObject.convertXmlToObject(requestPayload, JudgementRequest.class);
+        JudgementResponse response = judgementService.requestJudgment(idamId, sdtRequestRef, request);
+
+        if (response.getJudgementResponseDetail() != null) {
+            byte[] targetAppResponse =
+                xmlToObject.convertObjectToXml(response.getJudgementResponseDetail()).getBytes(StandardCharsets.UTF_8);
+            individualRequest.setTargetApplicationResponse(targetAppResponse);
+        }
+        setIndividualRequestStatus(individualRequest, response.getResponseStatus());
+    }
+
+    private void breathingSpace(String requestPayload,
+                                String idamId,
+                                String sdtRequestRef,
+                                IIndividualRequest individualRequest) throws IOException {
+        BreathingSpaceRequest request = xmlToObject.convertXmlToObject(requestPayload, BreathingSpaceRequest.class);
+        BreathingSpaceResponse response = breathingSpace.breathingSpace(idamId, sdtRequestRef, request);
+
+        setIndividualRequestStatus(individualRequest, response.getResponseStatus());
+    }
+
+    private void claimStatusUpdate(String requestPayload,
+                                   String idamId,
+                                   String sdtRequestRef,
+                                   IIndividualRequest individualRequest) throws IOException {
+        ClaimStatusUpdateRequest request =
+            xmlToObject.convertXmlToObject(requestPayload, ClaimStatusUpdateRequest.class);
+        ClaimStatusUpdateResponse response = claimStatusUpdate.claimStatusUpdate(idamId, sdtRequestRef, request);
+
+        setIndividualRequestStatus(individualRequest, response.getResponseStatus());
+    }
+
+    private void claimRequest(String requestPayload,
+                              String idamId,
+                              String sdtRequestRef,
+                              IIndividualRequest individualRequest) throws IOException {
+        ClaimRequest request = xmlToObject.convertXmlToObject(requestPayload, ClaimRequest.class);
+        request.setBulkCustomerId(String.valueOf(individualRequest.getBulkSubmission()
+                                                     .getBulkCustomer().getSdtCustomerId()));
+        ClaimResponse response = claimRequestService.claimRequest(idamId, sdtRequestRef, request);
+
+        if (response.getClaimResponseDetail() != null) {
+            byte[] targetAppResponse =
+                xmlToObject.convertObjectToXml(response.getClaimResponseDetail()).getBytes(StandardCharsets.UTF_8);
+            individualRequest.setTargetApplicationResponse(targetAppResponse);
+        }
+        setIndividualRequestStatus(individualRequest, response.getResponseStatus());
+    }
+
+    private void warrantRequest(String requestPayload,
+                                String sdtSystemUserAuthToken,
+                                String serviceAuthToken,
+                                String idamId,
+                                String sdtRequestRef,
+                                IIndividualRequest individualRequest) throws IOException {
+        WarrantRequest request = xmlToObject.convertXmlToObject(requestPayload, WarrantRequest.class);
+        WarrantResponse response =
+            warrantService.warrantRequest(sdtSystemUserAuthToken, serviceAuthToken, idamId, sdtRequestRef, request);
+
+        if (response.getWarrantResponseDetail() != null) {
+            byte[] targetAppResponse =
+                xmlToObject.convertObjectToXml(response.getWarrantResponseDetail()).getBytes(StandardCharsets.UTF_8);
+            individualRequest.setTargetApplicationResponse(targetAppResponse);
+        }
+        setIndividualRequestStatus(individualRequest, response.getResponseStatus());
+    }
+
+    private void judgementWarrantRequest(String requestPayload,
+                                         String sdtSystemUserAuthToken,
+                                         String serviceAuthToken,
+                                         String idamId,
+                                         String sdtRequestRef,
+                                         IIndividualRequest individualRequest) throws IOException {
+        JudgementWarrantRequest request = xmlToObject.convertXmlToObject(requestPayload, JudgementWarrantRequest.class);
+        JudgementWarrantResponse response =
+            judgementWarrantService.judgementWarrantRequest(sdtSystemUserAuthToken,
+                                                            serviceAuthToken,
+                                                            idamId,
+                                                            sdtRequestRef,
+                                                            request);
+
+        if (response.getJudgementWarrantResponseDetail() != null) {
+            byte[] targetAppResponse =
+                xmlToObject.convertObjectToXml(response.getJudgementWarrantResponseDetail())
+                    .getBytes(StandardCharsets.UTF_8);
+            individualRequest.setTargetApplicationResponse(targetAppResponse);
+        }
+        setIndividualRequestStatus(individualRequest, response.getResponseStatus());
+    }
+
+    private void setIndividualRequestStatus(IIndividualRequest individualRequest, ResponseStatus responseStatus) {
+        if (ResponseStatus.ACCEPTED.equals(responseStatus)) {
+            individualRequest.markRequestAsAccepted();
+        } else if (ResponseStatus.INITIALLY_ACCEPTED.equals(responseStatus)) {
+            individualRequest.markRequestAsInitiallyAccepted();
         }
     }
 
