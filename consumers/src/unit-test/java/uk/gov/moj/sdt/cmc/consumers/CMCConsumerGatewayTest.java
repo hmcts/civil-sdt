@@ -16,6 +16,7 @@ import uk.gov.moj.sdt.cmc.consumers.api.IJudgementService;
 import uk.gov.moj.sdt.cmc.consumers.api.IJudgementWarrantService;
 import uk.gov.moj.sdt.cmc.consumers.api.IWarrantService;
 import uk.gov.moj.sdt.cmc.consumers.converter.XmlConverter;
+import uk.gov.moj.sdt.cmc.consumers.exception.CMCCaseLockedException;
 import uk.gov.moj.sdt.cmc.consumers.model.claimdefences.ClaimDefencesResponse;
 import uk.gov.moj.sdt.cmc.consumers.model.claimdefences.ClaimDefencesResult;
 import uk.gov.moj.sdt.cmc.consumers.request.BreathingSpaceRequest;
@@ -401,6 +402,38 @@ class CMCConsumerGatewayTest {
 
         verify(xmlToObject).convertXmlToObject("", BreathingSpaceRequest.class);
         verify(breathingSpace).breathingSpace(null, SDT_REFERENCE, breathingSpaceRequest);
+    }
+
+    @Test
+    void shouldHandleCaseLockedException() throws IOException {
+        String requestPayload = "TestRequestPayload";
+
+        IIndividualRequest individualRequest = new IndividualRequest();
+        individualRequest.setSdtRequestReference(SDT_REFERENCE);
+        individualRequest.setRequestPayload(requestPayload.getBytes(StandardCharsets.UTF_8));
+        individualRequest.setRequestType(CLAIM_STATUS_UPDATE.getType());
+        individualRequest.setRequestStatus(IIndividualRequest.IndividualRequestStatus.FORWARDED.getStatus());
+        individualRequest.setForwardingAttempts(1);
+
+        when(xmlToObject.convertXmlToObject(requestPayload, ClaimStatusUpdateRequest.class))
+            .thenReturn(claimStatusUpdateRequest);
+
+        CMCCaseLockedException caseLockedException = new CMCCaseLockedException();
+        when(claimStatusUpdate.claimStatusUpdate(null, SDT_REFERENCE, claimStatusUpdateRequest))
+            .thenThrow(caseLockedException);
+
+        cmcConsumerGateway.individualRequest(individualRequest, CONNECTION_TIME_OUT, RECEIVE_TIME_OUT);
+
+        assertEquals(IIndividualRequest.IndividualRequestStatus.CASE_LOCKED.getStatus(),
+                     individualRequest.getRequestStatus(),
+                     "Individual request has unexpected status");
+        assertEquals(0,
+                     individualRequest.getForwardingAttempts(),
+                     "Individual request has unexpected forwarding attempts value");
+        assertNotNull(individualRequest.getUpdatedDate(), "Individual request updated date should not be null");
+
+        verify(xmlToObject).convertXmlToObject(requestPayload, ClaimStatusUpdateRequest.class);
+        verify(claimStatusUpdate).claimStatusUpdate(null, SDT_REFERENCE, claimStatusUpdateRequest);
     }
 
     private Date formattedDate() throws ParseException {

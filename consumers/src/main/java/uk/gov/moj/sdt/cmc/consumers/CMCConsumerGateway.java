@@ -18,6 +18,7 @@ import uk.gov.moj.sdt.cmc.consumers.api.IJudgementService;
 import uk.gov.moj.sdt.cmc.consumers.api.IJudgementWarrantService;
 import uk.gov.moj.sdt.cmc.consumers.api.IWarrantService;
 import uk.gov.moj.sdt.cmc.consumers.converter.XmlConverter;
+import uk.gov.moj.sdt.cmc.consumers.exception.CMCCaseLockedException;
 import uk.gov.moj.sdt.cmc.consumers.model.claimdefences.ClaimDefencesResponse;
 import uk.gov.moj.sdt.cmc.consumers.request.BreathingSpaceRequest;
 import uk.gov.moj.sdt.cmc.consumers.request.ClaimStatusUpdateRequest;
@@ -147,6 +148,9 @@ public class CMCConsumerGateway implements IConsumerGateway {
             } else {
                 throw e;
             }
+        } catch (CMCCaseLockedException e) {
+            LOGGER.info("Case locked for SDT reference [{}]", individualRequest.getSdtRequestReference());
+            individualRequest.markRequestAsCaseLocked();
         } catch (Exception e) {
             String message = e.getMessage();
             if (message != null && message.contains(CASE_OFF_LINE)) {
