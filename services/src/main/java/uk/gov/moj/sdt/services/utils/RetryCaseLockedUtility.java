@@ -14,9 +14,9 @@ import uk.gov.moj.sdt.services.utils.api.IMessagingUtility;
 @Slf4j
 public class RetryCaseLockedUtility {
 
-    private IIndividualRequestDao individualRequestDao;
+    private final IIndividualRequestDao individualRequestDao;
 
-    private IMessagingUtility messagingUtility;
+    private final IMessagingUtility messagingUtility;
 
     @Autowired
     public RetryCaseLockedUtility(@Qualifier("IndividualRequestDao") IIndividualRequestDao individualRequestDao,
