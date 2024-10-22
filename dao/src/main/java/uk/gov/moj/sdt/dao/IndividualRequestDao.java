@@ -51,6 +51,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
+import static uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus.CASE_LOCKED;
 import static uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus.FAILED_QUEUE;
 import static uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus.FORWARDED;
 import static uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus.QUEUED;
@@ -188,6 +189,21 @@ public class IndividualRequestDao extends GenericDao<IndividualRequest> implemen
         countQuery.select(criteriaBuilder.count(countRoot)).where(predicates);
 
         return getEntityManager().createQuery(countQuery).getSingleResult();
+    }
+
+    @Override
+    public List<IIndividualRequest> getCaseLockedIndividualRequests(int minimumAgeInMinutes)
+            throws DataAccessException {
+        final LocalDateTime latestTime = LocalDateTime.now().minusMinutes(minimumAgeInMinutes);
+
+        Predicate[] predicates = new Predicate[2];
+        predicates[0] = criteriaBuilder.equal(root.get(REQUEST_STATUS), CASE_LOCKED.getStatus());
+        predicates[1] = criteriaBuilder.lessThan(root.get(UPDATED_DATE), latestTime);
+
+        List<IndividualRequest> queryList =
+            queryAsList(IndividualRequest.class, () -> criteriaQuery.select(root).where(predicates));
+
+        return new ArrayList<>(queryList);
     }
 
     private Predicate[] createIndividualRequestPredicate(LocalDateTime latestTime) {
