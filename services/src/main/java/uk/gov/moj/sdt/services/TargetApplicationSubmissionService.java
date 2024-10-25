@@ -3,6 +3,8 @@ package uk.gov.moj.sdt.services;
 import java.nio.charset.StandardCharsets;
 import java.text.MessageFormat;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import javax.xml.ws.WebServiceException;
 
 import org.slf4j.Logger;
@@ -32,6 +34,7 @@ import uk.gov.moj.sdt.services.utils.GenericXmlParser;
 import uk.gov.moj.sdt.utils.SdtContext;
 import uk.gov.moj.sdt.utils.cmc.RequestTypeXmlNodeValidator;
 import uk.gov.moj.sdt.utils.cmc.exception.CMCException;
+import uk.gov.moj.sdt.utils.cmc.exception.CMCUnsupportedRequestTypeException;
 import uk.gov.moj.sdt.utils.mbeans.SdtMetricsMBean;
 
 import static uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStatus.FORWARDED;
@@ -44,7 +47,8 @@ import static uk.gov.moj.sdt.domain.api.IIndividualRequest.IndividualRequestStat
  * @author Manoj Kulkarni
  */
 @Service("TargetApplicationSubmissionService")
-public class TargetApplicationSubmissionService extends AbstractSdtService implements ITargetApplicationSubmissionService {
+public class TargetApplicationSubmissionService
+    extends AbstractSdtService implements ITargetApplicationSubmissionService {
 
     /**
      * Logger object.
@@ -72,7 +76,6 @@ public class TargetApplicationSubmissionService extends AbstractSdtService imple
      * web service.
      */
     private IConsumerGateway cmcRequestConsumer;
-
 
     /**
      * The ICacheable reference to the global parameters cache.
@@ -149,22 +152,21 @@ public class TargetApplicationSubmissionService extends AbstractSdtService imple
                     this.reQueueRequest(individualRequest);
                 } catch (final SoapFaultException e) {
                     // Update the individual request with the soap fault reason
-                    this.handleSoapFaultAndWebServiceException(individualRequest, e.getMessage());
+                    handleInternalException(individualRequest, e.getMessage());
                 } catch (final WebServiceException e) {
-
                     LOGGER.error("Exception calling target application for SDT reference [{}] - {}",
                             individualRequest.getSdtRequestReference(), e.getMessage());
 
-                    this.handleSoapFaultAndWebServiceException(individualRequest, e.getMessage());
+                    handleInternalException(individualRequest, e.getMessage());
+                } catch (final CMCUnsupportedRequestTypeException e) {
+                    LOGGER.error("Exception checking CMC request type for SDT reference [{}] - {}",
+                                 individualRequest.getSdtRequestReference(), e.getMessage());
+                    handleCmcUnsupportedRequestTypeException(individualRequest);
+                } catch (final CMCException e) {
+                    LOGGER.error("Exception calling CMC target application for SDT reference [{}] - {}",
+                                 individualRequest.getSdtRequestReference(), e.getMessage());
 
-                } catch (final CMCException irte) {
-                    String errorMessage = String.format("%s [ %s ] - %s", "Exception calling target application for SDT reference",
-                                                        individualRequest.getSdtRequestReference(),
-                                                        irte.getMessage());
-                    LOGGER.error(errorMessage);
-
-                    updateRequestRejected(individualRequest);
-                    updateCompletedRequest(individualRequest, !isCMCRequestType(individualRequest));
+                    handleInternalException(individualRequest, e.getMessage());
                 }
             } else {
                 LOGGER.info("SDT Reference {} already processed", sdtRequestReference);
@@ -197,7 +199,6 @@ public class TargetApplicationSubmissionService extends AbstractSdtService imple
             individualRequest.setUpdatedDate(LocalDateTime.now());
             this.getIndividualRequestDao().persist(individualRequest);
         }
-
     }
 
     /**
@@ -333,8 +334,8 @@ public class TargetApplicationSubmissionService extends AbstractSdtService imple
      * @param errorMessage      the exception message when the request has failed.
      */
     // CHECKSTYLE:OFF
-    private void handleSoapFaultAndWebServiceException(final IIndividualRequest individualRequest,
-                                                       final String errorMessage)
+    private void handleInternalException(final IIndividualRequest individualRequest,
+                                         final String errorMessage)
     // CHECKSTYLE:ON
     {
         if (LOGGER.isDebugEnabled()) {
@@ -354,6 +355,22 @@ public class TargetApplicationSubmissionService extends AbstractSdtService imple
         this.getIndividualRequestDao().persist(individualRequest);
     }
 
+    private void handleCmcUnsupportedRequestTypeException(IIndividualRequest individualRequest) {
+        final IErrorMessage errorMessage =
+            getErrorMessagesCache().getValue(IErrorMessage.class, IErrorMessage.ErrorCode.INVALID_CMC_REQUEST.name());
+
+        List<String> messageReplacements = new ArrayList<>();
+        messageReplacements.add(individualRequest.getCustomerRequestReference());
+        messageReplacements.add(individualRequest.getRequestType());
+
+        IErrorLog errorLog =
+            new ErrorLog(errorMessage.getErrorCode(),
+                         MessageFormat.format(errorMessage.getErrorText(), messageReplacements.toArray()));
+        individualRequest.markRequestAsRejected(errorLog);
+
+        updateCompletedRequest(individualRequest, !isCMCRequestType(individualRequest));
+    }
+
     /**
      * @return individual request dao
      */
@@ -363,6 +380,7 @@ public class TargetApplicationSubmissionService extends AbstractSdtService imple
     }
 
     /**
+     * Set individual request DAO.
      * @param individualRequestDao individual request dao
      */
     @Override
@@ -371,6 +389,7 @@ public class TargetApplicationSubmissionService extends AbstractSdtService imple
     }
 
     /**
+     * Get the request consumer to be used for processing the individual request.
      * @return the request consumer.
      */
     private IConsumerGateway getRequestConsumer(IIndividualRequest individualRequest) {
@@ -399,8 +418,8 @@ public class TargetApplicationSubmissionService extends AbstractSdtService imple
     }
 
     /**
-     * Reads an system parameter to add delay to the request processing if the
-     * system parameter has non null value.
+     * Reads a system parameter to add delay to the request processing if the
+     * system parameter has non-null value.
      *
      * @param request IndividualRequest object
      */
@@ -443,10 +462,10 @@ public class TargetApplicationSubmissionService extends AbstractSdtService imple
         }
 
         return globalParameter.getValue();
-
     }
 
     /**
+     * Re-queue an individual request.
      * @param individualRequest the individual request.
      */
     private void reQueueRequest(final IIndividualRequest individualRequest) {
@@ -471,6 +490,7 @@ public class TargetApplicationSubmissionService extends AbstractSdtService imple
     }
 
     /**
+     * Determine if an individual request can be re-queued based on the forwarding attempts.
      * @param individualRequest the individual request object.
      * @return true if the request forwarding attempts is less than the maximum forwarding attempts parameter.
      */
@@ -483,6 +503,7 @@ public class TargetApplicationSubmissionService extends AbstractSdtService imple
     }
 
     /**
+     * Get MessageWriter.
      * @return messageWriter the MessageWriter for the messaging API.
      */
     private IMessageWriter getMessageWriter() {
@@ -490,6 +511,7 @@ public class TargetApplicationSubmissionService extends AbstractSdtService imple
     }
 
     /**
+     * Set MessageWriter.
      * @param messageWriter the message writer.
      */
     public void setMessageWriter(final IMessageWriter messageWriter) {
@@ -497,6 +519,7 @@ public class TargetApplicationSubmissionService extends AbstractSdtService imple
     }
 
     /**
+     * Get ErrorMessagesCache.
      * @return cacheable interface for the error messages cache.
      */
     public ICacheable getErrorMessagesCache() {
@@ -504,6 +527,7 @@ public class TargetApplicationSubmissionService extends AbstractSdtService imple
     }
 
     /**
+     * Set ErrorMessagesCache.
      * @param errorMessagesCache the error messages cache.
      */
     public void setErrorMessagesCache(final ICacheable errorMessagesCache) {

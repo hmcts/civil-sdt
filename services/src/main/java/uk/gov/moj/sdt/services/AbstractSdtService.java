@@ -128,7 +128,6 @@ public abstract class AbstractSdtService {
 
         final List<String> completeRequestStatus = Arrays.asList(ACCEPTED.getStatus(), REJECTED.getStatus());
 
-
         final long requestsCount = this.getIndividualRequestDao().queryAsCount(
             IndividualRequest.class,
             () -> createCriteria(
