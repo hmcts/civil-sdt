@@ -28,8 +28,9 @@ public class CMCErrorDecoder implements ErrorDecoder {
         String responseBody = responseBodyToString(response.body());
 
         if (responseStatus == STATUS_BAD_REQUEST) {
-            CMCRejectedException cmcRejectedException = cmcRejectedException(responseBody);
-            return Objects.requireNonNullElseGet(cmcRejectedException, () -> createCMCException(responseStatus, responseBody));
+            CMCRejectedException cmcRejectedException = createCMCRejectedException(responseBody);
+            return Objects.requireNonNullElseGet(cmcRejectedException,
+                                                 () -> createCMCException(responseStatus, responseBody));
         } else if (responseStatus == STATUS_LOCKED) {
             return new CMCCaseLockedException();
         } else {
@@ -58,7 +59,7 @@ public class CMCErrorDecoder implements ErrorDecoder {
         return body;
     }
 
-    private CMCRejectedException cmcRejectedException(String responseBody) {
+    private CMCRejectedException createCMCRejectedException(String responseBody) {
         CMCRejectedException cmcRejectedException = null;
 
         if (responseBody != null) {
