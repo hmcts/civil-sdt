@@ -43,6 +43,7 @@ import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 import uk.gov.moj.sdt.utils.SdtContext;
 import uk.gov.moj.sdt.utils.cmc.RequestTypeXmlNodeValidator;
 import uk.gov.moj.sdt.utils.cmc.exception.CMCException;
+import uk.gov.moj.sdt.utils.cmc.exception.CMCUnsupportedRequestTypeException;
 
 import javax.xml.ws.WebServiceException;
 import java.nio.charset.StandardCharsets;
@@ -128,7 +129,14 @@ class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestBase {
         "Individual Request format could not be processed by the Target Application. " +
             "Please check the data and resubmit the request, or contact {0} for assistance.";
 
+    private static final String INVALID_CMC_REQUEST = "INVALID_CMC_REQUEST";
+
     private static final String REQUEST_PAYLOAD = "Test Xml";
+
+    private static final String UNSUPPORTED_CMC_REQUEST_TYPE = "mcolSetAside";
+
+    private static final String UNEXPECTED_INTERNAL_SYSTEM_ERROR =
+        "Individual request has unexpected internal system error";
 
     /**
      * Target Application Submision Service object.
@@ -412,7 +420,7 @@ class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestBase {
 
         mockGlobalParameterCache(TEN_MILLISECONDS, ONE_THOUSAND_MILLISECONDS, TWELVE_THOUSAND_MILLISECONDS);
 
-        final TimeoutException timeoutEx = new TimeoutException("Timeout occurred", "Timeout occurred");
+        final TimeoutException timeoutEx = new TimeoutException("TIMEOUT_ERROR", "Timeout occurred");
         doThrow(timeoutEx).when(mockConsumerGateway).individualRequest(individualRequest, 1000, 12000);
 
         final IErrorMessage errorMsg =
@@ -442,7 +450,7 @@ class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestBase {
 
         assertEquals(REQUEST_NOT_ACKNOWLEDGED,
                      individualRequest.getInternalSystemError(),
-                     "Individual request has unexpected internal system error");
+                     UNEXPECTED_INTERNAL_SYSTEM_ERROR);
 
         verify(mockIndividualRequestDao,times(2)).persist(individualRequest);
         verify(mockConsumerGateway).individualRequest(individualRequest, 1000, 12000);
@@ -474,7 +482,7 @@ class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestBase {
 
         when(requestTypeXmlNodeValidator.isCMCClaimRequest(CLAIM.getType(), true)).thenReturn(true);
 
-        final TimeoutException timeoutEx = new TimeoutException("Timeout occurred", "Timeout occurred");
+        final TimeoutException timeoutEx = new TimeoutException("TIMEOUT_ERROR", "Timeout occurred");
         doThrow(timeoutEx).when(mockCmcConsumerGateway).individualRequest(individualRequest, 1000, 12000);
 
         final IErrorMessage errorMsg =
@@ -504,7 +512,7 @@ class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestBase {
 
         assertEquals(REQUEST_NOT_ACKNOWLEDGED,
                      individualRequest.getInternalSystemError(),
-                     "Individual request has unexpected internal system error");
+                     UNEXPECTED_INTERNAL_SYSTEM_ERROR);
 
         verify(mockIndividualRequestDao,times(2)).persist(individualRequest);
         verify(mockCmcConsumerGateway).individualRequest(individualRequest, 1000, 12000);
@@ -877,32 +885,36 @@ class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestBase {
         final IIndividualRequest individualRequest = new IndividualRequest();
         individualRequest.setSdtRequestReference(TEST_1);
         individualRequest.setRequestStatus(IIndividualRequest.IndividualRequestStatus.RECEIVED.getStatus());
+        individualRequest.setCustomerRequestReference("CustReqRef1");
         setUpIndividualRequest(individualRequest);
-        individualRequest.setRequestType(CLAIM.getType());
+        individualRequest.setRequestType(UNSUPPORTED_CMC_REQUEST_TYPE);
+        individualRequest.getBulkSubmission().getBulkCustomer().setReadyForAlternateService(true);
 
-        SdtContext.getContext().setRawInXml(RESPONSE);
-
-        when(this.mockIndividualRequestDao.getRequestBySdtReference(TEST_1)).thenReturn(individualRequest);
+        when(mockIndividualRequestDao.getRequestBySdtReference(TEST_1)).thenReturn(individualRequest);
 
         mockGlobalParameterCache(TEN_MILLISECONDS, ONE_THOUSAND_MILLISECONDS, TWELVE_THOUSAND_MILLISECONDS);
 
-        IGlobalParameter contactDetails = new GlobalParameter();
-        contactDetails.setName(CONTACT_DETAILS);
-        contactDetails.setValue("Tester");
-        when(mockCacheable.getValue(IGlobalParameter.class, CONTACT_DETAILS)).thenReturn(contactDetails);
-
-        CMCException cmcExceptionRequestTypeUnsupported =
-            new CMCException("Request Type: " + CLAIM.getType() + " not supported");
-        when(requestTypeXmlNodeValidator.isCMCRequestType(CLAIM.getType(),
+        when(requestTypeXmlNodeValidator.isCMCClaimRequest(UNSUPPORTED_CMC_REQUEST_TYPE, true)).thenReturn(false);
+        CMCUnsupportedRequestTypeException cmcUnsupportedRequestTypeException =
+            new CMCUnsupportedRequestTypeException("Request Type mcolSetAside not supported");
+        when(requestTypeXmlNodeValidator.isCMCRequestType(UNSUPPORTED_CMC_REQUEST_TYPE,
                                                           REQUEST_PAYLOAD,
                                                           NODE_NAME_CLAIM_NUMBER,
                                                           true))
-            .thenThrow(cmcExceptionRequestTypeUnsupported);
+            .thenThrow(cmcUnsupportedRequestTypeException);
+        when(requestTypeXmlNodeValidator.isCMCRequestType(UNSUPPORTED_CMC_REQUEST_TYPE,
+                                                          REQUEST_PAYLOAD,
+                                                          NODE_NAME_CLAIM_NUMBER,
+                                                          false))
+            .thenReturn(true);
 
-        IErrorMessage errCustXml = expectErrorMessage(CUST_XML_ERR_CODE, CUST_XML_ERR_DESCRIPTION, CUST_XML_ERR_TEXT);
-        when(mockErrorMsgCacheable.getValue(IErrorMessage.class, CUST_XML_ERR_CODE)).thenReturn(errCustXml);
+        IErrorMessage errInvalidCmcRequest =
+            expectErrorMessage(INVALID_CMC_REQUEST,
+                               "Invalid CMC request type",
+                               "Individual request {0} for CMC has an invalid request type {1}");
+        when(mockErrorMsgCacheable.getValue(IErrorMessage.class, INVALID_CMC_REQUEST)).thenReturn(errInvalidCmcRequest);
 
-        this.targetAppSubmissionService.processRequestToSubmit(TEST_1);
+        targetAppSubmissionService.processRequestToSubmit(TEST_1);
 
         assertEquals(IIndividualRequest.IndividualRequestStatus.REJECTED.getStatus(),
                      individualRequest.getRequestStatus(),
@@ -910,9 +922,8 @@ class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestBase {
 
         IErrorLog requestErrorLog = individualRequest.getErrorLog();
         assertNotNull(requestErrorLog, "Individual request should have an error log");
-        assertEquals(CUST_XML_ERR_CODE, requestErrorLog.getErrorCode(), "Error log has unexpected error code");
-        assertEquals("Individual Request format could not be processed by the Target Application. " +
-                         "Please check the data and resubmit the request, or contact Tester for assistance.",
+        assertEquals(INVALID_CMC_REQUEST, requestErrorLog.getErrorCode(), "Error log has unexpected error code");
+        assertEquals("Individual request CustReqRef1 for CMC has an invalid request type mcolSetAside",
                      requestErrorLog.getErrorText(),
                      "Error log has unexpected text");
 
@@ -920,82 +931,55 @@ class TargetApplicationSubmissionServiceTest extends AbstractSdtUnitTestBase {
         verify(mockCacheable).getValue(IGlobalParameter.class, MCOL_INDV_REQ_DELAY);
         verify(mockCacheable).getValue(IGlobalParameter.class, TARGET_APP_TIMEOUT);
         verify(mockCacheable).getValue(IGlobalParameter.class, TARGET_APP_RESP_TIMEOUT);
-        verify(mockCacheable).getValue(IGlobalParameter.class, CONTACT_DETAILS);
-        verify(mockErrorMsgCacheable).getValue(IErrorMessage.class, CUST_XML_ERR_CODE);
-        verify(mockIndividualRequestDao, times(3)).persist(individualRequest);
-
-        verify(mockConsumerGateway, never()).individualRequest(any(IIndividualRequest.class), anyLong(), anyLong());
+        verify(mockErrorMsgCacheable).getValue(IErrorMessage.class, INVALID_CMC_REQUEST);
+        verify(mockIndividualRequestDao, times(2)).persist(individualRequest);
+        verify(requestTypeXmlNodeValidator, times(2)).isCMCClaimRequest(UNSUPPORTED_CMC_REQUEST_TYPE, true);
+        verify(requestTypeXmlNodeValidator).isCMCRequestType(UNSUPPORTED_CMC_REQUEST_TYPE,
+                                                             REQUEST_PAYLOAD,
+                                                             NODE_NAME_CLAIM_NUMBER,
+                                                             true);
+        verify(requestTypeXmlNodeValidator).isCMCRequestType(UNSUPPORTED_CMC_REQUEST_TYPE,
+                                                             REQUEST_PAYLOAD,
+                                                             NODE_NAME_CLAIM_NUMBER,
+                                                             false);
+        verify(mockCmcConsumerGateway, never()).individualRequest(any(IIndividualRequest.class), anyLong(), anyLong());
     }
 
     @Test
-    void processCCDReferenceRequestWhenCaseNotOffLine() {
-        final IIndividualRequest individualRequest = new IndividualRequest();
-
+    void processRequestToSubmitCMCException() {
+        IIndividualRequest individualRequest = new IndividualRequest();
         individualRequest.setSdtRequestReference(TEST_1);
         individualRequest.setRequestStatus(IIndividualRequest.IndividualRequestStatus.RECEIVED.getStatus());
+        individualRequest.setRequestType(CLAIM.getType());
         setUpIndividualRequest(individualRequest);
-        individualRequest.setRequestType(JUDGMENT.getType());
-        individualRequest.setRequestPayload(REQUEST_PAYLOAD.getBytes(StandardCharsets.UTF_8));
+        individualRequest.getBulkSubmission().getBulkCustomer().setReadyForAlternateService(true);
 
-        when(this.mockIndividualRequestDao.getRequestBySdtReference(TEST_1)).thenReturn(individualRequest);
+        when(mockIndividualRequestDao.getRequestBySdtReference(TEST_1)).thenReturn(individualRequest);
 
         mockGlobalParameterCache(TEN_MILLISECONDS, ONE_THOUSAND_MILLISECONDS, TWELVE_THOUSAND_MILLISECONDS);
 
-        when(requestTypeXmlNodeValidator.isCMCRequestType(anyString(), anyString(), anyString(), anyBoolean()))
-            .thenReturn(true);
+        when(requestTypeXmlNodeValidator.isCMCClaimRequest(CLAIM.getType(), true)).thenReturn(true);
 
-        this.targetAppSubmissionService.processRequestToSubmit(TEST_1);
+        CMCException cmcException = new CMCException("Unexpected CMC exception");
+        doThrow(cmcException).when(mockCmcConsumerGateway).individualRequest(individualRequest, 1000, 12000);
 
-        assertEquals(IIndividualRequest.IndividualRequestStatus.FORWARDED.getStatus(),
-                     individualRequest.getRequestStatus());
-
-        verify(mockCmcConsumerGateway).individualRequest(any(IIndividualRequest.class), anyLong(), anyLong());
-        verify(mockIndividualRequestDao, times(2)).persist(individualRequest);
-        verify(mockCacheable).getValue(IGlobalParameter.class, TARGET_APP_RESP_TIMEOUT);
-        verify(mockCacheable).getValue(IGlobalParameter.class, TARGET_APP_TIMEOUT);
-        verify(mockCacheable).getValue(IGlobalParameter.class, MCOL_INDV_REQ_DELAY);
-        verify(mockIndividualRequestDao).getRequestBySdtReference(TEST_1);
-        verify(requestTypeXmlNodeValidator, times(2))
-            .isCMCRequestType(anyString(), anyString(), anyString(), anyBoolean());
-    }
-
-    @Test
-    void processCCDReferenceRequestFailOnCaseOffLine() {
-        final IIndividualRequest individualRequest = new IndividualRequest();
-
-        individualRequest.setSdtRequestReference(TEST_1);
-        individualRequest.setRequestStatus(IIndividualRequest.IndividualRequestStatus.RECEIVED.getStatus());
-        setUpIndividualRequest(individualRequest);
-        individualRequest.setRequestType(JUDGMENT.getType());
-
-        when(this.mockIndividualRequestDao.getRequestBySdtReference(TEST_1)).thenReturn(individualRequest);
-
-        individualRequest.setSdtRequestReference(TEST_1);
-        individualRequest.setRequestStatus(IIndividualRequest.IndividualRequestStatus.RECEIVED.getStatus());
-        setUpIndividualRequest(individualRequest);
-        individualRequest.setRequestType(JUDGMENT.getType());
-        individualRequest.setRequestPayload(REQUEST_PAYLOAD.getBytes(StandardCharsets.UTF_8));
-
-        when(this.mockIndividualRequestDao.getRequestBySdtReference(TEST_1)).thenReturn(individualRequest);
-
-        mockGlobalParameterCache(TEN_MILLISECONDS, ONE_THOUSAND_MILLISECONDS, TWELVE_THOUSAND_MILLISECONDS);
-
-        when(requestTypeXmlNodeValidator.isCMCRequestType(anyString(), anyString(), anyString(), anyBoolean()))
-            .thenReturn(true);
-
-        this.targetAppSubmissionService.processRequestToSubmit(TEST_1);
+        targetAppSubmissionService.processRequestToSubmit(TEST_1);
 
         assertEquals(IIndividualRequest.IndividualRequestStatus.FORWARDED.getStatus(),
-                     individualRequest.getRequestStatus());
+                     individualRequest.getRequestStatus(),
+                     "Individual request has unexpected status");
+        assertEquals(1,
+                     individualRequest.getForwardingAttempts(),
+                     "Individual request has unexpected number of forwarding attempts");
+        assertEquals("Unexpected CMC exception",
+                     individualRequest.getInternalSystemError(),
+                     UNEXPECTED_INTERNAL_SYSTEM_ERROR);
+        assertTrue(individualRequest.isDeadLetter(), "Individual request dead letter flag should be set to true");
 
-        verify(mockCmcConsumerGateway).individualRequest(any(IIndividualRequest.class), anyLong(), anyLong());
-        verify(mockIndividualRequestDao, times(2)).persist(individualRequest);
-        verify(mockCacheable).getValue(IGlobalParameter.class, TARGET_APP_RESP_TIMEOUT);
-        verify(mockCacheable).getValue(IGlobalParameter.class, TARGET_APP_TIMEOUT);
-        verify(mockCacheable).getValue(IGlobalParameter.class, MCOL_INDV_REQ_DELAY);
         verify(mockIndividualRequestDao).getRequestBySdtReference(TEST_1);
-        verify(requestTypeXmlNodeValidator, times(2))
-            .isCMCRequestType(anyString(), anyString(), anyString(), anyBoolean());
+        verify(mockIndividualRequestDao, times(2)).persist(individualRequest);
+        verify(requestTypeXmlNodeValidator).isCMCClaimRequest(CLAIM.getType(), true);
+        verify(mockCmcConsumerGateway).individualRequest(individualRequest, 1000, 12000);
     }
 
     private void mockGlobalParameterCache(String individualRequestDelay,

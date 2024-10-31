@@ -3,7 +3,6 @@ package uk.gov.moj.sdt.cmc.consumers;
 import com.google.common.collect.Lists;
 import feign.Request;
 import feign.RetryableException;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -17,6 +16,7 @@ import uk.gov.moj.sdt.cmc.consumers.api.IJudgementWarrantService;
 import uk.gov.moj.sdt.cmc.consumers.api.IWarrantService;
 import uk.gov.moj.sdt.cmc.consumers.converter.XmlConverter;
 import uk.gov.moj.sdt.cmc.consumers.exception.CMCCaseLockedException;
+import uk.gov.moj.sdt.cmc.consumers.exception.CMCRejectedException;
 import uk.gov.moj.sdt.cmc.consumers.model.claimdefences.ClaimDefencesResponse;
 import uk.gov.moj.sdt.cmc.consumers.model.claimdefences.ClaimDefencesResult;
 import uk.gov.moj.sdt.cmc.consumers.request.BreathingSpaceRequest;
@@ -47,7 +47,9 @@ import uk.gov.moj.sdt.domain.api.ITargetApplication;
 import uk.gov.moj.sdt.idam.IdamRepository;
 import uk.gov.moj.sdt.idam.S2SRepository;
 import uk.gov.moj.sdt.response.SubmitQueryResponse;
+import uk.gov.moj.sdt.utils.AbstractSdtUnitTestBase;
 import uk.gov.moj.sdt.utils.cmc.RequestType;
+import uk.gov.moj.sdt.utils.cmc.exception.CMCException;
 import uk.gov.moj.sdt.utils.cmc.xml.XmlElementValueReader;
 
 import java.io.IOException;
@@ -62,11 +64,12 @@ import java.util.Date;
 import java.util.Locale;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -77,7 +80,6 @@ import static uk.gov.moj.sdt.utils.cmc.RequestType.CLAIM_STATUS_UPDATE;
 import static uk.gov.moj.sdt.utils.cmc.RequestType.JUDGMENT;
 import static uk.gov.moj.sdt.utils.cmc.RequestType.JUDGMENT_WARRANT;
 import static uk.gov.moj.sdt.utils.cmc.RequestType.WARRANT;
-import static uk.gov.moj.sdt.utils.cmc.exception.CMCExceptionMessages.CASE_OFF_LINE;
 
 /**
  * Test class for the consumer gateway.
@@ -85,7 +87,7 @@ import static uk.gov.moj.sdt.utils.cmc.exception.CMCExceptionMessages.CASE_OFF_L
  * @author Mark Dathorne
  */
 @ExtendWith(MockitoExtension.class)
-class CMCConsumerGatewayTest {
+class CMCConsumerGatewayTest extends AbstractSdtUnitTestBase {
 
     private static final long CONNECTION_TIME_OUT = 10;
 
@@ -98,6 +100,9 @@ class CMCConsumerGatewayTest {
     private static final String SDT_USER_AUTH_TOKEN = "sdt user token";
 
     private static final String S2S_TOKEN = "sds token";
+
+    private static final String ERROR_CMCEXCEPTION_NOT_THROWN = "Expected CMCException not thrown";
+    private static final String ERROR_CMCEXCEPTION_UNEXPECTED_MESSAGE = "CMCException has unexpected message";
 
     private CMCConsumerGateway cmcConsumerGateway;
 
@@ -151,8 +156,8 @@ class CMCConsumerGatewayTest {
     @Mock
     private S2SRepository s2SRepository;
 
-    @BeforeEach
-    public void setUpLocalTests() {
+    @Override
+    protected void setUpLocalTests() {
         cmcConsumerGateway = new CMCConsumerGateway(breathingSpace,
                                                     judgementService,
                                                     claimStatusUpdate,
@@ -309,24 +314,19 @@ class CMCConsumerGatewayTest {
     }
 
     @Test
-    void shouldAddCaseOffLineErrorWhenInvokingJudgementRequest() throws Exception {
-        JudgementResponse response = new JudgementResponse();
-        Date date = formattedDate();
-        JudgementResponseDetail judgementResponseDetail = new JudgementResponseDetail();
-        judgementResponseDetail.setJudgmentEnteredDate(date);
-        judgementResponseDetail.setFirstPaymentDate(date);
-        response.setJudgementResponseDetail(judgementResponseDetail);
-        RuntimeException exception = new RuntimeException(CASE_OFF_LINE);
-        doThrow(exception).when(judgementService).requestJudgment(any(), any(), any());
+    void shouldAddCaseOffLineErrorWhenInvokingJudgementRequest() {
+        CMCRejectedException exception = new CMCRejectedException(200, "Case is Offline.");
+        when(judgementService.requestJudgment(any(), any(), any())).thenThrow(exception);
 
         IIndividualRequest individualRequest = new IndividualRequest();
         individualRequest.setRequestType(JUDGMENT.getType());
 
         cmcConsumerGateway.individualRequest(individualRequest, CONNECTION_TIME_OUT, RECEIVE_TIME_OUT);
+
         IErrorLog errorLog = individualRequest.getErrorLog();
         assertNotNull(errorLog, "Error log should not be null");
         assertEquals("200", errorLog.getErrorCode(), "Unexpected error code");
-        assertEquals("Case is offline", errorLog.getErrorText(), "Unexpected error text");
+        assertEquals("Case is Offline.", errorLog.getErrorText(), "Unexpected error text");
     }
 
     @Test
@@ -335,7 +335,7 @@ class CMCConsumerGatewayTest {
         Request request = mock(Request.class);
         RetryableException retryableException =
             new RetryableException(-1, "Timeout", Request.HttpMethod.POST, socketTimeoutException, null, request);
-        doThrow(retryableException).when(judgementService).requestJudgment(any(), any(), any());
+        when(judgementService.requestJudgment(any(), any(), any())).thenThrow(retryableException);
 
         IIndividualRequest individualRequest = mock(IIndividualRequest.class);
         setupMockBehaviour(JUDGMENT, individualRequest);
@@ -350,6 +350,67 @@ class CMCConsumerGatewayTest {
         assertEquals("Read time out error sending [MCOL-0000001] to CMC",
                      exception.getErrorDescription(),
                      "TimeoutException has unexpected error description");
+    }
+
+    @Test
+    void shouldThrowCmcExceptionForOtherRetryableException() throws Exception {
+        RuntimeException runtimeException = new RuntimeException("Runtime other exception");
+        Request request = mock(Request.class);
+        RetryableException retryableException =
+            new RetryableException(-1, "Other exception", Request.HttpMethod.POST, runtimeException, null, request);
+        when(judgementService.requestJudgment(any(), any(), any())).thenThrow(retryableException);
+
+        IIndividualRequest individualRequest = mock(IIndividualRequest.class);
+        setupMockBehaviour(JUDGMENT, individualRequest);
+
+        CMCException exception =
+            assertThrows(CMCException.class,
+                         () -> cmcConsumerGateway.individualRequest(individualRequest,
+                                                                    CONNECTION_TIME_OUT,
+                                                                    RECEIVE_TIME_OUT),
+                         ERROR_CMCEXCEPTION_NOT_THROWN);
+        assertEquals("Other exception", exception.getMessage(), ERROR_CMCEXCEPTION_UNEXPECTED_MESSAGE);
+    }
+
+    @Test
+    void testShouldRethrowCmcException() throws Exception {
+        CMCException cmcException = new CMCException("Previously thrown CMCException");
+        when(judgementService.requestJudgment(any(), any(), any())).thenThrow(cmcException);
+
+        IIndividualRequest individualRequest = mock(IIndividualRequest.class);
+        setupMockBehaviour(JUDGMENT, individualRequest);
+
+        CMCException exception =
+            assertThrows(CMCException.class,
+                         () -> cmcConsumerGateway.individualRequest(individualRequest,
+                                                                    CONNECTION_TIME_OUT,
+                                                                    RECEIVE_TIME_OUT),
+                         ERROR_CMCEXCEPTION_NOT_THROWN);
+        assertEquals("Previously thrown CMCException", exception.getMessage(), ERROR_CMCEXCEPTION_UNEXPECTED_MESSAGE);
+        assertNull(exception.getCause(), "CMCException cause should be null");
+    }
+
+    @Test
+    void testShouldThrowNewCmcException() throws Exception {
+        String message = "Runtime exception message";
+        RuntimeException runtimeException = new RuntimeException(message);
+        when(judgementService.requestJudgment(any(), any(), any())).thenThrow(runtimeException);
+
+        IIndividualRequest individualRequest = mock(IIndividualRequest.class);
+        setupMockBehaviour(JUDGMENT, individualRequest);
+
+        CMCException exception =
+            assertThrows(CMCException.class,
+                         () -> cmcConsumerGateway.individualRequest(individualRequest,
+                                                                    CONNECTION_TIME_OUT,
+                                                                    RECEIVE_TIME_OUT),
+                         ERROR_CMCEXCEPTION_NOT_THROWN);
+        assertEquals(message, exception.getMessage(), ERROR_CMCEXCEPTION_UNEXPECTED_MESSAGE);
+
+        Throwable exceptionCause = exception.getCause();
+        assertNotNull(exceptionCause, "CMCException cause should not be null");
+        assertInstanceOf(RuntimeException.class, exceptionCause, "CMCException has unexpected cause type");
+        assertEquals(message, exceptionCause.getMessage(), "CMCException cause has unexpected message");
     }
 
     @Test

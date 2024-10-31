@@ -19,6 +19,7 @@ import uk.gov.moj.sdt.cmc.consumers.api.IJudgementWarrantService;
 import uk.gov.moj.sdt.cmc.consumers.api.IWarrantService;
 import uk.gov.moj.sdt.cmc.consumers.converter.XmlConverter;
 import uk.gov.moj.sdt.cmc.consumers.exception.CMCCaseLockedException;
+import uk.gov.moj.sdt.cmc.consumers.exception.CMCRejectedException;
 import uk.gov.moj.sdt.cmc.consumers.model.claimdefences.ClaimDefencesResponse;
 import uk.gov.moj.sdt.cmc.consumers.request.BreathingSpaceRequest;
 import uk.gov.moj.sdt.cmc.consumers.request.ClaimStatusUpdateRequest;
@@ -47,8 +48,6 @@ import uk.gov.moj.sdt.utils.SdtContext;
 import uk.gov.moj.sdt.utils.cmc.RequestType;
 import uk.gov.moj.sdt.utils.cmc.exception.CMCException;
 import uk.gov.moj.sdt.utils.cmc.xml.XmlElementValueReader;
-
-import static uk.gov.moj.sdt.utils.cmc.exception.CMCExceptionMessages.CASE_OFF_LINE;
 
 @Component("CMCConsumerGateway")
 @SuppressWarnings("java:S6539")
@@ -146,19 +145,18 @@ public class CMCConsumerGateway implements IConsumerGateway {
                 throw new TimeoutException("TIMEOUT_ERROR",
                                            "Read time out error sending [" + sdtRequestReference + "] to CMC");
             } else {
-                throw e;
+                throw new CMCException(e.getMessage(), e);
             }
+        } catch (CMCRejectedException e) {
+            IErrorLog errorLog = new ErrorLog(e.getErrorCode(), e.getErrorText());
+            individualRequest.markRequestAsRejected(errorLog);
         } catch (CMCCaseLockedException e) {
             LOGGER.info("Case locked for SDT reference [{}]", individualRequest.getSdtRequestReference());
             individualRequest.markRequestAsCaseLocked();
+        } catch (CMCException e) {
+            throw e;
         } catch (Exception e) {
-            String message = e.getMessage();
-            if (message != null && message.contains(CASE_OFF_LINE)) {
-                IErrorLog errorLog = new ErrorLog("200", "Case is offline");
-                individualRequest.markRequestAsRejected(errorLog);
-            } else {
-                throw new CMCException(message, e);
-            }
+            throw new CMCException(e.getMessage(), e);
         }
     }
 
