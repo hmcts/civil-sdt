@@ -2,18 +2,17 @@ module "servicebus-namespace" {
   providers = {
     azurerm.private_endpoint = azurerm.private_endpoint
   }
-  source              = "git@github.com:hmcts/terraform-module-servicebus-namespace?ref=master"
+  source              = "git@github.com:hmcts/terraform-module-servicebus-namespace?ref=4.x"
   name                = "${var.product}-${var.component}-servicebus-${var.env}"
   resource_group_name = azurerm_resource_group.civil_sdt_rg.name
   location            = var.location
   env                 = var.env
   common_tags         = local.tags
   sku                 = var.sku
-  zone_redundant      = (var.sku != "Premium" ? "false" : "true")
 }
 
 module "servicebus-sdt-queue" {
-  source                        = "git@github.com:hmcts/terraform-module-servicebus-queue?ref=master"
+  source                        = "git@github.com:hmcts/terraform-module-servicebus-queue?ref=4.x"
   name                          = "${var.product}-${var.component}-in-out-${var.env}"
   namespace_name                = module.servicebus-namespace.name
   resource_group_name           = azurerm_resource_group.civil_sdt_rg.name
