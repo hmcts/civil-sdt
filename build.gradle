@@ -295,7 +295,7 @@ allprojects {
 
     testImplementation libraries.junit5
     testImplementation group: 'com.fasterxml.jackson.module', name: 'jackson-module-jaxb-annotations', version: '2.18.3'
-    testImplementation "com.github.hmcts:fortify-client:1.4.7:all"
+    testImplementation "com.github.hmcts:fortify-client:1.4.8:all"
     testImplementation group: 'com.github.npathai', name: 'hamcrest-optional', version: '2.0.0'
     testImplementation group: 'com.github.tomakehurst', name: 'wiremock-jre8', version: '3.0.1'
     testImplementation group: 'commons-lang', name: 'commons-lang', version: '2.6'
