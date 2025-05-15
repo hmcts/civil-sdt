@@ -19,7 +19,6 @@
   <!--Please add all the temporary suppression under the below section-->
   <suppress>
     <notes>Temporary Suppressions
-      CVE-2023-36052
       CVE-2024-6763
       CVE-2024-8184
       CVE-2024-22201
@@ -27,7 +26,6 @@
       CVE-2024-38820 
       CVE-2025-25193
     </notes>
-    <cve>CVE-2023-36052</cve>
     <cve>CVE-2024-6763</cve>
     <cve>CVE-2024-8184</cve>
     <cve>CVE-2024-22201</cve>
