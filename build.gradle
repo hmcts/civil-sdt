@@ -158,14 +158,14 @@ ext {
   junitVersion = '5.11.4'
   junitPlatformVersion = '1.11.4'
   log4jVersion = '2.24.3'
-  postgresqlVersion = '42.7.5'
+  postgresqlVersion = '42.7.6'
   reformLogging= '5.1.9'
   restAssuredVersion = '4.3.0!!'
   springCloudVersion = '2021.0.9'
   tomcatVersion = '9.0.105'
-  cxfVersion = '3.6.6'
+  cxfVersion = '3.6.7'
   jaxwsVersion = "2.3.1"
-  testcontainers = '1.21.0'
+  testcontainers = '1.21.1'
   sdtCommonVersion = '3.2.1-SDT-249.0.7'
   limits = [
     'instruction': 99,
