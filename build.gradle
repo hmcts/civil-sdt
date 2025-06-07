@@ -166,7 +166,7 @@ ext {
   cxfVersion = '3.6.7'
   jaxwsVersion = "2.3.1"
   testcontainers = '1.21.1'
-  sdtCommonVersion = '3.2.1'
+  sdtCommonVersion = '3.3.0'
   limits = [
     'instruction': 99,
     'branch'     : 99,
