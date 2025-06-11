@@ -202,7 +202,7 @@ dependencyManagement {
   }
   dependencies {
     // CVE-2023-24998
-    dependencySet(group: 'commons-fileupload', version: '1.5') {
+    dependencySet(group: 'commons-fileupload', version: '1.6.0') {
       entry 'commons-fileupload'
     }
     dependencySet(group: 'org.apache.tomcat.embed', version: tomcatVersion) {
@@ -389,7 +389,7 @@ subprojects { subproject ->
     }
     dependencies {
       // CVE-2023-24998
-      dependencySet(group: 'commons-fileupload', version: '1.5') {
+      dependencySet(group: 'commons-fileupload', version: '1.6.0') {
         entry 'commons-fileupload'
       }
       dependencySet(group: 'org.apache.tomcat.embed', version: tomcatVersion) {
