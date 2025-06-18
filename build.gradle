@@ -166,7 +166,7 @@ ext {
   cxfVersion = '3.6.7'
   jaxwsVersion = "2.3.1"
   testcontainers = '1.21.1'
-  sdtCommonVersion = '3.3.0'
+  sdtCommonVersion = '3.4.0'
   limits = [
     'instruction': 99,
     'branch'     : 99,
@@ -221,7 +221,8 @@ allprojects {
     mavenLocal()
     mavenCentral()
     maven {
-      url  "https://jitpack.io"
+      url "https://pkgs.dev.azure.com/hmcts/Artifacts/_packaging/hmcts-lib/maven/v1"
+      name "HMCTS common libraries"
     }
   }
 
@@ -283,7 +284,16 @@ allprojects {
     implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign'
 
 
-    implementation group: 'com.github.hmcts', name: 'civil-sdt-common', version: sdtCommonVersion
+    implementation group: 'com.github.hmcts.civil-sdt-common', name: 'dao-api', version: sdtCommonVersion
+    implementation group: 'com.github.hmcts.civil-sdt-common', name: 'domain', version: sdtCommonVersion
+    implementation group: 'com.github.hmcts.civil-sdt-common', name: 'handlers', version: sdtCommonVersion
+    implementation group: 'com.github.hmcts.civil-sdt-common', name: 'handlers-api', version: sdtCommonVersion
+    implementation group: 'com.github.hmcts.civil-sdt-common', name: 'interceptors', version: sdtCommonVersion
+    implementation group: 'com.github.hmcts.civil-sdt-common', name: 'producers-api', version: sdtCommonVersion
+    implementation group: 'com.github.hmcts.civil-sdt-common', name: 'services-api', version: sdtCommonVersion
+    implementation group: 'com.github.hmcts.civil-sdt-common', name: 'transformers', version: sdtCommonVersion
+    implementation group: 'com.github.hmcts.civil-sdt-common', name: 'utils', version: sdtCommonVersion
+    implementation group: 'com.github.hmcts.civil-sdt-common', name: 'validators', version: sdtCommonVersion
     /*
       Use actual implementation of xerces 2.12.2 instead of the one bundled with Java.  The version in openJDK contains
       a bug in XMLSchemaValidator where cvc-complex-type.4 errors are reported twice.  The bug causes some XSD validation
@@ -295,7 +305,7 @@ allprojects {
 
     testImplementation libraries.junit5
     testImplementation group: 'com.fasterxml.jackson.module', name: 'jackson-module-jaxb-annotations', version: '2.19.1'
-    testImplementation "com.github.hmcts:fortify-client:1.4.8:all"
+    testImplementation "com.github.hmcts:fortify-client:1.4.9:all"
     testImplementation group: 'com.github.npathai', name: 'hamcrest-optional', version: '2.0.0'
     testImplementation group: 'com.github.tomakehurst', name: 'wiremock-jre8', version: '3.0.1'
     testImplementation group: 'commons-lang', name: 'commons-lang', version: '2.6'
@@ -402,7 +412,16 @@ subprojects { subproject ->
 
   dependencies {
     implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign'
-    implementation group: 'com.github.hmcts', name: 'civil-sdt-common', version: sdtCommonVersion
+    implementation group: 'com.github.hmcts.civil-sdt-common', name: 'dao-api', version: sdtCommonVersion
+    implementation group: 'com.github.hmcts.civil-sdt-common', name: 'domain', version: sdtCommonVersion
+    implementation group: 'com.github.hmcts.civil-sdt-common', name: 'handlers', version: sdtCommonVersion
+    implementation group: 'com.github.hmcts.civil-sdt-common', name: 'handlers-api', version: sdtCommonVersion
+    implementation group: 'com.github.hmcts.civil-sdt-common', name: 'interceptors', version: sdtCommonVersion
+    implementation group: 'com.github.hmcts.civil-sdt-common', name: 'producers-api', version: sdtCommonVersion
+    implementation group: 'com.github.hmcts.civil-sdt-common', name: 'services-api', version: sdtCommonVersion
+    implementation group: 'com.github.hmcts.civil-sdt-common', name: 'transformers', version: sdtCommonVersion
+    implementation group: 'com.github.hmcts.civil-sdt-common', name: 'utils', version: sdtCommonVersion
+    implementation group: 'com.github.hmcts.civil-sdt-common', name: 'validators', version: sdtCommonVersion
 
     testImplementation group: 'com.github.hmcts.civil-sdt-common', name: 'utils', version: sdtCommonVersion, classifier: 'test'
     testImplementation group: 'com.github.hmcts.civil-sdt-common', name: 'utils', version: sdtCommonVersion, classifier: 'integ-test'
