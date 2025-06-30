@@ -7,12 +7,12 @@ module "postgresql-v15" {
     azurerm.postgres_network = azurerm.private_endpoint
   }
 
-  admin_user_object_id        = var.jenkins_AAD_objectId
-  business_area               = "cft"
-  common_tags                 = local.tags
-  component                   = var.component
-  env                         = var.env
-  enable_db_report_privileges = true
+  admin_user_object_id               = var.jenkins_AAD_objectId
+  business_area                      = "cft"
+  common_tags                        = local.tags
+  component                          = var.component
+  env                                = var.env
+  enable_db_report_privileges        = true
   pgsql_databases = [
     {
       name : "civil_sdt"
@@ -20,10 +20,15 @@ module "postgresql-v15" {
       report_privilege_tables : ["individual_requests"]
     }
   ]
-  pgsql_version                = "15"
-  product                      = var.product
-  name                         = join("-", [var.product, var.component, "v15"])
-  backup_retention_days        = var.database_backup_retention_days
+  kv_name                            = module.civil_sdt_key_vault.key_vault_name
+  kv_subscription                    = var.aks_subscription_id
+  user_secret_name                   = azurerm_key_vault_secret.POSTGRES-USER-V15.name
+  pass_secret_name                   = azurerm_key_vault_secret.POSTGRES-PASS-V15.name
+  force_db_report_privileges_trigger = "1"
+  pgsql_version                      = "15"
+  product                            = var.product
+  name                               = join("-", [var.product, var.component, "v15"])
+  backup_retention_days              = var.database_backup_retention_days
 }
 
 # Create secret for database user
