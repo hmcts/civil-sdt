@@ -340,10 +340,10 @@ allprojects {
       exclude group: 'junit', module: 'junit'
       exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
     }
-    testImplementation('org.springframework.cloud:spring-cloud-contract-wiremock:2.2.6.RELEASE') {
+    testImplementation('org.springframework.cloud:spring-cloud-contract-wiremock:2.2.8.RELEASE') {
       exclude group: 'commons-beanutils', module: 'commons-beanutils'
     }
-    testImplementation('org.springframework.cloud:spring-cloud-starter-contract-stub-runner:2.2.6.RELEASE') {
+    testImplementation('org.springframework.cloud:spring-cloud-starter-contract-stub-runner:2.2.8.RELEASE') {
       exclude group: 'com.github.tomakehurst', module: 'wiremock-standalone'
       exclude group: 'commons-beanutils', module: 'commons-beanutils'
       exclude group: 'org.codehaus.groovy', module: 'groovy-xml'
