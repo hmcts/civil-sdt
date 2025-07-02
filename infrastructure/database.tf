@@ -21,7 +21,7 @@ module "postgresql-v15" {
     }
   ]
   kv_name                            = module.civil_sdt_key_vault.key_vault_name
-  kv_subscription                    = var.aks_subscription_id
+  kv_subscription                    = var.kv_subscription
   user_secret_name                   = azurerm_key_vault_secret.POSTGRES-USER-V15.name
   pass_secret_name                   = azurerm_key_vault_secret.POSTGRES-PASS-V15.name
   force_db_report_privileges_trigger = "1"
