@@ -60,3 +60,8 @@ variable "max_message_size_in_kilobytes" {
   default     = null
 }
 
+variable "kv_subscription" {
+  type        = string
+  description = "Name or Id of key vault subscription.  Used for setting up privileges for database reporting postgres cron jobs.  Only applies to production."
+  default     = "DCD-CNP-DEV"
+}
