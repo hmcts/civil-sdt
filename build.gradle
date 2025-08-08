@@ -264,7 +264,7 @@ allprojects {
     implementation group: 'org.apache.tomcat.embed', name: 'tomcat-embed-websocket', version: tomcatVersion
     implementation group: 'org.flywaydb', name: 'flyway-core', version: '9.22.3'
     implementation group: 'org.glassfish', name: 'jakarta.el', version: '4.0.2'
-    implementation group: 'org.hibernate', name: 'hibernate-validator', version: '7.0.5.Final'
+    implementation group: 'org.hibernate', name: 'hibernate-validator', version: '8.0.3.Final'
     implementation group: 'org.postgresql', name: 'postgresql', version: postgresqlVersion
     implementation group: 'org.springdoc', name: 'springdoc-openapi-ui', version: '1.8.0'
     implementation group: 'org.springframework', name: 'spring-jms'
