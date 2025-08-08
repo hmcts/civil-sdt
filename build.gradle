@@ -250,7 +250,7 @@ allprojects {
     }
     implementation group: 'javax.inject', name: 'javax.inject', version: '1'
     implementation group: 'javax.jws', name: 'javax.jws-api', version: '1.1'
-    implementation group: 'net.minidev', name: 'json-smart', version: '2.5.2'
+    implementation group: 'net.minidev', name: 'json-smart', version: '2.6.0'
     implementation group: 'org.apache.commons', name: 'commons-compress', version: '1.27.1'
     implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.18.0'
     implementation group: 'org.apache.cxf', name: 'cxf-rt-features-logging', version: cxfVersion
