@@ -4,7 +4,7 @@
     "local>hmcts/.github:renovate-config",
     "local>hmcts/.github//renovate/automerge-minor"
   ],
-  "schedule": ["* 8-19 * * 1-5"],
-  "automergeSchedule": ["* 8-19 * * 1-5"],
+  "schedule": ["* 8-18 * * 1-5"],
+  "automergeSchedule": ["* 8-18 * * 1-5"],
   "updateNotScheduled": false
 }
