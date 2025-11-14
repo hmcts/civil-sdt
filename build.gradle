@@ -152,7 +152,7 @@ dependencyCheck {
 }
 
 ext {
-  feignJackson = '11.10'
+  feignJackson = '13.6'
   groovyVersion = '3.0.13!!'
   hamcrestVersion = '1.3'
   junitVersion = '5.11.4'
