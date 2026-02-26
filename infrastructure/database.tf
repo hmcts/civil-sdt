@@ -7,12 +7,12 @@ module "postgresql-v15" {
     azurerm.postgres_network = azurerm.private_endpoint
   }
 
-  admin_user_object_id               = var.jenkins_AAD_objectId
-  business_area                      = "cft"
-  common_tags                        = local.tags
-  component                          = var.component
-  env                                = var.env
-  enable_db_report_privileges        = true
+  admin_user_object_id        = var.jenkins_AAD_objectId
+  business_area               = "cft"
+  common_tags                 = local.tags
+  component                   = var.component
+  env                         = var.env
+  enable_db_report_privileges = true
   pgsql_databases = [
     {
       name : "civil_sdt"
