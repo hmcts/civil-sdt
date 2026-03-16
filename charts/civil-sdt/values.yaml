@@ -1,6 +1,6 @@
 java:
   applicationPort: 4550
-  image: 'hmctspublic.azurecr.io/civil/sdt:latest'
+  image: 'hmctsprod.azurecr.io/civil/sdt:latest'
   ingressHost: civil-sdt-{{ .Values.global.environment }}.service.core-compute-{{ .Values.global.environment }}.internal
   aadIdentityName: civil
   environment:
