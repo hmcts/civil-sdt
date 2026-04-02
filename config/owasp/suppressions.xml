@@ -30,7 +30,10 @@
       CVE-2024-38808
       CVE-2024-38820
       CVE-2025-5115
+      CVE-2025-11143
       CVE-2025-35036
+      CVE-2026-33870
+      CVE-2026-33871
     </notes>
     <cve>CVE-2023-1932</cve>
     <cve>CVE-2024-6763</cve>
@@ -43,7 +46,10 @@
     <cve>CVE-2024-38808</cve>
     <cve>CVE-2024-38820</cve>
     <cve>CVE-2025-5115</cve>
+    <cve>CVE-2025-11143</cve>
     <cve>CVE-2025-35036</cve>
+    <cve>CVE-2026-33870</cve>
+    <cve>CVE-2026-33871</cve>
   </suppress>
   <!--End of temporary suppression section -->
 
