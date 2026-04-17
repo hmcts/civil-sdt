@@ -14,6 +14,12 @@ module "civil_sdt_key_vault" {
   product_group_name          = "DTS Civil"
   common_tags                 = local.tags
   managed_identity_object_ids = [data.azurerm_user_assigned_identity.civil-mi.principal_id]
+  jenkins_object_id           = data.azurerm_user_assigned_identity.jenkins.principal_id
+}
+
+data "azurerm_user_assigned_identity" "jenkins" {
+  name                = "jenkins-${var.env}-mi"
+  resource_group_name = "managed-identities-${var.env}-rg"
 }
 
 data "azurerm_key_vault" "s2s_vault" {
