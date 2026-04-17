@@ -32,6 +32,7 @@
       CVE-2025-5115
       CVE-2025-11143
       CVE-2025-35036
+      CVE-2026-22732
       CVE-2026-33870
       CVE-2026-33871
     </notes>
@@ -48,6 +49,7 @@
     <cve>CVE-2025-5115</cve>
     <cve>CVE-2025-11143</cve>
     <cve>CVE-2025-35036</cve>
+    <cve>CVE-2026-22732</cve>
     <cve>CVE-2026-33870</cve>
     <cve>CVE-2026-33871</cve>
   </suppress>
