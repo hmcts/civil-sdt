@@ -377,6 +377,10 @@ allprojects {
         if (details.requested.group == 'com.fasterxml.woodstox' && details.requested.name == 'woodstox-core') {
           details.useVersion '6.4.0' // CVE-2022-40152
         }
+        if (details.requested.group == 'org.apache.geronimo.specs' && details.requested.name == 'geronimo-jms_2.0_spec') {
+          details.useVersion '1.0-alpha-2'
+          details.because 'azure-servicebus-jms 1.0.0 declares this dependency as LATEST, which requires dynamic repository metadata'
+        }
       }
     }
     exclude group: 'org.springframework.security', module: 'spring-security-rsa'
