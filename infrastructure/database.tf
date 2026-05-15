@@ -30,6 +30,10 @@ module "postgresql-v15" {
       name  = "track_io_timing"
       value = "ON"
     },
+    {
+      name  = "backslash_quote"
+      value = "on"
+    },
   ]
   kv_name                            = module.civil_sdt_key_vault.key_vault_name
   kv_subscription                    = var.kv_subscription
