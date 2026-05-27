@@ -67,6 +67,9 @@
       CVE-2026-42586
       CVE-2026-42587
       CVE-2026-44248
+      CVE-2026-44417
+      CVE-2026-44618
+      CVE-2026-44930
     </notes>
     <cve>CVE-2023-1932</cve>
     <cve>CVE-2024-6763</cve>
@@ -116,6 +119,9 @@
     <cve>CVE-2026-42586</cve>
     <cve>CVE-2026-42587</cve>
     <cve>CVE-2026-44248</cve>
+    <cve>CVE-2026-44417</cve>
+    <cve>CVE-2026-44618</cve>
+    <cve>CVE-2026-44930</cve>
   </suppress>
   <!--End of temporary suppression section -->
 
