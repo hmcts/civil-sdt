@@ -8,11 +8,13 @@
       CVE-2023-35116 - Not believed to be a valid vulnerability - see https://github.com/FasterXML/jackson-databind/issues/3972
       CVE-2023-36414 - This CVE only refers to the .NET Azure Identity SDK up to version 1.10.2. DependencyCheck appears to be matching incorrectly against azure-identity-extensions and ignoring the language version - see https://github.com/jeremylong/DependencyCheck/issues/6334
       CVE-2023-36415 - This CVE only refers to the Azure Identity SDK and only up to version 1.10.2 of the Java version of it. DependencyCheck appears to be matching incorrectly against azure-identity-extensions and incorrectly flagging azure-identity as being affected, even though a non-vulnerable version is being used - see https://github.com/jeremylong/DependencyCheck/issues/5992
+      CVE-2026-42582 - This CVE only refers to Netty 4.2.0.Final - 4.2.12.Final. CBUS is still using the 4.1.x branch of Netty so this CVE does not apply.
     </notes>
     <cve>CVE-2022-1471</cve>
     <cve>CVE-2023-35116</cve>
     <cve>CVE-2023-36414</cve>
     <cve>CVE-2023-36415</cve>
+    <cve>CVE-2026-42582</cve>
   </suppress>
   <!--End of false positives section -->
 
@@ -53,17 +55,7 @@
       CVE-2026-42402
       CVE-2026-42403
       CVE-2026-42404
-      CVE-2026-42578
-      CVE-2026-42579
-      CVE-2026-42580
-      CVE-2026-42581
       CVE-2026-42582
-      CVE-2026-42583
-      CVE-2026-42584
-      CVE-2026-42585
-      CVE-2026-42586
-      CVE-2026-42587
-      CVE-2026-44248
       CVE-2026-44417
       CVE-2026-44618
       CVE-2026-44930
@@ -102,17 +94,7 @@
     <cve>CVE-2026-42402</cve>
     <cve>CVE-2026-42403</cve>
     <cve>CVE-2026-42404</cve>
-    <cve>CVE-2026-42578</cve>
-    <cve>CVE-2026-42579</cve>
-    <cve>CVE-2026-42580</cve>
-    <cve>CVE-2026-42581</cve>
     <cve>CVE-2026-42582</cve>
-    <cve>CVE-2026-42583</cve>
-    <cve>CVE-2026-42584</cve>
-    <cve>CVE-2026-42585</cve>
-    <cve>CVE-2026-42586</cve>
-    <cve>CVE-2026-42587</cve>
-    <cve>CVE-2026-44248</cve>
     <cve>CVE-2026-44417</cve>
     <cve>CVE-2026-44618</cve>
     <cve>CVE-2026-44930</cve>
