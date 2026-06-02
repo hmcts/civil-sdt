@@ -53,6 +53,20 @@
       CVE-2026-42402
       CVE-2026-42403
       CVE-2026-42404
+      CVE-2026-42578
+      CVE-2026-42579
+      CVE-2026-42580
+      CVE-2026-42581
+      CVE-2026-42582
+      CVE-2026-42583
+      CVE-2026-42584
+      CVE-2026-42585
+      CVE-2026-42586
+      CVE-2026-42587
+      CVE-2026-44248
+      CVE-2026-44417
+      CVE-2026-44618
+      CVE-2026-44930
     </notes>
     <cve>CVE-2023-1932</cve>
     <cve>CVE-2024-6763</cve>
@@ -88,6 +102,20 @@
     <cve>CVE-2026-42402</cve>
     <cve>CVE-2026-42403</cve>
     <cve>CVE-2026-42404</cve>
+    <cve>CVE-2026-42578</cve>
+    <cve>CVE-2026-42579</cve>
+    <cve>CVE-2026-42580</cve>
+    <cve>CVE-2026-42581</cve>
+    <cve>CVE-2026-42582</cve>
+    <cve>CVE-2026-42583</cve>
+    <cve>CVE-2026-42584</cve>
+    <cve>CVE-2026-42585</cve>
+    <cve>CVE-2026-42586</cve>
+    <cve>CVE-2026-42587</cve>
+    <cve>CVE-2026-44248</cve>
+    <cve>CVE-2026-44417</cve>
+    <cve>CVE-2026-44618</cve>
+    <cve>CVE-2026-44930</cve>
   </suppress>
   <!--End of temporary suppression section -->
 
