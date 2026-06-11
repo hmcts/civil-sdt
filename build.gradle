@@ -233,8 +233,8 @@ allprojects {
 
   dependencies {
     annotationProcessor 'org.mapstruct:mapstruct-processor:1.6.3', 'org.projectlombok:lombok-mapstruct-binding:0.2.0'
-    implementation group: 'com.azure', name: 'azure-core', version: '1.57.1'
-    implementation group: 'com.azure', name: 'azure-messaging-servicebus', version: '7.17.17'
+    implementation group: 'com.azure', name: 'azure-core', version: '1.58.1'
+    implementation group: 'com.azure', name: 'azure-messaging-servicebus', version: '7.17.18'
     implementation group: 'com.fasterxml.jackson.module', name: 'jackson-module-jaxb-annotations', version: jacksonVersion
     implementation group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-xml', version: jacksonVersion
     implementation group: 'com.github.hmcts.java-logging', name: 'logging', version: '8.0.0'
