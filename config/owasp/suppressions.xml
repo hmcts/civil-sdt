@@ -51,13 +51,20 @@
       CVE-2026-40974
       CVE-2026-40975
       CVE-2026-40977
+      CVE-2026-41838
       CVE-2026-41840
       CVE-2026-41841
       CVE-2026-41842
       CVE-2026-41843
+      CVE-2026-41844
+      CVE-2026-41845
+      CVE-2026-41846
+      CVE-2026-41847
+      CVE-2026-41848
       CVE-2026-41849
       CVE-2026-41850
       CVE-2026-41851
+      CVE-2026-41852
       CVE-2026-42198
       CVE-2026-42402
       CVE-2026-42403
@@ -96,20 +103,27 @@
     <cve>CVE-2026-40974</cve>
     <cve>CVE-2026-40975</cve>
     <cve>CVE-2026-40977</cve>
+    <cve>CVE-2026-41838</cve>
     <cve>CVE-2026-41840</cve>
     <cve>CVE-2026-41841</cve>
     <cve>CVE-2026-41842</cve>
     <cve>CVE-2026-41843</cve>
+    <cve>CVE-2026-41844</cve>
+    <cve>CVE-2026-41845</cve>
+    <cve>CVE-2026-41846</cve>
+    <cve>CVE-2026-41847</cve>
+    <cve>CVE-2026-41848</cve>
     <cve>CVE-2026-41849</cve>
     <cve>CVE-2026-41850</cve>
     <cve>CVE-2026-41851</cve>
+    <cve>CVE-2026-41852</cve>
     <cve>CVE-2026-42198</cve>
     <cve>CVE-2026-42402</cve>
     <cve>CVE-2026-42403</cve>
     <cve>CVE-2026-42404</cve>
     <cve>CVE-2026-44417</cve>
     <cve>CVE-2026-44618</cve>
-    <cve>CVE-2026-44930</cve>
+    <cve>CVE-2026-44930</cve>    
   </suppress>
   <!--End of temporary suppression section -->
 
