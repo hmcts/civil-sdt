@@ -167,7 +167,7 @@ ext {
   jaxwsVersion = "2.3.1"
   testcontainers = '1.21.4'
   sdtCommonVersion = '4.0.0'
-  jacksonVersion = '2.19.4'
+  jacksonVersion = '2.22.1'
   limits = [
     'instruction': 99,
     'branch'     : 99,
