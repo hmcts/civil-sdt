@@ -198,6 +198,7 @@ ext['hibernate-validator.version'] = '6.0.20.Final'
 ext['activemq.version'] = '5.18.3'
 ext['netty.version'] = '4.1.133.Final'
 ext['byte-buddy.version'] = '1.17.7'
+ext['jetty.version'] = '9.4.58.v20250814'
 
 dependencyManagement {
   imports {
