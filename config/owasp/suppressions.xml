@@ -125,6 +125,7 @@
       CVE-2026-56817
       CVE-2026-56819
       CVE-2026-56820
+      CVE-2026-66299
     </notes>
     <cve>CVE-2023-1932</cve>
     <cve>CVE-2024-6763</cve>
@@ -230,6 +231,7 @@
     <cve>CVE-2026-56817</cve>
     <cve>CVE-2026-56819</cve>
     <cve>CVE-2026-56820</cve>
+    <cve>CVE-2026-66299</cve>
   </suppress>
   <!--End of temporary suppression section -->
 
