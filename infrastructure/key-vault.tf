@@ -4,17 +4,18 @@ data "azurerm_user_assigned_identity" "civil-mi" {
 }
 
 module "civil_sdt_key_vault" {
-  source = "git@github.com:hmcts/cnp-module-key-vault?ref=master"
+  source = "git@github.com:hmcts/cnp-module-key-vault?ref=DTSPO-31965/remove-jenkins-ptl-access"
 
-  name                        = "${var.product}-${var.component}-${var.env}"
-  product                     = var.product
-  env                         = var.env
-  object_id                   = var.jenkins_AAD_objectId
-  resource_group_name         = azurerm_resource_group.civil_sdt_rg.name
-  product_group_name          = "DTS Civil"
-  common_tags                 = local.tags
-  managed_identity_object_ids = [data.azurerm_user_assigned_identity.civil-mi.principal_id]
-  jenkins_object_id           = data.azurerm_user_assigned_identity.jenkins.principal_id
+  name                         = "${var.product}-${var.component}-${var.env}"
+  product                      = var.product
+  env                          = var.env
+  object_id                    = var.jenkins_AAD_objectId
+  resource_group_name          = azurerm_resource_group.civil_sdt_rg.name
+  product_group_name           = "DTS Civil"
+  common_tags                  = local.tags
+  managed_identity_object_ids  = [data.azurerm_user_assigned_identity.civil-mi.principal_id]
+  jenkins_object_id            = data.azurerm_user_assigned_identity.jenkins.principal_id
+  grant_preview_jenkins_access = var.env == "aat"
 }
 
 data "azurerm_user_assigned_identity" "jenkins" {
