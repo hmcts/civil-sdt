@@ -8,13 +8,35 @@
       CVE-2023-35116 - Not believed to be a valid vulnerability - see https://github.com/FasterXML/jackson-databind/issues/3972
       CVE-2023-36414 - This CVE only refers to the .NET Azure Identity SDK up to version 1.10.2. DependencyCheck appears to be matching incorrectly against azure-identity-extensions and ignoring the language version - see https://github.com/jeremylong/DependencyCheck/issues/6334
       CVE-2023-36415 - This CVE only refers to the Azure Identity SDK and only up to version 1.10.2 of the Java version of it. DependencyCheck appears to be matching incorrectly against azure-identity-extensions and incorrectly flagging azure-identity as being affected, even though a non-vulnerable version is being used - see https://github.com/jeremylong/DependencyCheck/issues/5992
-      CVE-2026-42582 - This CVE only refers to Netty 4.2.0.Final - 4.2.12.Final. CBUS is still using the 4.1.x branch of Netty so this CVE does not apply.
+      CVE-2026-42582 - This CVE only refers to Netty 4.2.0.Final - 4.2.12.Final. CBUS is still using the 4.1.x branch of Netty so this CVE does not apply. 
+      CVE-2026-49875 - This CVE is fixed in version 3.6.12 of Apache CXF. Confirmed at:- https://cxf.apache.org/security-advisories.html 
+      CVE-2026-50623 - This CVE is fixed in version 3.6.12 of Apache CXF. Confirmed at:- https://cxf.apache.org/security-advisories.html
+      CVE-2026-50627 - This CVE is fixed in version 3.6.12 of Apache CXF. Confirmed at:- https://cxf.apache.org/security-advisories.html
+      CVE-2026-50628 - This CVE is fixed in version 3.6.12 of Apache CXF. Confirmed at:- https://cxf.apache.org/security-advisories.html
+      CVE-2026-50629 - This CVE is fixed in version 3.6.12 of Apache CXF. Confirmed at:- https://cxf.apache.org/security-advisories.html
+      CVE-2026-50630 - This CVE is fixed in version 3.6.12 of Apache CXF. Confirmed at:- https://cxf.apache.org/security-advisories.html
+      CVE-2026-50631 - This CVE is fixed in version 3.6.12 of Apache CXF. Confirmed at:- https://cxf.apache.org/security-advisories.html
+      CVE-2026-50632 - This CVE is fixed in version 3.6.12 of Apache CXF. Confirmed at:- https://cxf.apache.org/security-advisories.html
+      CVE-2026-50633 - This CVE is fixed in version 3.6.12 of Apache CXF. Confirmed at:- https://cxf.apache.org/security-advisories.html
+      CVE-2026-50634 - This CVE is fixed in version 3.6.12 of Apache CXF. Confirmed at:- https://cxf.apache.org/security-advisories.html
+      CVE-2026-50645 - This CVE is fixed in version 3.6.12 of Apache CXF. Confirmed at:- https://cxf.apache.org/security-advisories.html
     </notes>
     <cve>CVE-2022-1471</cve>
     <cve>CVE-2023-35116</cve>
     <cve>CVE-2023-36414</cve>
     <cve>CVE-2023-36415</cve>
     <cve>CVE-2026-42582</cve>
+    <cve>CVE-2026-49875</cve>
+    <cve>CVE-2026-50623</cve>
+    <cve>CVE-2026-50627</cve>
+    <cve>CVE-2026-50628</cve>
+    <cve>CVE-2026-50629</cve>
+    <cve>CVE-2026-50630</cve>
+    <cve>CVE-2026-50631</cve>
+    <cve>CVE-2026-50632</cve>
+    <cve>CVE-2026-50633</cve>
+    <cve>CVE-2026-50634</cve>
+    <cve>CVE-2026-50645</cve>
   </suppress>
   <!--End of false positives section -->
 
