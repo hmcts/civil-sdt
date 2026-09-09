@@ -44,7 +44,7 @@ class MockJudgementWarrantServiceTest extends AbstractSdtUnitTestBase {
         assertEquals("123456", response.getWarrantNumber());
         assertNotNull(response.getFirstPaymentDate());
         assertNotNull(response.getJudgmentEnteredDate());
-        assertEquals(JUDGMENT_ACCEPTED_WARRANT_ACCEPTED_BY_CCBC.getMessage(), response.getJudgmentWarrantStatus());
+        assertEquals(JUDGMENT_ACCEPTED_WARRANT_ACCEPTED_BY_CCBC.getMessage(), response.getJudgmentWarrantStatus().getMessage());
         assertEquals("123", response.getEnforcingCourtCode());
         assertEquals("Court Code", response.getEnforcingCourtName());
     }

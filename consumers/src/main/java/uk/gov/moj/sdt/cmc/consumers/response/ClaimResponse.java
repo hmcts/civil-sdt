@@ -21,5 +21,7 @@ public class ClaimResponse {
 
     @JsonFormat(pattern="yyyy-MM-dd")
     private Date serviceDate;
+
+    private Long fee;
 }
 
