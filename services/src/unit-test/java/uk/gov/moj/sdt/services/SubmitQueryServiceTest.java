@@ -22,6 +22,7 @@ import uk.gov.moj.sdt.consumers.exception.TimeoutException;
 import uk.gov.moj.sdt.dao.api.IBulkCustomerDao;
 import uk.gov.moj.sdt.domain.BulkCustomer;
 import uk.gov.moj.sdt.domain.BulkCustomerApplication;
+import uk.gov.moj.sdt.domain.ErrorLog;
 import uk.gov.moj.sdt.domain.ErrorMessage;
 import uk.gov.moj.sdt.domain.GlobalParameter;
 import uk.gov.moj.sdt.domain.ServiceRouting;
@@ -30,6 +31,7 @@ import uk.gov.moj.sdt.domain.SubmitQueryRequest;
 import uk.gov.moj.sdt.domain.TargetApplication;
 import uk.gov.moj.sdt.domain.api.IBulkCustomer;
 import uk.gov.moj.sdt.domain.api.IBulkCustomerApplication;
+import uk.gov.moj.sdt.domain.api.IErrorLog;
 import uk.gov.moj.sdt.domain.api.IErrorMessage;
 import uk.gov.moj.sdt.domain.api.IGlobalParameter;
 import uk.gov.moj.sdt.domain.api.IServiceRouting;
@@ -61,6 +63,7 @@ import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -417,6 +420,7 @@ class SubmitQueryServiceTest extends AbstractSdtUnitTestBase {
         cmcClaimDefencesResults.add(cmcClaimDefencesResult);
         SubmitQueryResponse cmcSubmitQueryResponse = new SubmitQueryResponse();
         cmcSubmitQueryResponse.setClaimDefencesResults(cmcClaimDefencesResults);
+        cmcSubmitQueryResponse.setClaimDefencesResultsCount(cmcClaimDefencesResults.size());
 
         when(mockCmcConsumerGateway.submitQuery(submitQueryRequest, 1000, 12000))
             .thenReturn(cmcSubmitQueryResponse);
@@ -484,12 +488,60 @@ class SubmitQueryServiceTest extends AbstractSdtUnitTestBase {
         verify(mockResponsesSummaryUtil, never()).getSummaryResults(any(), any());
     }
 
+    @ParameterizedTest
+    @NullSource
+    @MethodSource("noCmcClaimDefences")
+    void testSubmitQueryMcolMaximumNumberOfDefencesReached(SubmitQueryResponse cmcSubmitQueryResponse) {
+        // Set up query request
+        ISubmitQueryRequest submitQueryRequest = new SubmitQueryRequest();
+
+        IBulkCustomer requestBulkCustomer = new BulkCustomer();
+        requestBulkCustomer.setSdtCustomerId(12L);
+        submitQueryRequest.setBulkCustomer(requestBulkCustomer);
+
+        ITargetApplication requestTargetApplication = new TargetApplication();
+        requestTargetApplication.setTargetApplicationCode("MCOL");
+        submitQueryRequest.setTargetApplication(requestTargetApplication);
+        submitQueryRequest.setResultCount(2000);
+        IErrorLog errorLog = new ErrorLog();
+        errorLog.setErrorCode("78");
+        errorLog.setErrorText("maximum number of defences reached");
+        submitQueryRequest.setErrorLog(errorLog);
+
+        // Set up bulk customer to be returned by mockBulkConsumerDao
+        setUpBulkCustomerCmc("MCOL", 12L);
+
+        // Set up global parameters to be returned by mockGlobalParamCache
+        setUpGlobalParam(MCOL_MAX_CONCURRENT_QUERY_REQ, DEFAULT_NUM_CONCURRENT_QUERY_REQS);
+        setUpGlobalParam(TARGET_APP_TIMEOUT, ONE_THOUSAND);
+        setUpGlobalParam(TARGET_APP_RESP_TIMEOUT, TWELVE_THOUSAND);
+
+
+        when(mockConsumerGateway.submitQuery(submitQueryRequest, 1000, 12000))
+            .thenReturn(cmcSubmitQueryResponse);
+
+        SdtContext.getContext().setRawInXml(CRITERIA);
+
+        submitQueryService.submitQuery(submitQueryRequest);
+
+        assertEquals(2000, submitQueryRequest.getResultCount(), "Query request has unexpected result count");
+
+        verify(mockBulkCustomerDao).getBulkCustomerBySdtId(12L);
+        verify(mockGlobalParamCache).getValue(IGlobalParameter.class, MCOL_MAX_CONCURRENT_QUERY_REQ);
+        verify(mockGlobalParamCache).getValue(IGlobalParameter.class, TARGET_APP_TIMEOUT);
+        verify(mockGlobalParamCache).getValue(IGlobalParameter.class, TARGET_APP_RESP_TIMEOUT);
+        verify(mockConsumerGateway).submitQuery(submitQueryRequest, 1000, 12000);
+        verify(mockCmcConsumerGateway).submitQuery(submitQueryRequest, 1000, 12000);
+        verify(mockResponsesSummaryUtil, never()).getSummaryResults(any(), any());
+    }
+
     static Stream<Arguments> noCmcClaimDefences() {
         SubmitQueryResponse nullCmcClaimDefencesResponse = new SubmitQueryResponse();
 
         SubmitQueryResponse noCmcClaimDefencesResponse = new SubmitQueryResponse();
         List<ClaimDefencesResult> claimDefencesResults = new ArrayList<>();
         noCmcClaimDefencesResponse.setClaimDefencesResults(claimDefencesResults);
+        noCmcClaimDefencesResponse.setClaimDefencesResultsCount(claimDefencesResults.size());
 
         return Stream.of(
             arguments(nullCmcClaimDefencesResponse),
