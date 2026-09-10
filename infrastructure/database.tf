@@ -13,12 +13,27 @@ module "postgresql-v15" {
   component                   = var.component
   env                         = var.env
   enable_db_report_privileges = true
+  enable_qpi                  = var.enable_qpi
   pgsql_databases = [
     {
       name : "civil_sdt"
       report_privilege_schema : "public"
       report_privilege_tables : ["individual_requests"]
     }
+  ]
+  pgsql_server_configuration = [
+    {
+      name  = "azure.extensions"
+      value = "pg_stat_statements"
+    },
+    {
+      name  = "track_io_timing"
+      value = "ON"
+    },
+    {
+      name  = "backslash_quote"
+      value = "on"
+    },
   ]
   kv_name                            = module.civil_sdt_key_vault.key_vault_name
   kv_subscription                    = var.kv_subscription

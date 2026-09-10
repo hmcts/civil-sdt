@@ -65,3 +65,9 @@ variable "kv_subscription" {
   description = "Name or Id of key vault subscription.  Used for setting up privileges for database reporting postgres cron jobs.  Only applies to production."
   default     = "DCD-CNP-DEV"
 }
+
+variable "enable_qpi" {
+  description = "Enables Query Performance Insight. Creates Log Analytics workspace and diagnostic setting needed"
+  type        = bool
+  default     = false
+}
