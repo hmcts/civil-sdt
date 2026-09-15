@@ -21,7 +21,7 @@ class JudgementWarrantResponseTest {
         judgementWarrantResponse.setJudgmentWarrantStatus(WARRANT_REQUEST_ERROR);
 
         assertEquals(WARRANT_REQUEST_ERROR.getMessage(),
-                     judgementWarrantResponse.getJudgmentWarrantStatus(),
+                     judgementWarrantResponse.getJudgmentWarrantStatus().getMessage(),
                      "JudgementWarrantResponse has unexpected judgement warrant status");
     }
 
