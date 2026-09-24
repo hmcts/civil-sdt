@@ -4,7 +4,7 @@ data "azurerm_user_assigned_identity" "civil-mi" {
 }
 
 module "civil_sdt_key_vault" {
-  source = "git@github.com:hmcts/cnp-module-key-vault?ref=DTSPO-31965/remove-jenkins-ptl-access"
+  source = "git@github.com:hmcts/cnp-module-key-vault?ref=master"
 
   name                         = "${var.product}-${var.component}-${var.env}"
   product                      = var.product
