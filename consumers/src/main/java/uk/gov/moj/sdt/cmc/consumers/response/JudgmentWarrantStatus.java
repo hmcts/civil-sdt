@@ -1,5 +1,7 @@
 package uk.gov.moj.sdt.cmc.consumers.response;
 
+import java.util.Arrays;
+
 public enum JudgmentWarrantStatus {
 
     JUDGMENT_REQUEST_ERROR("Judgment Request error."),
@@ -19,5 +21,10 @@ public enum JudgmentWarrantStatus {
 
     public String getMessage() {
         return message;
+    }
+
+    public static JudgmentWarrantStatus getJudgmentWarrantStatus(String status) {
+        return Arrays.stream(values()).filter(value -> value.getMessage().equals(status)
+            || value.name().equals(status)).findFirst().orElse(null);
     }
 }
