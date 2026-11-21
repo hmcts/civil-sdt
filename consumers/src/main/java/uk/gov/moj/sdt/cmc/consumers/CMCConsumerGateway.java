@@ -1,7 +1,6 @@
 package uk.gov.moj.sdt.cmc.consumers;
 
-import java.nio.charset.StandardCharsets;
-
+import feign.FeignException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +30,8 @@ import uk.gov.moj.sdt.cmc.consumers.response.judgement.JudgementResponse;
 import uk.gov.moj.sdt.consumers.api.IConsumerGateway;
 import uk.gov.moj.sdt.consumers.exception.OutageException;
 import uk.gov.moj.sdt.consumers.exception.TimeoutException;
+import uk.gov.moj.sdt.domain.ErrorLog;
+import uk.gov.moj.sdt.domain.api.IErrorLog;
 import uk.gov.moj.sdt.domain.api.IIndividualRequest;
 import uk.gov.moj.sdt.domain.api.ISubmitQueryRequest;
 import uk.gov.moj.sdt.idam.IdamRepository;
@@ -41,6 +42,9 @@ import uk.gov.moj.sdt.utils.cmc.RequestType;
 import uk.gov.moj.sdt.utils.cmc.exception.CMCException;
 import uk.gov.moj.sdt.utils.cmc.exception.CaseOffLineException;
 import uk.gov.moj.sdt.utils.cmc.xml.XmlElementValueReader;
+import uk.gov.moj.sdt.ws._2013.sdt.baseschema.StatusCodeType;
+
+import java.nio.charset.StandardCharsets;
 
 import static uk.gov.moj.sdt.utils.cmc.exception.CMCExceptionMessages.CASE_OFF_LINE;
 
@@ -51,6 +55,9 @@ public class CMCConsumerGateway implements IConsumerGateway {
     private static final Logger LOGGER = LoggerFactory.getLogger(CMCConsumerGateway.class);
     public static final String FROM_DATE = "fromDate";
     public static final String TO_DATE = "toDate";
+    private static final String MAX_RESULTS = "78";
+    private static final int NO_DATA = 77;
+    private static final int NOT_FOUND = 404;
 
     private IBreathingSpaceService breathingSpace;
     private IClaimStatusUpdateService claimStatusUpdate;
@@ -164,17 +171,39 @@ public class CMCConsumerGateway implements IConsumerGateway {
         String xmlContent = SdtContext.getContext().getRawOutXml();
         String fromDate = xmlElementValueReader.getElementValue(xmlContent, FROM_DATE);
         String toDate = xmlElementValueReader.getElementValue(xmlContent, TO_DATE);
-        ClaimDefencesResponse response = claimDefences.claimDefences(idamRepository.getSdtSystemUserAccessToken(),
-                                                                     s2SRepository.getS2SToken(),
-                                                                     SdtContext.getContext().getCustomerIdamId(),
-                                                                     fromDate,
-                                                                     toDate);
-
         SubmitQueryResponse submitQueryResponse = new SubmitQueryResponse();
-        submitQueryResponse.setClaimDefencesResults(response.getResults());
-        submitQueryResponse.setClaimDefencesResultsCount(response.getResultCount());
+        try {
+            ClaimDefencesResponse response = claimDefences.claimDefences(idamRepository.getSdtSystemUserAccessToken(),
+                                                                         s2SRepository.getS2SToken(),
+                                                                         SdtContext.getContext().getCustomerIdamId(),
+                                                                         fromDate,
+                                                                         toDate);
+            updateResponseStatus(submitQueryRequest, submitQueryResponse, response);
+        } catch (FeignException e) {
+            boolean noResults = NO_DATA == e.status() || NOT_FOUND == e.status();
+            if (!noResults) {
+                final IErrorLog errorLog = new ErrorLog(String.valueOf(e.status()), e.getMessage());
+                submitQueryRequest.reject(errorLog);
+            }
+        }
 
         return submitQueryResponse;
+    }
+
+    private void updateResponseStatus(ISubmitQueryRequest submitQueryRequest,
+                                      SubmitQueryResponse submitQueryResponse,
+                                      ClaimDefencesResponse response) {
+        submitQueryResponse.setClaimDefencesResults(response.getResults());
+        if (!maximumResultCountReached(submitQueryRequest)) {
+            submitQueryResponse.setClaimDefencesResultsCount(response.getResultCount());
+            submitQueryRequest.setErrorLog(null);
+            submitQueryRequest.setStatus(StatusCodeType.OK.value());
+        }
+    }
+
+    private boolean maximumResultCountReached(ISubmitQueryRequest submitQueryRequest) {
+        return submitQueryRequest.hasError()
+            && submitQueryRequest.getErrorLog().getErrorCode().equalsIgnoreCase(MAX_RESULTS);
     }
 
 }
